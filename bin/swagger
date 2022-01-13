@@ -1,0 +1,13 @@
+#!/bin/bash
+# Copyright 2019, Boon Logic Inc
+
+# controls the version of goswagger that is used to generate code
+# from spec files.
+
+goswagger_version=v0.28.0
+
+# update docker with latest package
+docker pull quay.io/goswagger/swagger:${goswagger_version}
+
+# run designated swagger command
+docker run --rm -it  --user $(id -u):$(id -g) -e GOPATH=${GOPATH} -v ${HOME}:${HOME} -w $(pwd) quay.io/goswagger/swagger:${goswagger_version} $*
