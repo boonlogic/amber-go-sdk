@@ -6,6 +6,8 @@ package client
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
+	"amber-go-sdk/ambergen/client/operations"
+
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"

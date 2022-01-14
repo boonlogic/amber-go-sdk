@@ -9,9 +9,8 @@ import (
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+	"io/ioutil"
 
-	// "github.com/go-openapi/runtime"
-	"net/http"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -20,10 +19,10 @@ import (
 )
 
 type LicenseProfile struct {
-	username    string `json:"username"`
-	password    string `json:"password"`
-	server      string `json:"server"`
-	oauthServer string `json:"oauth-server"`
+	Username    string `json:"username"`
+	Password    string `json:"password"`
+	Server      string `json:"server"`
+	OauthServer string `json:"oauth-server"`
 }
 
 type LicenseProfiles map[string]LicenseProfile
@@ -35,10 +34,13 @@ type AmberClient struct {
 	reauthTime     time.Time
 	licenseFile    string
 	licenseId      string
+	verify         bool
+	cert           string
 	username       string
 	licenseProfile LicenseProfile
 	timeout        uint
 	authWriter     runtime.ClientAuthInfoWriter
+	proxy          string
 }
 
 func envFallback(key string, defVal string) string {
@@ -53,13 +55,44 @@ func NewAmberClient(licenseId *string, licenseFile *string, verify *bool, cert *
 	var ac AmberClient
 	var err error
 
+	// set default values
+	if licenseId == nil {
+		ac.licenseId = "default"
+	} else {
+		ac.licenseId = *licenseId
+	}
+	if licenseFile == nil {
+		ac.licenseFile = "~/.Amber.license"
+	} else {
+		ac.licenseFile = *licenseFile
+	}
+	if verify == nil {
+		ac.verify = true
+	} else {
+		ac.verify = *verify
+	}
+	if cert == nil {
+		ac.cert = ""
+	} else {
+		ac.cert = *cert
+	}
+	if timeout == nil {
+		ac.timeout = 360
+	} else {
+		ac.timeout = *timeout
+	}
+
 	// initialize reauth timer to expired time
 	ac.reauthTime = time.Now().Add(time.Second * -1)
 
-	// load from license file if necessary, override from environment if specified
-	var exists bool
-	ac.licenseFile, exists = os.LookupEnv("AMBER_LICENSE_FILE")
-	if exists {
+	// set default license file
+	licenseEnv := os.Getenv("AMBER_LICENSE_FILE")
+	if licenseEnv != "" {
+		ac.licenseFile = licenseEnv
+	}
+
+	var lp LicenseProfiles
+	if ac.licenseFile != "" {
 		// expand home directory if necessary
 		if strings.HasPrefix(ac.licenseFile, "~/") {
 			dirname, _ := os.UserHomeDir()
@@ -67,81 +100,53 @@ func NewAmberClient(licenseId *string, licenseFile *string, verify *bool, cert *
 		}
 		if _, err = os.Stat(ac.licenseFile); err == nil {
 			//
-			blob, err := os.ReadFile(ac.licenseFile)
+			blob, err := ioutil.ReadFile(ac.licenseFile)
 			if err != nil {
 				return nil, err
 			}
-			if err := json.Unmarshal(blob, &ac.licenseProfile); err != nil {
+
+			if err := json.Unmarshal(blob, &lp); err != nil {
 				return nil, err
 			}
-		} else {
-			if licenseFile != nil {
-				// if license file is something other than default, throw exception
-				ac.licenseFile = *licenseFile
-			}
 		}
+		ac.licenseProfile = lp[ac.licenseId]
 	}
 
 	// override from environment
-	ac.licenseProfile.username = envFallback("AMBER_USERNAME", ac.licenseProfile.username)
-	ac.licenseProfile.password = envFallback("AMBER_PASSWORD", ac.licenseProfile.password)
-	ac.licenseProfile.server = envFallback("AMBER_SERVER", ac.licenseProfile.server)
-	ac.licenseProfile.oauthServer = envFallback("AMBER_OAUTH_SERVER", ac.licenseProfile.oauthServer)
-	if ac.licenseProfile.oauthServer == "" {
-		ac.licenseProfile.oauthServer = ac.licenseProfile.server
+	ac.licenseProfile.Username = envFallback("AMBER_USERNAME", ac.licenseProfile.Username)
+	ac.licenseProfile.Password = envFallback("AMBER_PASSWORD", ac.licenseProfile.Password)
+	ac.licenseProfile.Server = envFallback("AMBER_SERVER", ac.licenseProfile.Server)
+	ac.licenseProfile.OauthServer = envFallback("AMBER_OAUTH_SERVER", ac.licenseProfile.OauthServer)
+	if ac.licenseProfile.OauthServer == "" {
+		ac.licenseProfile.OauthServer = ac.licenseProfile.Server
 	}
+	ac.proxy = envFallback("AMBER_PROXY", "")
+	ac.cert = envFallback("AMBER_SSL_CERT", ac.cert)
+	ac.verify = strings.ToLower(envFallback("AMBER_SSL_VERIFY", "false")) == "true"
+
 	// verify required profile elements have been created
-	if ac.licenseProfile.username == "" {
+	if ac.licenseProfile.Username == "" {
 		return nil, errors.New("missing username in profile")
 	}
-	if ac.licenseProfile.password == "" {
+	if ac.licenseProfile.Password == "" {
 		return nil, errors.New("missing username in profile")
 	}
-	if ac.licenseProfile.server == "" {
+	if ac.licenseProfile.Server == "" {
 		return nil, errors.New("missing username in profile")
 	}
 
 	ac.oauthParams = &aops.PostOauth2Params{
 		PostAuth2Request: &amodels.PostAuth2Request{
-			Username: &ac.licenseProfile.username,
-			Password: &ac.licenseProfile.password,
+			Username: &ac.licenseProfile.Username,
+			Password: &ac.licenseProfile.Password,
 		},
 	}
 
-	/*
-	   // set timeout in milliseconds
-	   this.defaultClient.timeout = timeout * 1000
-
-	   // set the proxy
-	   this.defaultClient.proxy = process.env.AMBER_PROXY || null
-
-	   // process overrides for the cert and verify
-	   this.license_profile.cert = process.env.AMBER_SSL_CERT || cert
-	   if (this.license_profile.cert !== null) {
-	       console.log("cert specification not implemented yet")
-	   }
-	   this.license_profile.verify = verify
-	   let verify_str = process.env.AMBER_SSL_VERIFY
-	   if (verify_str && verify_str.toLowerCase() === "false") {
-	       this.license_profile.verify = false
-	   }
-	   if (this.license_profile.verify === false) {
-	       this.defaultClient.verifyTLS = this.license_profile.verify
-	   }
-
-	*/
-
-	if timeout == nil {
-		ac.timeout = 360
-	} else {
-		ac.timeout = *timeout
-	}
-
 	// set up default transport
-	ac.amberServer = aclient.New(httptransport.New(ac.licenseProfile.server, "", nil), strfmt.Default)
+	ac.amberServer = aclient.New(httptransport.New(ac.licenseProfile.Server, "", nil), strfmt.Default)
 
 	// set up oauth2 transport
-	ac.oauthServer = aclient.New(httptransport.New(ac.licenseProfile.oauthServer, "", nil), strfmt.Default)
+	ac.oauthServer = aclient.New(httptransport.New(ac.licenseProfile.OauthServer, "", nil), strfmt.Default)
 
 	return &ac, nil
 }
@@ -149,8 +154,7 @@ func NewAmberClient(licenseId *string, licenseFile *string, verify *bool, cert *
 func (a AmberClient) authenticate() bool {
 	tIn := time.Now()
 	if a.reauthTime.Before(tIn) {
-		a.oauthServer.Operations
-		response, err := a.oauthServer.ClientService.PostOauth2(a.oauthParams, nil)
+		response, err := a.oauthServer.Operations.PostOauth2(a.oauthParams, nil)
 		if err != nil {
 			return false
 		}
@@ -170,18 +174,11 @@ func (a AmberClient) authenticate() bool {
 
 func (a AmberClient) ListSensors() (*amodels.GetSensorsResponse, error) {
 
-	if (a.authenticate()) == false {
+	if a.authenticate() == false {
 		return nil, errors.New("authentication failed")
 	}
 
-	params := &aops.GetSensorsParams{
-		Context: nil,
-		HTTPClient: &http.Client{
-			Transport:     a.,
-			Timeout:       time.Duration(time.Second * a.timeout),
-		},
-	}
-	resp, err := a.amberServer.Operations(operations.AllParams{}, a.authWriter)
+	params := &aops.GetSensorsParams{}
 	aok, err := a.amberServer.Operations.GetSensors(params, a.authWriter, nil)
 	if err != nil {
 		return nil, err
