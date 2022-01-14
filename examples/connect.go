@@ -2,7 +2,9 @@ package main
 
 import (
 	amber_client "amber-go-sdk"
+	"encoding/json"
 	"fmt"
+	"syscall"
 )
 
 func main() {
@@ -15,6 +17,8 @@ func main() {
 	response, err := amberClient.ListSensors()
 	if err != nil {
 		fmt.Printf("%v\n", err)
+		syscall.Exit(1)
 	}
-	fmt.Printf("%v\n", response)
+	formatted, _ := json.MarshalIndent(*response, "", "\t")
+	fmt.Printf("%v\n", string(formatted))
 }

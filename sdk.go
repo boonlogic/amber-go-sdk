@@ -6,6 +6,7 @@ import (
 	amodels "amber-go-sdk/ambergen/models"
 	"encoding/json"
 	"errors"
+	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 	"io/ioutil"
@@ -37,7 +38,7 @@ type AmberClient struct {
 	username       string
 	licenseProfile LicenseProfile
 	timeout        time.Duration
-	IdToken        string
+	authWriter     runtime.ClientAuthInfoWriter
 	proxy          string
 }
 
@@ -189,7 +190,7 @@ func (a *AmberClient) authenticate() bool {
 		}
 
 		// save the token as an authWriter
-		a.IdToken = *response.Payload.IDToken
+		a.authWriter = httptransport.BearerToken(*response.Payload.IDToken)
 
 		// save the expiration time (-60 seconds)
 		expiresIn, err := strconv.ParseUint(*response.Payload.ExpiresIn, 10, 64)
@@ -202,63 +203,96 @@ func (a *AmberClient) authenticate() bool {
 }
 
 func (a *AmberClient) ListSensors() (*amodels.GetSensorsResponse, error) {
-
 	if a.authenticate() == false {
 		return nil, errors.New("authentication failed")
 	}
-
 	params := &aops.GetSensorsParams{}
 	params.WithTimeout(a.timeout)
-	aok, err := a.amberServer.Operations.GetSensors(params, httptransport.BearerToken(a.IdToken))
+	aok, err := a.amberServer.Operations.GetSensors(params, a.authWriter)
 	if err != nil {
 		return nil, err
 	}
-
 	return &aok.Payload, nil
 }
 
 func (a AmberClient) GetSensor(sensorId string) (*amodels.GetSensorResponse, error) {
-
 	if (a.authenticate()) == false {
 		return nil, errors.New("authentication failed")
 	}
-
-	response := &amodels.GetSensorResponse{}
-	return response, nil
+	params := &aops.GetSensorParams{
+		SensorID:   sensorId,
+	}
+	params.WithTimeout(a.timeout)
+	aok, err := a.amberServer.Operations.GetSensor(params, a.authWriter)
+	if err != nil {
+		return nil, err
+	}
+	return aok.Payload, nil
 }
 
 func (a AmberClient) CreateSensor(label string) (*amodels.PostSensorResponse, error) {
-
 	if (a.authenticate()) == false {
 		return nil, errors.New("authentication failed")
 	}
-
-	response := &amodels.PostSensorResponse{}
-	return response, nil
+	params := &aops.PostSensorParams{
+		PostSensorRequest: &amodels.PostSensorRequest{
+			Label: label,
+		},
+	}
+	params.WithTimeout(a.timeout)
+	aok, err := a.amberServer.Operations.PostSensor(params, a.authWriter)
+	if err != nil {
+		return nil, err
+	}
+	return aok.Payload, nil
 }
 
-func (a AmberClient) UpdateLabel(sensorId string, label string) (*amodels.PutSensorResponse, error) {
-
+func (a AmberClient) UpdateLabel(sensorId string, label *string) (*amodels.PutSensorResponse, error) {
 	if (a.authenticate()) == false {
 		return nil, errors.New("authentication failed")
 	}
-
-	response := &amodels.PutSensorResponse{}
-	return response, nil
+	params := &aops.PutSensorParams{
+		PutSensorRequest: &amodels.PutSensorRequest{
+			Label: label,
+		},
+		SensorID: sensorId,
+	}
+	params.WithTimeout(a.timeout)
+	aok, err := a.amberServer.Operations.PutSensor(params, a.authWriter)
+	if err != nil {
+		return nil, err
+	}
+	return aok.Payload, nil
 }
 
-func (a AmberClient) ConfigureSensor(sensorId string, featureCount int, streamingWindowSize int,
-	samplesToBuffer int, learningRateNumerator int,
-	learningRateDenominator int, learningMaxClusters int,
-	learningMaxSamples int, anomalyHistoryWindow int,
-	features amodels.PostFeatureConfig) (*amodels.PostConfigResponse, error) {
-
+func (a AmberClient) ConfigureSensor(sensorId string, featureCount uint16, streamingWindowSize uint16,
+	samplesToBuffer uint32, learningRateNumerator uint64,
+	learningRateDenominator uint64, learningMaxClusters uint16,
+	learningMaxSamples uint64, anomalyHistoryWindow uint32,
+	features []*amodels.PostFeatureConfig) (*amodels.PostConfigResponse, error) {
 	if (a.authenticate()) == false {
 		return nil, errors.New("authentication failed")
 	}
-
-	response := &amodels.PostConfigResponse{}
-	return response, nil
+	params := &aops.PostConfigParams{
+		PostConfigRequest: &amodels.PostConfigRequest{
+			AnomalyHistoryWindow:    &anomalyHistoryWindow,
+			FeatureCount:            &featureCount,
+			Features:                features,
+			LearningMaxClusters:     &learningMaxClusters,
+			LearningMaxSamples:      &learningMaxSamples,
+			LearningRateDenominator: &learningRateDenominator,
+			LearningRateNumerator:   &learningRateNumerator,
+			SamplesToBuffer:         &samplesToBuffer,
+			StreamingWindowSize:     &streamingWindowSize,
+		},
+		SensorID: sensorId,
+	}
+	params.WithTimeout(a.timeout)
+	aok, err := a.amberServer.Operations.PostConfig(params, a.authWriter)
+	if err != nil {
+		return nil, err
+	}
+	return aok.Payload, nil
 }
 
 func (a AmberClient) GetConfig(sensorId string) (*amodels.GetConfigResponse, error) {
