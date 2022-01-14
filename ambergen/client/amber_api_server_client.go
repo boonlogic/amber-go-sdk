@@ -76,7 +76,6 @@ type TransportConfig struct {
 	BasePath string
 	Schemes  []string
 }
-
 // WithHost overrides the default host,
 // provided by the meta section of the spec file.
 func (cfg *TransportConfig) WithHost(host string) *TransportConfig {

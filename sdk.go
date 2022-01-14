@@ -1,16 +1,14 @@
 package amber_client
 
 import (
-	aclient "amber-go-sdk/ambergen/client"
+	apiclient "amber-go-sdk/ambergen/client"
 	aops "amber-go-sdk/ambergen/client/operations"
 	amodels "amber-go-sdk/ambergen/models"
 	"encoding/json"
 	"errors"
-	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 	"io/ioutil"
-
 	"os"
 	"path/filepath"
 	"strconv"
@@ -28,8 +26,8 @@ type LicenseProfile struct {
 type LicenseProfiles map[string]LicenseProfile
 
 type AmberClient struct {
-	amberServer    *aclient.AmberAPIServer
-	oauthServer    *aclient.AmberAPIServer
+	amberServer    *apiclient.AmberAPIServer
+	oauthServer    *apiclient.AmberAPIServer
 	oauthParams    *aops.PostOauth2Params
 	reauthTime     time.Time
 	licenseFile    string
@@ -38,8 +36,8 @@ type AmberClient struct {
 	cert           string
 	username       string
 	licenseProfile LicenseProfile
-	timeout        uint
-	authWriter     runtime.ClientAuthInfoWriter
+	timeout        time.Duration
+	IdToken        string
 	proxy          string
 }
 
@@ -49,6 +47,33 @@ func envFallback(key string, defVal string) string {
 		return defVal
 	}
 	return val
+}
+
+func parseServer(server string) (string, string, string, error) {
+
+	var scheme, host, basepath string
+
+	// parse the scheme
+	if strings.HasPrefix(server, "https://") {
+		scheme = "https"
+		server = strings.TrimPrefix(server, "https://")
+	} else if strings.HasPrefix(server, "http://") {
+		scheme = "http"
+		server = strings.TrimPrefix(server, "http://")
+	} else {
+		scheme = ""
+	}
+
+	indexOf := strings.Index(server, "/")
+	if indexOf == -1 {
+		host = server
+		basepath = ""
+	} else {
+		host = server[0:indexOf]
+		basepath = server[indexOf:]
+	}
+
+	return scheme, host, basepath, nil
 }
 
 func NewAmberClient(licenseId *string, licenseFile *string, verify *bool, cert *string, timeout *uint) (*AmberClient, error) {
@@ -77,9 +102,9 @@ func NewAmberClient(licenseId *string, licenseFile *string, verify *bool, cert *
 		ac.cert = *cert
 	}
 	if timeout == nil {
-		ac.timeout = 360
+		ac.timeout = 360 * time.Second
 	} else {
-		ac.timeout = *timeout
+		ac.timeout = time.Duration(*timeout) * time.Second
 	}
 
 	// initialize reauth timer to expired time
@@ -135,32 +160,36 @@ func NewAmberClient(licenseId *string, licenseFile *string, verify *bool, cert *
 		return nil, errors.New("missing username in profile")
 	}
 
-	ac.oauthParams = &aops.PostOauth2Params{
-		PostAuth2Request: &amodels.PostAuth2Request{
-			Username: &ac.licenseProfile.Username,
-			Password: &ac.licenseProfile.Password,
-		},
+	oauth2Request := amodels.PostAuth2Request{
+		Username: &ac.licenseProfile.Username,
+		Password: &ac.licenseProfile.Password,
 	}
 
-	// set up default transport
-	ac.amberServer = aclient.New(httptransport.New(ac.licenseProfile.Server, "", nil), strfmt.Default)
+	ac.oauthParams = aops.NewPostOauth2Params()
+	ac.oauthParams.SetPostAuth2Request(&oauth2Request)
+	ac.oauthParams.WithTimeout(ac.timeout)
 
-	// set up oauth2 transport
-	ac.oauthServer = aclient.New(httptransport.New(ac.licenseProfile.OauthServer, "", nil), strfmt.Default)
+	// set up default server
+	_, host, basePath, _ := parseServer(ac.licenseProfile.Server)
+	ac.amberServer = apiclient.New(httptransport.New(host, basePath, nil), strfmt.Default)
+
+	// set up oauth server
+	_, host, basePath, _ = parseServer(ac.licenseProfile.OauthServer)
+	ac.oauthServer = apiclient.New(httptransport.New(host, basePath, nil), strfmt.Default)
 
 	return &ac, nil
 }
 
-func (a AmberClient) authenticate() bool {
+func (a *AmberClient) authenticate() bool {
 	tIn := time.Now()
 	if a.reauthTime.Before(tIn) {
-		response, err := a.oauthServer.Operations.PostOauth2(a.oauthParams, nil)
+		response, err := a.oauthServer.Operations.PostOauth2(a.oauthParams)
 		if err != nil {
 			return false
 		}
 
 		// save the token as an authWriter
-		a.authWriter = httptransport.BearerToken(*response.Payload.IDToken)
+		a.IdToken = *response.Payload.IDToken
 
 		// save the expiration time (-60 seconds)
 		expiresIn, err := strconv.ParseUint(*response.Payload.ExpiresIn, 10, 64)
@@ -172,14 +201,15 @@ func (a AmberClient) authenticate() bool {
 	return true
 }
 
-func (a AmberClient) ListSensors() (*amodels.GetSensorsResponse, error) {
+func (a *AmberClient) ListSensors() (*amodels.GetSensorsResponse, error) {
 
 	if a.authenticate() == false {
 		return nil, errors.New("authentication failed")
 	}
 
 	params := &aops.GetSensorsParams{}
-	aok, err := a.amberServer.Operations.GetSensors(params, a.authWriter, nil)
+	params.WithTimeout(a.timeout)
+	aok, err := a.amberServer.Operations.GetSensors(params, httptransport.BearerToken(a.IdToken))
 	if err != nil {
 		return nil, err
 	}
