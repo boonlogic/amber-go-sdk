@@ -247,13 +247,13 @@ func (a AmberClient) CreateSensor(label string) (*amodels.PostSensorResponse, er
 	return aok.Payload, nil
 }
 
-func (a AmberClient) UpdateLabel(sensorId string, label *string) (*amodels.PutSensorResponse, error) {
+func (a AmberClient) UpdateLabel(sensorId string, label string) (*amodels.PutSensorResponse, error) {
 	if (a.authenticate()) == false {
 		return nil, errors.New("authentication failed")
 	}
 	params := &aops.PutSensorParams{
 		PutSensorRequest: &amodels.PutSensorRequest{
-			Label: label,
+			Label: &label,
 		},
 		SensorID: sensorId,
 	}
@@ -265,26 +265,12 @@ func (a AmberClient) UpdateLabel(sensorId string, label *string) (*amodels.PutSe
 	return aok.Payload, nil
 }
 
-func (a AmberClient) ConfigureSensor(sensorId string, featureCount uint16, streamingWindowSize uint16,
-	samplesToBuffer uint32, learningRateNumerator uint64,
-	learningRateDenominator uint64, learningMaxClusters uint16,
-	learningMaxSamples uint64, anomalyHistoryWindow uint32,
-	features []*amodels.PostFeatureConfig) (*amodels.PostConfigResponse, error) {
+func (a AmberClient) ConfigureSensor(sensorId string, payload amodels.PostConfigRequest) (*amodels.PostConfigResponse, error) {
 	if (a.authenticate()) == false {
 		return nil, errors.New("authentication failed")
 	}
 	params := &aops.PostConfigParams{
-		PostConfigRequest: &amodels.PostConfigRequest{
-			AnomalyHistoryWindow:    &anomalyHistoryWindow,
-			FeatureCount:            &featureCount,
-			Features:                features,
-			LearningMaxClusters:     &learningMaxClusters,
-			LearningMaxSamples:      &learningMaxSamples,
-			LearningRateDenominator: &learningRateDenominator,
-			LearningRateNumerator:   &learningRateNumerator,
-			SamplesToBuffer:         &samplesToBuffer,
-			StreamingWindowSize:     &streamingWindowSize,
-		},
+		PostConfigRequest: &payload,
 		SensorID: sensorId,
 	}
 	params.WithTimeout(a.timeout)
@@ -325,15 +311,12 @@ func (a AmberClient) DeleteSensor(sensorId string) error {
 	return nil
 }
 
-func (a AmberClient) StreamSensor(sensorId string, csv string, saveImage bool) (*amodels.PostStreamResponse, error) {
+func (a AmberClient) StreamSensor(sensorId string, payload amodels.PostStreamRequest) (*amodels.PostStreamResponse, error) {
 	if (a.authenticate()) == false {
 		return nil, errors.New("authentication failed")
 	}
 	params := &aops.PostStreamParams{
-		PostStreamRequest: &amodels.PostStreamRequest{
-			Data:      &csv,
-			SaveImage: &saveImage,
-		},
+		PostStreamRequest: &payload,
 		SensorID: sensorId,
 	}
 	params.WithTimeout(a.timeout)
@@ -359,15 +342,12 @@ func (a AmberClient) GetStatus(sensorId string) (*amodels.GetStatusResponse, err
 	return aok.Payload, nil
 }
 
-func (a AmberClient) PretrainSensor(sensorId string, csv string, autotuneConfig bool) (*amodels.PostPretrainResponse, error) {
+func (a AmberClient) PretrainSensor(sensorId string, payload amodels.PostPretrainRequest) (*amodels.PostPretrainResponse, error) {
 	if (a.authenticate()) == false {
 		return nil, errors.New("authentication failed")
 	}
 	params := &aops.PostPretrainParams{
-		PostPretrainRequest: &amodels.PostPretrainRequest{
-			AutotuneConfig: &autotuneConfig,
-			Data:           &csv,
-		},
+		PostPretrainRequest: &payload,
 		SensorID: sensorId,
 	}
 	params.WithTimeout(a.timeout)
@@ -407,13 +387,13 @@ func (a AmberClient) GetPretrainState(sensorId string) (*amodels.GetPretrainResp
 	return aok.Payload, nil
 }
 
-func (a AmberClient) GetRootCause(sensorId string, clusterId string, pattern string) (*amodels.GetRootCauseResponse, error) {
+func (a AmberClient) GetRootCause(sensorId string, clusterId *string, pattern *string) (*amodels.GetRootCauseResponse, error) {
 	if (a.authenticate()) == false {
 		return nil, errors.New("authentication failed")
 	}
 	params := &aops.GetRootCauseParams{
-		ClusterID: &clusterId,
-		Pattern:   &pattern,
+		ClusterID: clusterId,
+		Pattern:   pattern,
 		SensorID:  sensorId,
 	}
 	params.WithTimeout(a.timeout)
