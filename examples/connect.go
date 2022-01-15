@@ -14,7 +14,7 @@ func main() {
 		fmt.Printf("%v\n", err)
 	}
 
-	response, err := amberClient.ListSensors()
+	response, err := amberClient.GetVersion()
 	if err != nil {
 		fmt.Printf("%v\n", err)
 		syscall.Exit(1)

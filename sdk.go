@@ -220,7 +220,7 @@ func (a AmberClient) GetSensor(sensorId string) (*amodels.GetSensorResponse, err
 		return nil, errors.New("authentication failed")
 	}
 	params := &aops.GetSensorParams{
-		SensorID:   sensorId,
+		SensorID: sensorId,
 	}
 	params.WithTimeout(a.timeout)
 	aok, err := a.amberServer.Operations.GetSensor(params, a.authWriter)
@@ -296,78 +296,143 @@ func (a AmberClient) ConfigureSensor(sensorId string, featureCount uint16, strea
 }
 
 func (a AmberClient) GetConfig(sensorId string) (*amodels.GetConfigResponse, error) {
-
 	if (a.authenticate()) == false {
 		return nil, errors.New("authentication failed")
 	}
-
-	response := &amodels.GetConfigResponse{}
-	return response, nil
+	params := &aops.GetConfigParams{
+		SensorID: sensorId,
+	}
+	params.WithTimeout(a.timeout)
+	aok, err := a.amberServer.Operations.GetConfig(params, a.authWriter)
+	if err != nil {
+		return nil, err
+	}
+	return aok.Payload, nil
 }
 
 func (a AmberClient) DeleteSensor(sensorId string) error {
-
 	if (a.authenticate()) == false {
 		return errors.New("authentication failed")
+	}
+	params := &aops.DeleteSensorParams{
+		SensorID: sensorId,
+	}
+	params.WithTimeout(a.timeout)
+	_, err := a.amberServer.Operations.DeleteSensor(params, a.authWriter)
+	if err != nil {
+		return err
 	}
 	return nil
 }
 
 func (a AmberClient) StreamSensor(sensorId string, csv string, saveImage bool) (*amodels.PostStreamResponse, error) {
-
 	if (a.authenticate()) == false {
 		return nil, errors.New("authentication failed")
 	}
-
-	response := &amodels.PostStreamResponse{}
-	return response, nil
+	params := &aops.PostStreamParams{
+		PostStreamRequest: &amodels.PostStreamRequest{
+			Data:      &csv,
+			SaveImage: &saveImage,
+		},
+		SensorID: sensorId,
+	}
+	params.WithTimeout(a.timeout)
+	aok, err := a.amberServer.Operations.PostStream(params, a.authWriter)
+	if err != nil {
+		return nil, err
+	}
+	return aok.Payload, nil
 }
 
 func (a AmberClient) GetStatus(sensorId string) (*amodels.GetStatusResponse, error) {
-
 	if (a.authenticate()) == false {
 		return nil, errors.New("authentication failed")
 	}
-
-	response := &amodels.GetStatusResponse{}
-	return response, nil
+	params := &aops.GetStatusParams{
+		SensorID: sensorId,
+	}
+	params.WithTimeout(a.timeout)
+	aok, err := a.amberServer.Operations.GetStatus(params, a.authWriter)
+	if err != nil {
+		return nil, err
+	}
+	return aok.Payload, nil
 }
 
 func (a AmberClient) PretrainSensor(sensorId string, csv string, autotuneConfig bool) (*amodels.PostPretrainResponse, error) {
-
 	if (a.authenticate()) == false {
 		return nil, errors.New("authentication failed")
 	}
-
-	response := &amodels.PostPretrainResponse{}
-	return response, nil
+	params := &aops.PostPretrainParams{
+		PostPretrainRequest: &amodels.PostPretrainRequest{
+			AutotuneConfig: &autotuneConfig,
+			Data:           &csv,
+		},
+		SensorID: sensorId,
+	}
+	params.WithTimeout(a.timeout)
+	aok, accepted, err := a.amberServer.Operations.PostPretrain(params, a.authWriter)
+	if err != nil {
+		return nil, err
+	}
+	if accepted != nil {
+		acceptedResponse := amodels.PostPretrainResponse{
+			State:   accepted.Payload.State,
+			Message: accepted.Payload.Message,
+		}
+		return &acceptedResponse, nil
+	}
+	return aok.Payload, nil
 }
 
 func (a AmberClient) GetPretrainState(sensorId string) (*amodels.GetPretrainResponse, error) {
-
 	if (a.authenticate()) == false {
 		return nil, errors.New("authentication failed")
 	}
-
-	response := &amodels.GetPretrainResponse{}
-	return response, nil
+	params := &aops.GetPretrainParams{
+		SensorID: sensorId,
+	}
+	params.WithTimeout(a.timeout)
+	aok, accepted, err := a.amberServer.Operations.GetPretrain(params, a.authWriter)
+	if accepted != nil {
+		acceptedResponse := amodels.GetPretrainResponse{
+			Message: accepted.Payload.Message,
+			State:   accepted.Payload.State,
+		}
+		return &acceptedResponse, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	return aok.Payload, nil
 }
 
 func (a AmberClient) GetRootCause(sensorId string, clusterId string, pattern string) (*amodels.GetRootCauseResponse, error) {
-
 	if (a.authenticate()) == false {
 		return nil, errors.New("authentication failed")
 	}
-
-	response := &amodels.GetRootCauseResponse{}
-	return response, nil
+	params := &aops.GetRootCauseParams{
+		ClusterID: &clusterId,
+		Pattern:   &pattern,
+		SensorID:  sensorId,
+	}
+	params.WithTimeout(a.timeout)
+	aok, err := a.amberServer.Operations.GetRootCause(params, a.authWriter)
+	if err != nil {
+		return nil, err
+	}
+	return &aok.Payload, nil
 }
 
-func (a AmberClient) GetVersion() (string, error) {
-
+func (a AmberClient) GetVersion() (*amodels.Version, error) {
 	if (a.authenticate()) == false {
-		return "", errors.New("authentication failed")
+		return nil, errors.New("authentication failed")
 	}
-
-	return "", nil
+	params := &aops.GetVersionParams{}
+	params.WithTimeout(a.timeout)
+	aok, err := a.amberServer.Operations.GetVersion(params, a.authWriter)
+	if err != nil {
+		return nil, err
+	}
+	return aok.Payload, nil
 }
