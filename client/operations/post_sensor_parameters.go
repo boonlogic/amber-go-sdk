@@ -15,7 +15,7 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"amber-go-sdk/ambergen/models"
+	"github.com/boonlogic/amber-go-sdk/models"
 )
 
 // NewPostSensorParams creates a new PostSensorParams object,

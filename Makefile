@@ -26,5 +26,5 @@ clean: ## clean up go cache and modcache
 	go clean -modcache -cache
 
 generate-client: ## generate amber swagger client code based on json schema file
-	bin/swagger generate client -t ambergen --keep-spec-order -f swagger.json
+	bin/swagger generate client --keep-spec-order -f swagger.json
 

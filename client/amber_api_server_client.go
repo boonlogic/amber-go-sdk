@@ -6,8 +6,7 @@ package client
 // Editing this file might prove futile when you re-run the swagger generate command
 
 import (
-	"amber-go-sdk/ambergen/client/operations"
-
+	"github.com/boonlogic/amber-go-sdk/client/operations"
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
@@ -76,6 +75,7 @@ type TransportConfig struct {
 	BasePath string
 	Schemes  []string
 }
+
 // WithHost overrides the default host,
 // provided by the meta section of the spec file.
 func (cfg *TransportConfig) WithHost(host string) *TransportConfig {

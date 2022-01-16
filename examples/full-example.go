@@ -1,23 +1,23 @@
 package main
 
 import (
-	amber_client "amber-go-sdk"
-	amodels "amber-go-sdk/ambergen/models"
 	"encoding/json"
 	"fmt"
+	amberClient "github.com/boonlogic/amber-go-sdk"
+	amberModels "github.com/boonlogic/amber-go-sdk/models"
 	"syscall"
 )
 
 func main() {
 
-	amberClient, err := amber_client.NewAmberClient(nil, nil, nil, nil, nil)
+	ac, err := amberClient.NewAmberClient(nil, nil, nil, nil, nil)
 	if err != nil {
 		fmt.Printf("%v\n", err)
 	}
 
 	// Get version
 	fmt.Printf("get version\n")
-	versionResponse, err := amberClient.GetVersion()
+	versionResponse, err := ac.GetVersion()
 	if err != nil {
 		fmt.Printf("%v\n", err)
 		syscall.Exit(1)
@@ -27,7 +27,7 @@ func main() {
 
 	// List all sensors belonging to current user
 	fmt.Printf("listing sensors\n")
-	listResponse, err := amberClient.ListSensors()
+	listResponse, err := ac.ListSensors()
 	if err != nil {
 		fmt.Printf("%v\n", err)
 		syscall.Exit(1)
@@ -37,7 +37,7 @@ func main() {
 
 	// Create a new sensor
 	fmt.Printf("create sensor\n")
-	createSensorResponse, err := amberClient.CreateSensor("new-go-sdk-sensor")
+	createSensorResponse, err := ac.CreateSensor("new-go-sdk-sensor")
 	if err != nil {
 		fmt.Printf("%v\n", err)
 		syscall.Exit(1)
@@ -50,7 +50,7 @@ func main() {
 
 	// get sensor info
 	fmt.Printf("get sensor\n")
-	getSensorResponse, err := amberClient.GetSensor(sensorId)
+	getSensorResponse, err := ac.GetSensor(sensorId)
 	if err != nil {
 		fmt.Printf("%v\n", err)
 		syscall.Exit(1)
@@ -60,7 +60,7 @@ func main() {
 
 	// update the label of a sensor
 	fmt.Printf("update label\n")
-	updateLabelResponse, err := amberClient.UpdateLabel(sensorId, "updated-go-sdk-sensor")
+	updateLabelResponse, err := ac.UpdateLabel(sensorId, "updated-go-sdk-sensor")
 	if err != nil {
 		fmt.Printf("%v\n", err)
 		syscall.Exit(1)
@@ -72,7 +72,7 @@ func main() {
 	fmt.Printf("configuring sensor\n")
 	var featureCount uint16 = 1
 	var streamingWindowSize uint16 = 25
-	postConfigRequest := amodels.PostConfigRequest{
+	postConfigRequest := amberModels.PostConfigRequest{
 		AnomalyHistoryWindow:    nil,
 		FeatureCount:            &featureCount,
 		Features:                nil,
@@ -83,7 +83,7 @@ func main() {
 		SamplesToBuffer:         nil,
 		StreamingWindowSize:     &streamingWindowSize,
 	}
-	configSensorResponse, err := amberClient.ConfigureSensor(sensorId, postConfigRequest)
+	configSensorResponse, err := ac.ConfigureSensor(sensorId, postConfigRequest)
 	if err != nil {
 		fmt.Printf("%v\n", err)
 		syscall.Exit(1)
@@ -93,7 +93,7 @@ func main() {
 
 	// get sensor configuration
 	fmt.Printf("get sensor configuration\n")
-	getConfigResponse, err := amberClient.GetConfig(sensorId)
+	getConfigResponse, err := ac.GetConfig(sensorId)
 	if err != nil {
 		fmt.Printf("%v\n", err)
 		syscall.Exit(1)
@@ -105,11 +105,11 @@ func main() {
 	fmt.Printf("stream data\n")
 	data := "0.1,0.1,0.3"
 	saveImage := true
-	streamPayload := amodels.PostStreamRequest{
+	streamPayload := amberModels.PostStreamRequest{
 		Data:      &data,
 		SaveImage: &saveImage,
 	}
-	streamSensorResponse, err := amberClient.StreamSensor(sensorId, streamPayload)
+	streamSensorResponse, err := ac.StreamSensor(sensorId, streamPayload)
 	if err != nil {
 		fmt.Printf("%v\n", err)
 		syscall.Exit(1)
@@ -118,7 +118,7 @@ func main() {
 	fmt.Printf("%v\n", string(formatted))
 
 	fmt.Printf("get cluster status\n")
-	getStatusResponse, err := amberClient.GetStatus(sensorId)
+	getStatusResponse, err := ac.GetStatus(sensorId)
 	if err != nil {
 		fmt.Printf("%v\n", err)
 		syscall.Exit(1)
@@ -128,18 +128,18 @@ func main() {
 
 	fmt.Printf("getting root cause\n")
 	/*
-	clusterId := "[1,2]"
-	getRootCause, err := amberClient.GetRootCause(sensorId, &clusterId, nil)
-	if err != nil {
-		fmt.Printf("%v\n", err)
-		syscall.Exit(1)
-	}
-	formatted, _ = json.MarshalIndent(*getRootCause, "", "\t")
-	fmt.Printf("%v\n", string(formatted))
-	 */
+		clusterId := "[1,2]"
+		getRootCause, err := ac.GetRootCause(sensorId, &clusterId, nil)
+		if err != nil {
+			fmt.Printf("%v\n", err)
+			syscall.Exit(1)
+		}
+		formatted, _ = json.MarshalIndent(*getRootCause, "", "\t")
+		fmt.Printf("%v\n", string(formatted))
+	*/
 
 	fmt.Printf("delete sensor instance\n")
-	err = amberClient.DeleteSensor(sensorId)
+	err = ac.DeleteSensor(sensorId)
 	if err != nil {
 		fmt.Printf("%v\n", err)
 		syscall.Exit(1)

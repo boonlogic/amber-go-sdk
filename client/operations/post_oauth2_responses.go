@@ -12,7 +12,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 
-	"amber-go-sdk/ambergen/models"
+	"github.com/boonlogic/amber-go-sdk/models"
 )
 
 // PostOauth2Reader is a Reader for the PostOauth2 structure.
