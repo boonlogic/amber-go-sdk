@@ -65,7 +65,7 @@ func main() {
 
 Running the connect-example.py script should yield output like the following:
 
-`$ ./connect-example`
+`$ go run examples/connect.go`
 ```json
 {
     "release": "0.0.405",
