@@ -4,7 +4,7 @@ A Go SDK for Boon Amber sensor analytics
 
 - __Website__: [boonlogic.com](https://boonlogic.com)
 - __Documentation__: [Boon Docs Main Page](https://docs.boonlogic.com)
-- __SDK Functional Breakdown__: [amber-go-sdk functional breakdown](https://boonlogic.github.io/amber-go-sdk/docs/boonamber/index.html)
+- __SDK Functional Breakdown__: [amber-go-sdk functional breakdown](https://boonlogic.github.io/amber-go-sdk/docs/functions.md)
 
 ## Installation
 
@@ -48,7 +48,7 @@ import (
 
 func main() {
 
-	ac, err := amberClient.NewAmberClient(nil, nil, nil, nil, nil)
+	ac, err := amberClient.NewAmberClientFromFile(nil, nil)
 	if err != nil {
 		fmt.Printf("%v\n", err)
 	}
@@ -97,7 +97,7 @@ import (
 
 func main() {
 
-	ac, err := amberClient.NewAmberClient(nil, nil, nil, nil, nil)
+	ac, err := amberClient.NewAmberClientFromfile(nil, nil)
 	if err != nil {
 		fmt.Printf("%v\n", err)
 	}
