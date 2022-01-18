@@ -1,4 +1,4 @@
-![Logo](../images/BoonLogic.png)
+![Logo](BoonLogic.png)
 
 # Boon Amber GO SDK
 
