@@ -1,4 +1,4 @@
-![Logo](docs/BoonLogic.png)
+![Logo](https://github.com/boonlogic/amber-go-sdk/blob/master/docs/BoonLogic.png?raw=true)
 
 # Boon Amber GO SDK
 
