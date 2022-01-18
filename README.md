@@ -1,3 +1,5 @@
+![Logo](../images/BoonLogic.png)
+
 # Boon Amber GO SDK
 
 A Go SDK for Boon Amber sensor analytics
