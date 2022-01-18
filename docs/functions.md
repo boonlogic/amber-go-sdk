@@ -24,15 +24,15 @@ import "github.com/boonlogic/amber-go-sdk"
   - [func (a *AmberClient) ListSensors() (*amberModels.GetSensorsResponse, error)](<#func-amberclient-listsensors>)
   - [func (a *AmberClient) PretrainSensor(sensorId string, payload amberModels.PostPretrainRequest) (*amberModels.PostPretrainResponse, error)](<#func-amberclient-pretrainsensor>)
   - [func (a *AmberClient) SetCert(cert string) error](<#func-amberclient-setcert>)
+  - [func (a *AmberClient) SetNoVerify(verify bool) error](<#func-amberclient-setnoverify>)
   - [func (a *AmberClient) SetProxy(proxy string) error](<#func-amberclient-setproxy>)
   - [func (a *AmberClient) SetTimeout(timeout int) error](<#func-amberclient-settimeout>)
-  - [func (a *AmberClient) SetVerify(verify bool) error](<#func-amberclient-setverify>)
   - [func (a *AmberClient) StreamSensor(sensorId string, payload amberModels.PostStreamRequest) (*amberModels.PostStreamResponse, error)](<#func-amberclient-streamsensor>)
   - [func (a *AmberClient) UpdateLabel(sensorId string, label string) (*amberModels.PutSensorResponse, error)](<#func-amberclient-updatelabel>)
 - [type LicenseProfile](<#type-licenseprofile>)
 
 
-## type [AmberClient](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L29-L41>)
+## type [AmberClient](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L29-L42>)
 
 ```go
 type AmberClient struct {
@@ -40,17 +40,15 @@ type AmberClient struct {
 }
 ```
 
-### func [NewAmberClientFromEnv](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L128>)
+### func [NewAmberClientFromEnv](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L120>)
 
 ```go
 func NewAmberClientFromEnv() (*AmberClient, error)
 ```
 
-#### Create new AmberClient using environment variables
+Create new AmberClient using environment variables
 
-Example: \`\`\` ac\, err := amberClient\.NewAmberClientFromFile\(nil\, nil\) \`\`\`
-
-### func [NewAmberClientFromFile](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L85>)
+### func [NewAmberClientFromFile](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L83>)
 
 ```go
 func NewAmberClientFromFile(licenseId *string, licenseFile *string) (*AmberClient, error)
@@ -58,7 +56,7 @@ func NewAmberClientFromFile(licenseId *string, licenseFile *string) (*AmberClien
 
 Create new AmberClient using Amber license file
 
-### func [NewAmberClientFromProfile](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L44>)
+### func [NewAmberClientFromProfile](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L45>)
 
 ```go
 func NewAmberClientFromProfile(profile LicenseProfile) (*AmberClient, error)
@@ -66,103 +64,103 @@ func NewAmberClientFromProfile(profile LicenseProfile) (*AmberClient, error)
 
 Create new AmberClient given LicenseProfile structure
 
-### func \(\*AmberClient\) [ConfigureSensor](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L232>)
+### func \(\*AmberClient\) [ConfigureSensor](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L226>)
 
 ```go
 func (a *AmberClient) ConfigureSensor(sensorId string, payload amberModels.PostConfigRequest) (*amberModels.PostConfigResponse, error)
 ```
 
-### func \(\*AmberClient\) [CreateSensor](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L197>)
+### func \(\*AmberClient\) [CreateSensor](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L191>)
 
 ```go
 func (a *AmberClient) CreateSensor(label string) (*amberModels.PostSensorResponse, error)
 ```
 
-### func \(\*AmberClient\) [DeleteSensor](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L263>)
+### func \(\*AmberClient\) [DeleteSensor](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L257>)
 
 ```go
 func (a *AmberClient) DeleteSensor(sensorId string) error
 ```
 
-### func \(\*AmberClient\) [GetConfig](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L248>)
+### func \(\*AmberClient\) [GetConfig](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L242>)
 
 ```go
 func (a *AmberClient) GetConfig(sensorId string) (*amberModels.GetConfigResponse, error)
 ```
 
-### func \(\*AmberClient\) [GetPretrainState](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L332>)
+### func \(\*AmberClient\) [GetPretrainState](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L326>)
 
 ```go
 func (a *AmberClient) GetPretrainState(sensorId string) (*amberModels.GetPretrainResponse, error)
 ```
 
-### func \(\*AmberClient\) [GetRootCause](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L354>)
+### func \(\*AmberClient\) [GetRootCause](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L348>)
 
 ```go
 func (a *AmberClient) GetRootCause(sensorId string, clusterId *string, pattern *string) (*amberModels.GetRootCauseResponse, error)
 ```
 
-### func \(\*AmberClient\) [GetSensor](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L182>)
+### func \(\*AmberClient\) [GetSensor](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L176>)
 
 ```go
 func (a *AmberClient) GetSensor(sensorId string) (*amberModels.GetSensorResponse, error)
 ```
 
-### func \(\*AmberClient\) [GetStatus](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L294>)
+### func \(\*AmberClient\) [GetStatus](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L288>)
 
 ```go
 func (a *AmberClient) GetStatus(sensorId string) (*amberModels.GetStatusResponse, error)
 ```
 
-### func \(\*AmberClient\) [GetVersion](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L371>)
+### func \(\*AmberClient\) [GetVersion](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L365>)
 
 ```go
 func (a *AmberClient) GetVersion() (*amberModels.Version, error)
 ```
 
-### func \(\*AmberClient\) [ListSensors](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L169>)
+### func \(\*AmberClient\) [ListSensors](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L163>)
 
 ```go
 func (a *AmberClient) ListSensors() (*amberModels.GetSensorsResponse, error)
 ```
 
-### func \(\*AmberClient\) [PretrainSensor](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L309>)
+### func \(\*AmberClient\) [PretrainSensor](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L303>)
 
 ```go
 func (a *AmberClient) PretrainSensor(sensorId string, payload amberModels.PostPretrainRequest) (*amberModels.PostPretrainResponse, error)
 ```
 
-### func \(\*AmberClient\) [SetCert](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L153>)
+### func \(\*AmberClient\) [SetCert](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L146>)
 
 ```go
 func (a *AmberClient) SetCert(cert string) error
 ```
 
-### func \(\*AmberClient\) [SetProxy](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L163>)
+### func \(\*AmberClient\) [SetNoVerify](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L140>)
+
+```go
+func (a *AmberClient) SetNoVerify(verify bool) error
+```
+
+### func \(\*AmberClient\) [SetProxy](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L157>)
 
 ```go
 func (a *AmberClient) SetProxy(proxy string) error
 ```
 
-### func \(\*AmberClient\) [SetTimeout](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L158>)
+### func \(\*AmberClient\) [SetTimeout](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L152>)
 
 ```go
 func (a *AmberClient) SetTimeout(timeout int) error
 ```
 
-### func \(\*AmberClient\) [SetVerify](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L148>)
-
-```go
-func (a *AmberClient) SetVerify(verify bool) error
-```
-
-### func \(\*AmberClient\) [StreamSensor](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L278>)
+### func \(\*AmberClient\) [StreamSensor](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L272>)
 
 ```go
 func (a *AmberClient) StreamSensor(sensorId string, payload amberModels.PostStreamRequest) (*amberModels.PostStreamResponse, error)
 ```
 
-### func \(\*AmberClient\) [UpdateLabel](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L214>)
+### func \(\*AmberClient\) [UpdateLabel](<https://gitlab.boonlogic.com/development/expert/amber-go-sdk/blob/main/sdk.go#L208>)
 
 ```go
 func (a *AmberClient) UpdateLabel(sensorId string, label string) (*amberModels.PutSensorResponse, error)

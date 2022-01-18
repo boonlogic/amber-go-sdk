@@ -10,9 +10,10 @@ import (
 
 func main() {
 
-	ac, err := amberClient.NewAmberClient(nil, nil, nil, nil, nil)
+	ac, err := amberClient.NewAmberClientFromFile(nil, nil)
 	if err != nil {
 		fmt.Printf("%v\n", err)
+		syscall.Exit(1)
 	}
 
 	// Get version
