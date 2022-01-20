@@ -428,18 +428,18 @@ func (a *AmberClient) updateHttpClients() {
 	scheme, host, basePath, _ := parseServer(a.licenseProfile.Server)
 	if scheme == "https" {
 		httpClient, _ := httptransport.TLSClient(a.tlsOptions)
-		a.amberServer = amberClient.New(httptransport.NewWithClient(host, basePath, nil, httpClient), strfmt.Default)
+		a.amberServer = amberClient.New(httptransport.NewWithClient(host, basePath, []string{scheme}, httpClient), strfmt.Default)
 	} else {
-		a.amberServer = amberClient.New(httptransport.New(host, basePath, nil), strfmt.Default)
+		a.amberServer = amberClient.New(httptransport.New(host, basePath, []string{scheme}), strfmt.Default)
 	}
 
 	// set up oauth http client
 	_, host, basePath, _ = parseServer(a.licenseProfile.OauthServer)
 	if scheme == "https" {
 		httpClient, _ := httptransport.TLSClient(a.tlsOptions)
-		a.oauthServer = amberClient.New(httptransport.NewWithClient(host, basePath, nil, httpClient), strfmt.Default)
+		a.oauthServer = amberClient.New(httptransport.NewWithClient(host, basePath, []string{scheme}, httpClient), strfmt.Default)
 	} else {
-		a.oauthServer = amberClient.New(httptransport.New(host, basePath, nil), strfmt.Default)
+		a.oauthServer = amberClient.New(httptransport.New(host, basePath, []string{scheme}), strfmt.Default)
 	}
 }
 
