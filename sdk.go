@@ -44,6 +44,12 @@ type AmberClient struct {
 // Create new AmberClient given LicenseProfile structure
 func NewAmberClientFromProfile(profile LicenseProfile) (*AmberClient, error) {
 
+	// create client when given LicenseProfile
+	var client AmberClient
+
+	// override from environment
+	client.loadFromEnv()
+
 	if profile.Username == "" {
 		return nil, errors.New("missing username in profile")
 	}
@@ -57,8 +63,6 @@ func NewAmberClientFromProfile(profile LicenseProfile) (*AmberClient, error) {
 		profile.OauthServer = profile.Server
 	}
 
-	// create client when given LicenseProfile
-	var client AmberClient
 	client.licenseProfile = profile
 	client.timeout = 360 * time.Second
 
@@ -96,6 +100,17 @@ func NewAmberClientFromFile(licenseId *string, licenseFile *string) (*AmberClien
 		id = *licenseId
 	}
 
+	// override licenseFile and licenseId from environment
+	var envValue string
+	envValue = os.Getenv("AMBER_LICENSE_FILE")
+	if envValue != "" {
+		file = envValue
+	}
+	envValue = os.Getenv("AMBER_LICENSE_ID")
+	if envValue != "" {
+		id = envValue
+	}
+
 	// expand home directory if necessary
 	if strings.HasPrefix(file, "~/") {
 		dirname, _ := os.UserHomeDir()
@@ -113,27 +128,6 @@ func NewAmberClientFromFile(licenseId *string, licenseFile *string) (*AmberClien
 		}
 		profile = lp[id]
 	}
-	return NewAmberClientFromProfile(profile)
-}
-
-// Create new AmberClient using environment variables
-func NewAmberClientFromEnv() (*AmberClient, error) {
-
-	// construct a license profile based on environment
-	var profile LicenseProfile
-	if profile.Username = os.Getenv("AMBER_USERNAME"); profile.Username == "" {
-		return nil, errors.New("missing AMBER_USERNAME in environment")
-	}
-	if profile.Password = os.Getenv("AMBER_PASSWORD"); profile.Password == "" {
-		return nil, errors.New("missing AMBER_PASSWORD in environment")
-	}
-	if profile.Server = os.Getenv("AMBER_SERVER"); profile.Server == "" {
-		return nil, errors.New("missing AMBER_SERVER in environment")
-	}
-	if profile.OauthServer = os.Getenv("AMBER_OAUTH_SERVER"); profile.OauthServer == "" {
-		profile.OauthServer = profile.Server
-	}
-
 	return NewAmberClientFromProfile(profile)
 }
 
@@ -424,6 +418,13 @@ func (a *AmberClient) authenticate() bool {
 }
 
 func (a *AmberClient) updateHttpClients() {
+
+	// set default verify
+	verifyEnv := os.Getenv("AMBER_SSL_VERIFY")
+	if verifyEnv != "" {
+		a.verify = strings.ToLower(verifyEnv) == "true"
+	}
+
 	// set server http client
 	scheme, host, basePath, _ := parseServer(a.licenseProfile.Server)
 	if scheme == "https" {
@@ -440,5 +441,31 @@ func (a *AmberClient) updateHttpClients() {
 		a.oauthServer = amberClient.New(httptransport.NewWithClient(host, basePath, nil, httpClient), strfmt.Default)
 	} else {
 		a.oauthServer = amberClient.New(httptransport.New(host, basePath, nil), strfmt.Default)
+	}
+}
+
+func (a *AmberClient) loadFromEnv() {
+
+	// construct a license profile based on environment
+	if username := os.Getenv("AMBER_USERNAME"); username != "" {
+		a.licenseProfile.Username = username
+	}
+	if password := os.Getenv("AMBER_PASSWORD"); password != "" {
+		a.licenseProfile.Password = password
+	}
+	if server := os.Getenv("AMBER_SERVER"); server != "" {
+		a.licenseProfile.Server = server
+	}
+	if oauthServer := os.Getenv("AMBER_OAUTH_SERVER"); oauthServer != "" {
+		a.licenseProfile.OauthServer = oauthServer
+	}
+	if verify := os.Getenv("AMBER_SSL_VERIFY"); verify != "" {
+		a.verify = strings.ToLower(verify) == "true"
+	}
+	if proxy := os.Getenv("AMBER_PROXY"); proxy != "" {
+		a.proxy = strings.ToLower(proxy)
+	}
+	if cert := os.Getenv("AMBER_SSL_CERT"); cert != "" {
+		a.cert = strings.ToLower(cert)
 	}
 }
