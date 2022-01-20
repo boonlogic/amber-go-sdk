@@ -48,10 +48,10 @@ func NewAmberClientFromProfile(profile LicenseProfile) (*AmberClient, error) {
 		return nil, errors.New("missing username in profile")
 	}
 	if profile.Password == "" {
-		return nil, errors.New("missing username in profile")
+		return nil, errors.New("missing password in profile")
 	}
 	if profile.Server == "" {
-		return nil, errors.New("missing username in profile")
+		return nil, errors.New("missing server in profile")
 	}
 	if profile.OauthServer == "" {
 		profile.OauthServer = profile.Server
