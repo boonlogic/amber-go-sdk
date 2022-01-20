@@ -132,13 +132,13 @@ func NewAmberClientFromFile(licenseId *string, licenseFile *string) (*AmberClien
 }
 
 func (a *AmberClient) SetNoVerify(verify bool) error {
-	a.tlsOptions.InsecureSkipVerify = verify
+	a.verify = verify
 	a.updateHttpClients()
 	return nil
 }
 
 func (a *AmberClient) SetCert(cert string) error {
-	a.tlsOptions.Certificate = cert
+	a.cert = cert
 	a.updateHttpClients()
 	return nil
 }
@@ -419,11 +419,9 @@ func (a *AmberClient) authenticate() bool {
 
 func (a *AmberClient) updateHttpClients() {
 
-	// set default verify
-	verifyEnv := os.Getenv("AMBER_SSL_VERIFY")
-	if verifyEnv != "" {
-		a.verify = strings.ToLower(verifyEnv) == "true"
-	}
+	// set default verify and cert
+	a.tlsOptions.InsecureSkipVerify = a.verify
+	a.tlsOptions.Certificate = a.cert
 
 	// set server http client
 	scheme, host, basePath, _ := parseServer(a.licenseProfile.Server)
@@ -459,8 +457,10 @@ func (a *AmberClient) loadFromEnv() {
 	if oauthServer := os.Getenv("AMBER_OAUTH_SERVER"); oauthServer != "" {
 		a.licenseProfile.OauthServer = oauthServer
 	}
-	if verify := os.Getenv("AMBER_SSL_VERIFY"); verify != "" {
-		a.verify = strings.ToLower(verify) == "true"
+	a.verify = true
+	verifyEnv := os.Getenv("AMBER_SSL_VERIFY")
+	if strings.ToLower(verifyEnv) == "false" {
+		a.verify = false
 	}
 	if proxy := os.Getenv("AMBER_PROXY"); proxy != "" {
 		a.proxy = strings.ToLower(proxy)

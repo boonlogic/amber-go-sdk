@@ -1,6 +1,6 @@
 module github.com/boonlogic/amber-go-sdk
 
-go 1.16
+go 1.14
 
 require (
 	github.com/go-openapi/errors v0.20.1
