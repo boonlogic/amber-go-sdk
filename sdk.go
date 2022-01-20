@@ -46,6 +46,7 @@ func NewAmberClientFromProfile(profile LicenseProfile) (*AmberClient, error) {
 
 	// create client when given LicenseProfile
 	var client AmberClient
+	client.verify = true
 
 	// override from environment
 	client.loadFromEnv()
@@ -132,7 +133,7 @@ func NewAmberClientFromFile(licenseId *string, licenseFile *string) (*AmberClien
 }
 
 func (a *AmberClient) SetNoVerify(verify bool) error {
-	a.verify = verify
+	a.verify = !verify
 	a.updateHttpClients()
 	return nil
 }
@@ -420,7 +421,7 @@ func (a *AmberClient) authenticate() bool {
 func (a *AmberClient) updateHttpClients() {
 
 	// set default verify and cert
-	a.tlsOptions.InsecureSkipVerify = a.verify
+	a.tlsOptions.InsecureSkipVerify = !a.verify
 	a.tlsOptions.Certificate = a.cert
 
 	// set server http client
@@ -457,7 +458,6 @@ func (a *AmberClient) loadFromEnv() {
 	if oauthServer := os.Getenv("AMBER_OAUTH_SERVER"); oauthServer != "" {
 		a.licenseProfile.OauthServer = oauthServer
 	}
-	a.verify = true
 	verifyEnv := os.Getenv("AMBER_SSL_VERIFY")
 	if strings.ToLower(verifyEnv) == "false" {
 		a.verify = false
