@@ -47,6 +47,10 @@ func NewAmberClientFromProfile(profile LicenseProfile) (*AmberClient, error) {
 	// create client when given LicenseProfile
 	var client AmberClient
 	client.verify = true
+	if profile.OauthServer == "" {
+		profile.OauthServer = profile.Server
+	}
+	client.licenseProfile = profile
 
 	// override from environment
 	client.loadFromEnv()
@@ -60,11 +64,7 @@ func NewAmberClientFromProfile(profile LicenseProfile) (*AmberClient, error) {
 	if profile.Server == "" {
 		return nil, errors.New("missing server in profile")
 	}
-	if profile.OauthServer == "" {
-		profile.OauthServer = profile.Server
-	}
 
-	client.licenseProfile = profile
 	client.timeout = 360 * time.Second
 
 	// set reauthTime to the past
