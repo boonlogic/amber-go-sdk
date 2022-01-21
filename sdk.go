@@ -47,21 +47,22 @@ func NewAmberClientFromProfile(profile LicenseProfile) (*AmberClient, error) {
 	// create client when given LicenseProfile
 	var client AmberClient
 	client.verify = true
-	if profile.OauthServer == "" {
-		profile.OauthServer = profile.Server
-	}
 	client.licenseProfile = profile
 
 	// override from environment
 	client.loadFromEnv()
 
-	if profile.Username == "" {
+	if client.licenseProfile.OauthServer == "" {
+		client.licenseProfile.OauthServer = client.licenseProfile.Server
+	}
+
+	if client.licenseProfile.Username == "" {
 		return nil, errors.New("missing username in profile")
 	}
-	if profile.Password == "" {
+	if client.licenseProfile.Password == "" {
 		return nil, errors.New("missing password in profile")
 	}
-	if profile.Server == "" {
+	if client.licenseProfile.Server == "" {
 		return nil, errors.New("missing server in profile")
 	}
 
