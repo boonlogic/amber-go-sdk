@@ -1,0 +1,25 @@
+{
+    "default": {
+        "username": "amber-dev-user",
+        "password": "phi{Ch2obovoe",
+        "server": "http://dev-build-1:5888/v1",
+        "oauth-server": "https://amber-local.boonlogic.com/qa"
+    },
+    "missing-username": {
+        "password": "filler-password",
+        "server": "https://amber-local.boonlogic.com/dev"
+    },
+    "missing-password": {
+        "username": "amber-test-user",
+        "server": "https://amber-local.boonlogic.com/dev"
+    },
+    "missing-server": {
+        "username": "amber-test-user",
+        "password": "filler-password"
+    },
+    "garbage": {
+        "username": "garbage-username",
+        "password": "garbage-password",
+        "server": "https://amber-local.boonlogic.com/dev"
+    }
+}

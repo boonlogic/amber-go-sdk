@@ -18,6 +18,11 @@ generate-client: ## generate amber swagger client code based on json schema file
 docs: go-check ## generate documentation
 	 $(GOPATH)/bin/gomarkdoc --output docs/functions.md . ./models
 
+# test-v1, test-v1next, test-dev, test-qa, test-aoc, test-oap
+# add additional .license files in test directory to expand / customize tests
+test-%: go-check
+	@AMBER_TEST_PROFILE=$* go test -modcacherw -timeout 30m -v -coverprofile .coverage.out .
+
 go-check:
 ifndef GOPATH
 	$(error GOPATH is undefined)
