@@ -3,6 +3,7 @@ package amber_client
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	amberClient "github.com/boonlogic/amber-go-sdk/client"
 	amberOps "github.com/boonlogic/amber-go-sdk/client/operations"
 	amberModels "github.com/boonlogic/amber-go-sdk/models"
@@ -128,7 +129,12 @@ func NewAmberClientFromFile(licenseId *string, licenseFile *string) (*AmberClien
 		if err := json.Unmarshal(blob, &lp); err != nil {
 			return nil, err
 		}
+		if _, ok := lp[id]; !ok {
+			return nil, fmt.Errorf("license id '%v' not found", id)
+		}
 		profile = lp[id]
+	} else {
+		return nil, fmt.Errorf("license file '%v' not found", file)
 	}
 	return NewAmberClientFromProfile(profile)
 }
