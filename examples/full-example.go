@@ -18,9 +18,9 @@ func main() {
 
 	// Get version
 	fmt.Printf("get version\n")
-	versionResponse, err := ac.GetVersion()
-	if err != nil {
-		fmt.Printf("%v\n", err)
+	versionResponse, aErr := ac.GetVersion()
+	if aErr != nil {
+		fmt.Printf("%v\n", aErr)
 		syscall.Exit(1)
 	}
 	formmatted, _ := json.MarshalIndent(*versionResponse, "", "\t")
@@ -28,9 +28,9 @@ func main() {
 
 	// List all sensors belonging to current user
 	fmt.Printf("listing sensors\n")
-	listResponse, err := ac.ListSensors()
+	listResponse, aErr := ac.ListSensors()
 	if err != nil {
-		fmt.Printf("%v\n", err)
+		fmt.Printf("%v\n", aErr)
 		syscall.Exit(1)
 	}
 	formatted, _ := json.MarshalIndent(*listResponse, "", "\t")
@@ -38,9 +38,9 @@ func main() {
 
 	// Create a new sensor
 	fmt.Printf("create sensor\n")
-	createSensorResponse, err := ac.CreateSensor("new-go-sdk-sensor")
+	createSensorResponse, aErr := ac.CreateSensor("new-go-sdk-sensor")
 	if err != nil {
-		fmt.Printf("%v\n", err)
+		fmt.Printf("%v\n", aErr)
 		syscall.Exit(1)
 	}
 	formatted, _ = json.MarshalIndent(*createSensorResponse, "", "\t")
@@ -51,9 +51,9 @@ func main() {
 
 	// get sensor info
 	fmt.Printf("get sensor\n")
-	getSensorResponse, err := ac.GetSensor(sensorId)
+	getSensorResponse, aErr := ac.GetSensor(sensorId)
 	if err != nil {
-		fmt.Printf("%v\n", err)
+		fmt.Printf("%v\n", aErr)
 		syscall.Exit(1)
 	}
 	formatted, _ = json.MarshalIndent(*getSensorResponse, "", "\t")
@@ -61,9 +61,9 @@ func main() {
 
 	// update the label of a sensor
 	fmt.Printf("update label\n")
-	updateLabelResponse, err := ac.UpdateLabel(sensorId, "updated-go-sdk-sensor")
+	updateLabelResponse, aErr := ac.UpdateLabel(sensorId, "updated-go-sdk-sensor")
 	if err != nil {
-		fmt.Printf("%v\n", err)
+		fmt.Printf("%v\n", aErr)
 		syscall.Exit(1)
 	}
 	formatted, _ = json.MarshalIndent(*updateLabelResponse, "", "\t")
@@ -84,9 +84,9 @@ func main() {
 		SamplesToBuffer:         nil,
 		StreamingWindowSize:     &streamingWindowSize,
 	}
-	configSensorResponse, err := ac.ConfigureSensor(sensorId, postConfigRequest)
+	configSensorResponse, aErr := ac.ConfigureSensor(sensorId, postConfigRequest)
 	if err != nil {
-		fmt.Printf("%v\n", err)
+		fmt.Printf("%v\n", aErr)
 		syscall.Exit(1)
 	}
 	formatted, _ = json.MarshalIndent(*configSensorResponse, "", "\t")
@@ -94,9 +94,9 @@ func main() {
 
 	// get sensor configuration
 	fmt.Printf("get sensor configuration\n")
-	getConfigResponse, err := ac.GetConfig(sensorId)
+	getConfigResponse, aErr := ac.GetConfig(sensorId)
 	if err != nil {
-		fmt.Printf("%v\n", err)
+		fmt.Printf("%v\n", aErr)
 		syscall.Exit(1)
 	}
 	formatted, _ = json.MarshalIndent(*getConfigResponse, "", "\t")
@@ -110,18 +110,18 @@ func main() {
 		Data:      &data,
 		SaveImage: &saveImage,
 	}
-	streamSensorResponse, err := ac.StreamSensor(sensorId, streamPayload)
+	streamSensorResponse, aErr := ac.StreamSensor(sensorId, streamPayload)
 	if err != nil {
-		fmt.Printf("%v\n", err)
+		fmt.Printf("%v\n", aErr)
 		syscall.Exit(1)
 	}
 	formatted, _ = json.MarshalIndent(*streamSensorResponse, "", "\t")
 	fmt.Printf("%v\n", string(formatted))
 
 	fmt.Printf("get cluster status\n")
-	getStatusResponse, err := ac.GetStatus(sensorId)
+	getStatusResponse, aErr := ac.GetStatus(sensorId)
 	if err != nil {
-		fmt.Printf("%v\n", err)
+		fmt.Printf("%v\n", aErr)
 		syscall.Exit(1)
 	}
 	formatted, _ = json.MarshalIndent(*getStatusResponse, "", "\t")
@@ -132,7 +132,7 @@ func main() {
 		clusterId := "[1,2]"
 		getRootCause, err := ac.GetRootCause(sensorId, &clusterId, nil)
 		if err != nil {
-			fmt.Printf("%v\n", err)
+			fmt.Printf("%v\n", aErr)
 			syscall.Exit(1)
 		}
 		formatted, _ = json.MarshalIndent(*getRootCause, "", "\t")
@@ -140,9 +140,9 @@ func main() {
 	*/
 
 	fmt.Printf("delete sensor instance\n")
-	err = ac.DeleteSensor(sensorId)
-	if err != nil {
-		fmt.Printf("%v\n", err)
+	aErr = ac.DeleteSensor(sensorId)
+	if aErr != nil {
+		fmt.Printf("%v\n", aErr)
 		syscall.Exit(1)
 	}
 	fmt.Printf("%v deleted\n", sensorId)

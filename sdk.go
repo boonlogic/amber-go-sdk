@@ -162,22 +162,22 @@ func (a *AmberClient) SetProxy(proxy string) error {
 	return nil
 }
 
-func (a *AmberClient) ListSensors() (*amberModels.GetSensorsResponse, error) {
-	if a.authenticate() == false {
-		return nil, errors.New("authentication failed")
+func (a *AmberClient) ListSensors() (*amberModels.GetSensorsResponse, *amberModels.Error) {
+	if result, aErr := a.authenticate(); result != true {
+		return nil, aErr
 	}
 	params := &amberOps.GetSensorsParams{}
 	params.WithTimeout(a.timeout)
 	aok, err := a.amberServer.Operations.GetSensors(params, a.authWriter)
 	if err != nil {
-		return nil, err
+		return nil, err.(*amberOps.GetSensorsNotFound).Payload
 	}
 	return &aok.Payload, nil
 }
 
-func (a *AmberClient) GetSensor(sensorId string) (*amberModels.GetSensorResponse, error) {
-	if (a.authenticate()) == false {
-		return nil, errors.New("authentication failed")
+func (a *AmberClient) GetSensor(sensorId string) (*amberModels.GetSensorResponse, *amberModels.Error) {
+	if result, aErr := a.authenticate(); result != true {
+		return nil, aErr
 	}
 	params := &amberOps.GetSensorParams{
 		SensorID: sensorId,
@@ -185,14 +185,15 @@ func (a *AmberClient) GetSensor(sensorId string) (*amberModels.GetSensorResponse
 	params.WithTimeout(a.timeout)
 	aok, err := a.amberServer.Operations.GetSensor(params, a.authWriter)
 	if err != nil {
-		return nil, err
+		// theType := fmt.Sprintf("%T", err)
+		return nil, err.(*amberOps.GetSensorNotFound).Payload
 	}
 	return aok.Payload, nil
 }
 
-func (a *AmberClient) CreateSensor(label string) (*amberModels.PostSensorResponse, error) {
-	if (a.authenticate()) == false {
-		return nil, errors.New("authentication failed")
+func (a *AmberClient) CreateSensor(label string) (*amberModels.PostSensorResponse, *amberModels.Error) {
+	if result, aErr := a.authenticate(); result != true {
+		return nil, aErr
 	}
 	params := &amberOps.PostSensorParams{
 		PostSensorRequest: &amberModels.PostSensorRequest{
@@ -202,14 +203,14 @@ func (a *AmberClient) CreateSensor(label string) (*amberModels.PostSensorRespons
 	params.WithTimeout(a.timeout)
 	aok, err := a.amberServer.Operations.PostSensor(params, a.authWriter)
 	if err != nil {
-		return nil, err
+		return nil, err.(*amberOps.PostSensorNotFound).Payload
 	}
 	return aok.Payload, nil
 }
 
-func (a *AmberClient) UpdateLabel(sensorId string, label string) (*amberModels.PutSensorResponse, error) {
-	if (a.authenticate()) == false {
-		return nil, errors.New("authentication failed")
+func (a *AmberClient) UpdateLabel(sensorId string, label string) (*amberModels.PutSensorResponse, *amberModels.Error) {
+	if result, aErr := a.authenticate(); result != true {
+		return nil, aErr
 	}
 	params := &amberOps.PutSensorParams{
 		PutSensorRequest: &amberModels.PutSensorRequest{
@@ -220,14 +221,14 @@ func (a *AmberClient) UpdateLabel(sensorId string, label string) (*amberModels.P
 	params.WithTimeout(a.timeout)
 	aok, err := a.amberServer.Operations.PutSensor(params, a.authWriter)
 	if err != nil {
-		return nil, err
+		return nil, err.(*amberOps.PutSensorNotFound).Payload
 	}
 	return aok.Payload, nil
 }
 
-func (a *AmberClient) ConfigureSensor(sensorId string, payload amberModels.PostConfigRequest) (*amberModels.PostConfigResponse, error) {
-	if (a.authenticate()) == false {
-		return nil, errors.New("authentication failed")
+func (a *AmberClient) ConfigureSensor(sensorId string, payload amberModels.PostConfigRequest) (*amberModels.PostConfigResponse, *amberModels.Error) {
+	if result, aErr := a.authenticate(); result != true {
+		return nil, aErr
 	}
 	params := &amberOps.PostConfigParams{
 		PostConfigRequest: &payload,
@@ -236,14 +237,14 @@ func (a *AmberClient) ConfigureSensor(sensorId string, payload amberModels.PostC
 	params.WithTimeout(a.timeout)
 	aok, err := a.amberServer.Operations.PostConfig(params, a.authWriter)
 	if err != nil {
-		return nil, err
+		return nil, err.(*amberOps.PostConfigNotFound).Payload
 	}
 	return aok.Payload, nil
 }
 
-func (a *AmberClient) GetConfig(sensorId string) (*amberModels.GetConfigResponse, error) {
-	if (a.authenticate()) == false {
-		return nil, errors.New("authentication failed")
+func (a *AmberClient) GetConfig(sensorId string) (*amberModels.GetConfigResponse, *amberModels.Error) {
+	if result, aErr := a.authenticate(); result != true {
+		return nil, aErr
 	}
 	params := &amberOps.GetConfigParams{
 		SensorID: sensorId,
@@ -251,14 +252,14 @@ func (a *AmberClient) GetConfig(sensorId string) (*amberModels.GetConfigResponse
 	params.WithTimeout(a.timeout)
 	aok, err := a.amberServer.Operations.GetConfig(params, a.authWriter)
 	if err != nil {
-		return nil, err
+		return nil, err.(*amberOps.GetConfigNotFound).Payload
 	}
 	return aok.Payload, nil
 }
 
-func (a *AmberClient) DeleteSensor(sensorId string) error {
-	if (a.authenticate()) == false {
-		return errors.New("authentication failed")
+func (a *AmberClient) DeleteSensor(sensorId string) *amberModels.Error {
+	if result, aErr := a.authenticate(); result != true {
+		return aErr
 	}
 	params := &amberOps.DeleteSensorParams{
 		SensorID: sensorId,
@@ -266,14 +267,14 @@ func (a *AmberClient) DeleteSensor(sensorId string) error {
 	params.WithTimeout(a.timeout)
 	_, err := a.amberServer.Operations.DeleteSensor(params, a.authWriter)
 	if err != nil {
-		return err
+		return err.(*amberOps.DeleteSensorNotFound).Payload
 	}
 	return nil
 }
 
-func (a *AmberClient) StreamSensor(sensorId string, payload amberModels.PostStreamRequest) (*amberModels.PostStreamResponse, error) {
-	if (a.authenticate()) == false {
-		return nil, errors.New("authentication failed")
+func (a *AmberClient) StreamSensor(sensorId string, payload amberModels.PostStreamRequest) (*amberModels.PostStreamResponse, *amberModels.Error) {
+	if result, aErr := a.authenticate(); result != true {
+		return nil, aErr
 	}
 	params := &amberOps.PostStreamParams{
 		PostStreamRequest: &payload,
@@ -282,14 +283,14 @@ func (a *AmberClient) StreamSensor(sensorId string, payload amberModels.PostStre
 	params.WithTimeout(a.timeout)
 	aok, err := a.amberServer.Operations.PostStream(params, a.authWriter)
 	if err != nil {
-		return nil, err
+		return nil, err.(*amberOps.PostStreamNotFound).Payload
 	}
 	return aok.Payload, nil
 }
 
-func (a *AmberClient) GetStatus(sensorId string) (*amberModels.GetStatusResponse, error) {
-	if (a.authenticate()) == false {
-		return nil, errors.New("authentication failed")
+func (a *AmberClient) GetStatus(sensorId string) (*amberModels.GetStatusResponse, *amberModels.Error) {
+	if result, aErr := a.authenticate(); result != true {
+		return nil, aErr
 	}
 	params := &amberOps.GetStatusParams{
 		SensorID: sensorId,
@@ -297,14 +298,14 @@ func (a *AmberClient) GetStatus(sensorId string) (*amberModels.GetStatusResponse
 	params.WithTimeout(a.timeout)
 	aok, err := a.amberServer.Operations.GetStatus(params, a.authWriter)
 	if err != nil {
-		return nil, err
+		return nil, err.(*amberOps.GetStatusNotFound).Payload
 	}
 	return aok.Payload, nil
 }
 
-func (a *AmberClient) PretrainSensor(sensorId string, payload amberModels.PostPretrainRequest) (*amberModels.PostPretrainResponse, error) {
-	if (a.authenticate()) == false {
-		return nil, errors.New("authentication failed")
+func (a *AmberClient) PretrainSensor(sensorId string, payload amberModels.PostPretrainRequest) (*amberModels.PostPretrainResponse, *amberModels.Error) {
+	if result, aErr := a.authenticate(); result != true {
+		return nil, aErr
 	}
 	params := &amberOps.PostPretrainParams{
 		PostPretrainRequest: &payload,
@@ -313,7 +314,7 @@ func (a *AmberClient) PretrainSensor(sensorId string, payload amberModels.PostPr
 	params.WithTimeout(a.timeout)
 	aok, accepted, err := a.amberServer.Operations.PostPretrain(params, a.authWriter)
 	if err != nil {
-		return nil, err
+		return nil, err.(*amberOps.PostPretrainNotFound).Payload
 	}
 	if accepted != nil {
 		acceptedResponse := amberModels.PostPretrainResponse{
@@ -325,9 +326,9 @@ func (a *AmberClient) PretrainSensor(sensorId string, payload amberModels.PostPr
 	return aok.Payload, nil
 }
 
-func (a *AmberClient) GetPretrainState(sensorId string) (*amberModels.GetPretrainResponse, error) {
-	if (a.authenticate()) == false {
-		return nil, errors.New("authentication failed")
+func (a *AmberClient) GetPretrainState(sensorId string) (*amberModels.GetPretrainResponse, *amberModels.Error) {
+	if result, aErr := a.authenticate(); result != true {
+		return nil, aErr
 	}
 	params := &amberOps.GetPretrainParams{
 		SensorID: sensorId,
@@ -342,14 +343,14 @@ func (a *AmberClient) GetPretrainState(sensorId string) (*amberModels.GetPretrai
 		return &acceptedResponse, nil
 	}
 	if err != nil {
-		return nil, err
+		return nil, err.(*amberOps.GetPretrainNotFound).Payload
 	}
 	return aok.Payload, nil
 }
 
-func (a *AmberClient) GetRootCause(sensorId string, clusterId *string, pattern *string) (*amberModels.GetRootCauseResponse, error) {
-	if (a.authenticate()) == false {
-		return nil, errors.New("authentication failed")
+func (a *AmberClient) GetRootCause(sensorId string, clusterId *string, pattern *string) (*amberModels.GetRootCauseResponse, *amberModels.Error) {
+	if result, aErr := a.authenticate(); result != true {
+		return nil, aErr
 	}
 	params := &amberOps.GetRootCauseParams{
 		ClusterID: clusterId,
@@ -359,20 +360,20 @@ func (a *AmberClient) GetRootCause(sensorId string, clusterId *string, pattern *
 	params.WithTimeout(a.timeout)
 	aok, err := a.amberServer.Operations.GetRootCause(params, a.authWriter)
 	if err != nil {
-		return nil, err
+		return nil, err.(*amberOps.GetRootCauseNotFound).Payload
 	}
 	return &aok.Payload, nil
 }
 
-func (a *AmberClient) GetVersion() (*amberModels.Version, error) {
-	if (a.authenticate()) == false {
-		return nil, errors.New("authentication failed")
+func (a *AmberClient) GetVersion() (*amberModels.Version, *amberModels.Error) {
+	if result, aErr := a.authenticate(); result != true {
+		return nil, aErr
 	}
 	params := &amberOps.GetVersionParams{}
 	params.WithTimeout(a.timeout)
 	aok, err := a.amberServer.Operations.GetVersion(params, a.authWriter)
 	if err != nil {
-		return nil, err
+		return nil, err.(*amberOps.GetVersionInternalServerError).Payload
 	}
 	return aok.Payload, nil
 }
@@ -404,12 +405,12 @@ func parseServer(server string) (string, string, string, error) {
 	return scheme, host, basepath, nil
 }
 
-func (a *AmberClient) authenticate() bool {
+func (a *AmberClient) authenticate() (bool, *amberModels.Error) {
 	tIn := time.Now()
 	if a.reauthTime.Before(tIn) {
 		response, err := a.oauthServer.Operations.PostOauth2(a.oauthParams)
 		if err != nil {
-			return false
+			return false, err.(*amberOps.PostOauth2Unauthorized).Payload
 		}
 
 		// save the token as an authWriter
@@ -418,11 +419,11 @@ func (a *AmberClient) authenticate() bool {
 		// save the expiration time (-60 seconds)
 		expiresIn, err := strconv.ParseUint(*response.Payload.ExpiresIn, 10, 64)
 		if err != nil {
-			return false
+			return false, &amberModels.Error{Code: 500, Message: err.Error()}
 		}
 		a.reauthTime = tIn.Add(time.Second * time.Duration(expiresIn-60))
 	}
-	return true
+	return true, nil
 }
 
 func (a *AmberClient) updateHttpClients() {

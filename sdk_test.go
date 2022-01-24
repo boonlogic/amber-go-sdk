@@ -5,21 +5,24 @@ package amber_client
 import (
 	"encoding/json"
 	"fmt"
+	amberModels "github.com/boonlogic/amber-go-sdk/models"
 	"github.com/stretchr/testify/require"
 	"testing"
+	"time"
+
 	// "fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/secretsmanager"
-	// amberClient "github.com/boonlogic/amber-go-sdk/client"
-	// amberOps "github.com/boonlogic/amber-go-sdk/client/operations"
-	// amberModels "github.com/boonlogic/amber-go-sdk/models"
+
 	// "io/ioutil"
 	_ "log"
 	"os"
 )
 
 var licenseProfile LicenseProfile
+var testClient *AmberClient
+var testSensor string
 
 func init() {
 	var err error
@@ -62,7 +65,7 @@ func getUserSecrets() (LicenseProfile, error) {
 		os.Exit(3)
 	}
 
-	return LicenseProfile{}, nil
+	return profile, nil
 }
 
 func loadCredentialsIntoEnv() {
@@ -144,4 +147,191 @@ func TestNewAmberClientFromFile(t *testing.T) {
 	require.Equal(t, amberClientB.licenseProfile.Password, "mypassword-env")
 	require.Equal(t, amberClientB.licenseProfile.Server, "https://fakeserver.com/v1/env")
 	require.Equal(t, amberClientB.licenseProfile.OauthServer, "https://fakeserver.com/v1/oauth/env")
+}
+
+func TestNewAmberClientNegative(t *testing.T) {
+
+	id := "default"
+	file := "nonexistent-license-file"
+
+	// should error when specified license file does not exist
+	clearEnv()
+	_, err := NewAmberClientFromFile(&id, &file)
+	require.Equal(t, err.Error(), "license file 'nonexistent-license-file' not found")
+
+	// should error when specified license id does not exist
+	clearEnv()
+	id = "nonexistent-license-id"
+	file = "test/test.Amber.license"
+	_, err = NewAmberClientFromFile(&id, &file)
+	require.Equal(t, err.Error(), "license id 'nonexistent-license-id' not found")
+}
+
+func TestAuthenticate(t *testing.T) {
+
+	// should error when specified license file does not exist
+	clearEnv()
+
+	amberClient, err := NewAmberClientFromProfile(licenseProfile)
+	require.Nil(t, err)
+
+	// test authentication failure
+	savePassword := amberClient.licenseProfile.Password
+	amberClient.licenseProfile.Password = "bad"
+	authResult, aErr := amberClient.authenticate()
+	require.False(t, authResult)
+	require.Equal(t, 401, int(aErr.Code))
+	amberClient.licenseProfile.Password = savePassword
+
+	// test authentication success (will set jwt token)
+	authResult, aErr = amberClient.authenticate()
+	require.True(t, authResult)
+	require.Nil(t, aErr)
+
+	// test authentication when jwt token is expired.  setting it to Now should
+	// trigger a reauthentication since it is within the 1 minute reauth window
+	timeNow := time.Now()
+	amberClient.reauthTime = timeNow
+	authResult, aErr = amberClient.authenticate()
+	require.True(t, authResult)
+	require.Nil(t, aErr)
+	require.True(t, timeNow.Before(amberClient.reauthTime))
+}
+
+func TestSensor(T *testing.T) {
+
+	// the client and sensor that is created here will be used for the remainder of the tests
+	var err error
+	testClient, err = NewAmberClientFromProfile(licenseProfile)
+	require.Nil(T, err)
+
+	// test sensor creation
+	sensorLabel := "amber-go-sdk-create"
+	response, aErr := testClient.CreateSensor(sensorLabel)
+	require.Nil(T, aErr)
+	require.Equal(T, sensorLabel, *response.Label)
+	testSensor = *response.SensorID
+}
+
+func TestUpdateSensor(t *testing.T) {
+
+	// test sensor update
+	sensorLabel := "amber-go-sdk-test"
+	response, aErr := testClient.UpdateLabel(testSensor, sensorLabel)
+	require.Nil(t, aErr)
+	require.Equal(t, sensorLabel, *response.Label)
+
+	// test sensor update with invalid sensorID
+	sensorLabel = "amber-go-sdk-test"
+	notASensor := "aaaaaaaaaaaaaaaaaaa"
+	response, aErr = testClient.UpdateLabel(notASensor, sensorLabel)
+	require.NotNil(t, aErr)
+	require.Equal(t, 404, int(aErr.Code))
+	require.Equal(t, "sensor aaaaaaaaaaaaaaaaaaa not found", aErr.Message)
+}
+
+func TestGetSensor(t *testing.T) {
+	// test get sensor
+	response, aErr := testClient.GetSensor(testSensor)
+	require.Nil(t, aErr)
+	require.Equal(t, testSensor, *response.SensorID)
+
+	// test sensor update with invalid sensorID
+	notASensor := "aaaaaaaaaaaaaaaaaaa"
+	response, aErr = testClient.GetSensor(notASensor)
+	require.NotNil(t, aErr)
+	require.Equal(t, 404, int(aErr.Code))
+	require.Equal(t, "sensor aaaaaaaaaaaaaaaaaaa not found", aErr.Message)
+}
+
+func TestListSensors(t *testing.T) {
+	// test list sensors
+	response, aErr := testClient.ListSensors()
+	require.Nil(t, aErr)
+	length := len(*response)
+	require.Greater(t, length, 0)
+}
+
+func TestConfigureSensor(t *testing.T) {
+
+	// test sensor configuration
+	var featureCount uint16 = 1
+	var streamingWindowSize uint16 = 25
+	postConfigRequest := amberModels.PostConfigRequest{
+		AnomalyHistoryWindow:    nil,
+		FeatureCount:            &featureCount,
+		Features:                nil,
+		LearningMaxClusters:     nil,
+		LearningMaxSamples:      nil,
+		LearningRateDenominator: nil,
+		LearningRateNumerator:   nil,
+		SamplesToBuffer:         nil,
+		StreamingWindowSize:     &streamingWindowSize,
+	}
+	response, aErr := testClient.ConfigureSensor(testSensor, postConfigRequest)
+	require.Nil(t, aErr)
+	require.Equal(t, postConfigRequest.StreamingWindowSize, response.StreamingWindowSize)
+	require.Equal(t, postConfigRequest.FeatureCount, response.FeatureCount)
+	require.Equal(t, 1, len(response.Features))
+
+	// test sensor configuration with invalid sensorID
+	notASensor := "aaaaaaaaaaaaaaaaaaa"
+	response, aErr = testClient.ConfigureSensor(notASensor, postConfigRequest)
+	require.NotNil(t, aErr)
+	require.Equal(t, 404, int(aErr.Code))
+	require.Equal(t, "sensor aaaaaaaaaaaaaaaaaaa not found", aErr.Message)
+
+	// get the sensor config
+	getConfigResponse, aErr := testClient.GetSensor(testSensor)
+	require.Nil(t, aErr)
+
+	// test get sensor invalid sensorID
+	getConfigResponse, aErr = testClient.GetSensor(notASensor)
+	require.NotNil(t, aErr)
+	require.Nil(t, getConfigResponse)
+	require.Equal(t, 404, int(aErr.Code))
+	require.Equal(t, "sensor aaaaaaaaaaaaaaaaaaa not found", aErr.Message)
+}
+
+func TestPostStream(t *testing.T) {
+
+	// stream the sensor
+	data := "1.0,1.2,1.1,3.0"
+	saveImage := true
+	postStreamRequest := amberModels.PostStreamRequest{
+		Data:      &data,
+		SaveImage: &saveImage,
+	}
+	postStreamResponse, aErr := testClient.StreamSensor(testSensor, postStreamRequest)
+	require.Nil(t, aErr)
+	require.NotNil(t, postStreamResponse)
+	require.Equal(t, "Buffering", *postStreamResponse.StreamStatus.State)
+	require.Equal(t, 4, len(postStreamResponse.AH))
+	require.Equal(t, 4, len(postStreamResponse.AM))
+	require.Equal(t, 4, len(postStreamResponse.AW))
+	require.Equal(t, 4, len(postStreamResponse.AD))
+	require.Equal(t, 4, len(postStreamResponse.ID))
+
+	// stream the sensor with invalid sensor id
+	notASensor := "aaaaaaaaaaaaaaaaaaa"
+	postStreamResponse, aErr = testClient.StreamSensor(notASensor, postStreamRequest)
+	require.NotNil(t, aErr)
+	require.Nil(t, postStreamResponse)
+	require.Equal(t, 404, int(aErr.Code))
+	require.Equal(t, "sensor aaaaaaaaaaaaaaaaaaa not found", aErr.Message)
+}
+
+func TestPretrainSensor(t *testing.T) {
+}
+
+func TestGetRootCause(t *testing.T) {
+}
+
+func TestGetStatus(t *testing.T) {
+}
+
+func TestDeleteSensor(t *testing.T) {
+}
+
+func TestGetVersion(t *testing.T) {
 }
