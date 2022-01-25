@@ -548,7 +548,14 @@ func (a *AmberClient) authenticate() (bool, *amberModels.Error) {
 	if a.reauthTime.Before(tIn) {
 		response, err := a.oauthServer.Operations.PostOauth2(a.oauthParams)
 		if err != nil {
-			return false, err.(*amberOps.PostOauth2Unauthorized).Payload
+			switch errToken(err) {
+			case unauthorized:
+				return false, err.(*amberOps.PostOauth2Unauthorized).Payload
+			case internalServerError:
+				return false, err.(*amberOps.PostOauth2InternalServerError).Payload
+			default:
+				return false, &amberModels.Error{Code: 500, Message: err.Error()}
+			}
 		}
 
 		// save the token as an authWriter
