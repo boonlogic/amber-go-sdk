@@ -282,11 +282,11 @@ func TestConfigureSensor(t *testing.T) {
 	require.Equal(t, "sensor aaaaaaaaaaaaaaaaaaa not found", aErr.Message)
 
 	// get the sensor config
-	getConfigResponse, aErr := testClient.GetSensor(testSensor)
+	getConfigResponse, aErr := testClient.GetConfig(testSensor)
 	require.Nil(t, aErr)
 
-	// test get sensor invalid sensorID
-	getConfigResponse, aErr = testClient.GetSensor(notASensor)
+	// test get sensor config with invalid sensorID
+	getConfigResponse, aErr = testClient.GetConfig(notASensor)
 	require.NotNil(t, aErr)
 	require.Nil(t, getConfigResponse)
 	require.Equal(t, 404, int(aErr.Code))
@@ -339,7 +339,7 @@ func TestPretrainSensor(t *testing.T) {
 	require.Equal(t, "sensor aaaaaaaaaaaaaaaaaaa not found", aErr.Message)
 
 	// read entire data csv
-	csvData, err := loadCsvFileToString("examples/data.csv")
+	csvData, err := loadCsvFileToString("examples/output_current.csv")
 	require.Nil(t, err)
 
 	// pretrain the sensor with
@@ -362,11 +362,27 @@ func TestPretrainSensor(t *testing.T) {
 		require.Nil(t, aErr)
 		require.NotNil(t, getPretrainResponse)
 		pretrainState = *getPretrainResponse.State
-		require.True(t, pretrainState == "Pretraining" || pretrainState == "Pretrained")
+		require.True(t, pretrainState == "Pretraining" || pretrainState == "Pretrained" || pretrainState == "None")
 	}
+	require.Equal(t, "Pretrained", pretrainState)
 }
 
 func TestGetRootCause(t *testing.T) {
+
+	// test get rootcause
+	clusterIds := "[1]"
+	patterns := ""
+	getRootCauseResponse, aErr := testClient.GetRootCause(testSensor, &clusterIds, &patterns)
+	require.Nil(t, aErr)
+	require.NotNil(t, getRootCauseResponse)
+
+	// stream the sensor with invalid sensor id
+	notASensor := "aaaaaaaaaaaaaaaaaaa"
+	getRootCauseResponse, aErr = testClient.GetRootCause(notASensor, &clusterIds, &patterns)
+	require.NotNil(t, aErr)
+	require.Nil(t, getRootCauseResponse)
+	require.Equal(t, 404, int(aErr.Code))
+	require.Equal(t, "sensor aaaaaaaaaaaaaaaaaaa not found", aErr.Message)
 }
 
 func TestGetStatus(t *testing.T) {
@@ -374,7 +390,7 @@ func TestGetStatus(t *testing.T) {
 	response, aErr := testClient.GetStatus(testSensor)
 	require.Nil(t, aErr)
 	require.NotNil(t, response)
-	require.Equal(t, "Buffering", *response.State)
+	require.Equal(t, "Monitoring", *response.State)
 
 	// test get status with invalid sensorID
 	notASensor := "aaaaaaaaaaaaaaaaaaa"

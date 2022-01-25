@@ -14,6 +14,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strconv"
 	"strings"
 	"time"
@@ -171,7 +172,18 @@ func (a *AmberClient) ListSensors() (*amberModels.GetSensorsResponse, *amberMode
 	params.WithTimeout(a.timeout)
 	aok, err := a.amberServer.Operations.GetSensors(params, a.authWriter)
 	if err != nil {
-		return nil, err.(*amberOps.GetSensorsNotFound).Payload
+		switch errToken(err) {
+		case unauthorized:
+			return nil, err.(*amberOps.GetRootCauseUnauthorized).Payload
+		case notFound:
+			return nil, err.(*amberOps.GetRootCauseNotFound).Payload
+		case badRequest:
+			return nil, err.(*amberOps.GetRootCauseBadRequest).Payload
+		case internalServerError:
+			return nil, err.(*amberOps.GetRootCauseInternalServerError).Payload
+		default:
+			return nil, &amberModels.Error{Code: 500, Message: err.Error()}
+		}
 	}
 	return &aok.Payload, nil
 }
@@ -186,8 +198,18 @@ func (a *AmberClient) GetSensor(sensorId string) (*amberModels.GetSensorResponse
 	params.WithTimeout(a.timeout)
 	aok, err := a.amberServer.Operations.GetSensor(params, a.authWriter)
 	if err != nil {
-		// theType := fmt.Sprintf("%T", err)
-		return nil, err.(*amberOps.GetSensorNotFound).Payload
+		switch errToken(err) {
+		case unauthorized:
+			return nil, err.(*amberOps.GetSensorUnauthorized).Payload
+		case notFound:
+			return nil, err.(*amberOps.GetSensorNotFound).Payload
+		case badRequest:
+			return nil, err.(*amberOps.GetSensorBadRequest).Payload
+		case internalServerError:
+			return nil, err.(*amberOps.GetSensorInternalServerError).Payload
+		default:
+			return nil, &amberModels.Error{Code: 500, Message: err.Error()}
+		}
 	}
 	return aok.Payload, nil
 }
@@ -204,7 +226,18 @@ func (a *AmberClient) CreateSensor(label string) (*amberModels.PostSensorRespons
 	params.WithTimeout(a.timeout)
 	aok, err := a.amberServer.Operations.PostSensor(params, a.authWriter)
 	if err != nil {
-		return nil, err.(*amberOps.PostSensorNotFound).Payload
+		switch errToken(err) {
+		case unauthorized:
+			return nil, err.(*amberOps.PostSensorUnauthorized).Payload
+		case notFound:
+			return nil, err.(*amberOps.PostSensorNotFound).Payload
+		case badRequest:
+			return nil, err.(*amberOps.PostSensorBadRequest).Payload
+		case internalServerError:
+			return nil, err.(*amberOps.PostSensorInternalServerError).Payload
+		default:
+			return nil, &amberModels.Error{Code: 500, Message: err.Error()}
+		}
 	}
 	return aok.Payload, nil
 }
@@ -222,7 +255,18 @@ func (a *AmberClient) UpdateLabel(sensorId string, label string) (*amberModels.P
 	params.WithTimeout(a.timeout)
 	aok, err := a.amberServer.Operations.PutSensor(params, a.authWriter)
 	if err != nil {
-		return nil, err.(*amberOps.PutSensorNotFound).Payload
+		switch errToken(err) {
+		case unauthorized:
+			return nil, err.(*amberOps.PutSensorUnauthorized).Payload
+		case notFound:
+			return nil, err.(*amberOps.PutSensorNotFound).Payload
+		case badRequest:
+			return nil, err.(*amberOps.PutSensorBadRequest).Payload
+		case internalServerError:
+			return nil, err.(*amberOps.PutSensorInternalServerError).Payload
+		default:
+			return nil, &amberModels.Error{Code: 500, Message: err.Error()}
+		}
 	}
 	return aok.Payload, nil
 }
@@ -238,7 +282,18 @@ func (a *AmberClient) ConfigureSensor(sensorId string, payload amberModels.PostC
 	params.WithTimeout(a.timeout)
 	aok, err := a.amberServer.Operations.PostConfig(params, a.authWriter)
 	if err != nil {
-		return nil, err.(*amberOps.PostConfigNotFound).Payload
+		switch errToken(err) {
+		case unauthorized:
+			return nil, err.(*amberOps.PostConfigUnauthorized).Payload
+		case notFound:
+			return nil, err.(*amberOps.PostConfigNotFound).Payload
+		case badRequest:
+			return nil, err.(*amberOps.PostConfigBadRequest).Payload
+		case internalServerError:
+			return nil, err.(*amberOps.PostConfigInternalServerError).Payload
+		default:
+			return nil, &amberModels.Error{Code: 500, Message: err.Error()}
+		}
 	}
 	return aok.Payload, nil
 }
@@ -253,7 +308,18 @@ func (a *AmberClient) GetConfig(sensorId string) (*amberModels.GetConfigResponse
 	params.WithTimeout(a.timeout)
 	aok, err := a.amberServer.Operations.GetConfig(params, a.authWriter)
 	if err != nil {
-		return nil, err.(*amberOps.GetConfigNotFound).Payload
+		switch errToken(err) {
+		case unauthorized:
+			return nil, err.(*amberOps.GetConfigUnauthorized).Payload
+		case notFound:
+			return nil, err.(*amberOps.GetConfigNotFound).Payload
+		case badRequest:
+			return nil, err.(*amberOps.GetConfigBadRequest).Payload
+		case internalServerError:
+			return nil, err.(*amberOps.GetConfigInternalServerError).Payload
+		default:
+			return nil, &amberModels.Error{Code: 500, Message: err.Error()}
+		}
 	}
 	return aok.Payload, nil
 }
@@ -268,7 +334,18 @@ func (a *AmberClient) DeleteSensor(sensorId string) *amberModels.Error {
 	params.WithTimeout(a.timeout)
 	_, err := a.amberServer.Operations.DeleteSensor(params, a.authWriter)
 	if err != nil {
-		return err.(*amberOps.DeleteSensorNotFound).Payload
+		switch errToken(err) {
+		case unauthorized:
+			return err.(*amberOps.DeleteSensorUnauthorized).Payload
+		case notFound:
+			return err.(*amberOps.DeleteSensorNotFound).Payload
+		case badRequest:
+			return err.(*amberOps.DeleteSensorBadRequest).Payload
+		case internalServerError:
+			return err.(*amberOps.DeleteSensorInternalServerError).Payload
+		default:
+			return &amberModels.Error{Code: 500, Message: err.Error()}
+		}
 	}
 	return nil
 }
@@ -284,7 +361,18 @@ func (a *AmberClient) StreamSensor(sensorId string, payload amberModels.PostStre
 	params.WithTimeout(a.timeout)
 	aok, err := a.amberServer.Operations.PostStream(params, a.authWriter)
 	if err != nil {
-		return nil, err.(*amberOps.PostStreamNotFound).Payload
+		switch errToken(err) {
+		case unauthorized:
+			return nil, err.(*amberOps.PostStreamUnauthorized).Payload
+		case notFound:
+			return nil, err.(*amberOps.PostStreamNotFound).Payload
+		case badRequest:
+			return nil, err.(*amberOps.PostStreamBadRequest).Payload
+		case internalServerError:
+			return nil, err.(*amberOps.PostStreamInternalServerError).Payload
+		default:
+			return nil, &amberModels.Error{Code: 500, Message: err.Error()}
+		}
 	}
 	return aok.Payload, nil
 }
@@ -299,7 +387,18 @@ func (a *AmberClient) GetStatus(sensorId string) (*amberModels.GetStatusResponse
 	params.WithTimeout(a.timeout)
 	aok, err := a.amberServer.Operations.GetStatus(params, a.authWriter)
 	if err != nil {
-		return nil, err.(*amberOps.GetStatusNotFound).Payload
+		switch errToken(err) {
+		case unauthorized:
+			return nil, err.(*amberOps.GetStatusUnauthorized).Payload
+		case notFound:
+			return nil, err.(*amberOps.GetStatusNotFound).Payload
+		case badRequest:
+			return nil, err.(*amberOps.GetStatusBadRequest).Payload
+		case internalServerError:
+			return nil, err.(*amberOps.GetStatusInternalServerError).Payload
+		default:
+			return nil, &amberModels.Error{Code: 500, Message: err.Error()}
+		}
 	}
 	return aok.Payload, nil
 }
@@ -315,7 +414,18 @@ func (a *AmberClient) PretrainSensor(sensorId string, payload amberModels.PostPr
 	params.WithTimeout(a.timeout)
 	aok, accepted, err := a.amberServer.Operations.PostPretrain(params, a.authWriter)
 	if err != nil {
-		return nil, err.(*amberOps.PostPretrainNotFound).Payload
+		switch errToken(err) {
+		case unauthorized:
+			return nil, err.(*amberOps.PostPretrainUnauthorized).Payload
+		case notFound:
+			return nil, err.(*amberOps.PostPretrainNotFound).Payload
+		case badRequest:
+			return nil, err.(*amberOps.PostPretrainBadRequest).Payload
+		case internalServerError:
+			return nil, err.(*amberOps.PostPretrainInternalServerError).Payload
+		default:
+			return nil, &amberModels.Error{Code: 500, Message: err.Error()}
+		}
 	}
 	if accepted != nil {
 		acceptedResponse := amberModels.PostPretrainResponse{
@@ -344,7 +454,18 @@ func (a *AmberClient) GetPretrainState(sensorId string) (*amberModels.GetPretrai
 		return &acceptedResponse, nil
 	}
 	if err != nil {
-		return nil, err.(*amberOps.GetPretrainNotFound).Payload
+		switch errToken(err) {
+		case unauthorized:
+			return nil, err.(*amberOps.GetPretrainUnauthorized).Payload
+		case notFound:
+			return nil, err.(*amberOps.GetPretrainNotFound).Payload
+		case badRequest:
+			return nil, err.(*amberOps.GetPretrainBadRequest).Payload
+		case internalServerError:
+			return nil, err.(*amberOps.GetPretrainInternalServerError).Payload
+		default:
+			return nil, &amberModels.Error{Code: 500, Message: err.Error()}
+		}
 	}
 	return aok.Payload, nil
 }
@@ -361,7 +482,18 @@ func (a *AmberClient) GetRootCause(sensorId string, clusterId *string, pattern *
 	params.WithTimeout(a.timeout)
 	aok, err := a.amberServer.Operations.GetRootCause(params, a.authWriter)
 	if err != nil {
-		return nil, err.(*amberOps.GetRootCauseNotFound).Payload
+		switch errToken(err) {
+		case unauthorized:
+			return nil, err.(*amberOps.GetRootCauseUnauthorized).Payload
+		case notFound:
+			return nil, err.(*amberOps.GetRootCauseNotFound).Payload
+		case badRequest:
+			return nil, err.(*amberOps.GetRootCauseBadRequest).Payload
+		case internalServerError:
+			return nil, err.(*amberOps.GetRootCauseInternalServerError).Payload
+		default:
+			return nil, &amberModels.Error{Code: 500, Message: err.Error()}
+		}
 	}
 	return &aok.Payload, nil
 }
@@ -374,7 +506,12 @@ func (a *AmberClient) GetVersion() (*amberModels.Version, *amberModels.Error) {
 	params.WithTimeout(a.timeout)
 	aok, err := a.amberServer.Operations.GetVersion(params, a.authWriter)
 	if err != nil {
-		return nil, err.(*amberOps.GetVersionInternalServerError).Payload
+		switch errToken(err) {
+		case internalServerError:
+			return nil, err.(*amberOps.GetVersionInternalServerError).Payload
+		default:
+			return nil, &amberModels.Error{Code: 500, Message: err.Error()}
+		}
 	}
 	return aok.Payload, nil
 }
@@ -505,4 +642,26 @@ func loadCsvFileToString(csvFile string) (string, error) {
 		}
 	}
 	return csvString, nil
+}
+
+const unauthorized = "Unauthorized"
+const notFound = "NotFound"
+const internalServerError = "InternalServerError"
+const badRequest = "BadRequest"
+const unknown = "Unknown"
+
+func errToken(err error) string {
+	strType := reflect.TypeOf(err).String()
+	switch {
+	case strings.Index(strType, unauthorized) != -1:
+		return unauthorized
+	case strings.Index(strType, internalServerError) != -1:
+		return internalServerError
+	case strings.Index(strType, badRequest) != -1:
+		return badRequest
+	case strings.Index(strType, notFound) != -1:
+		return notFound
+	}
+
+	return unknown
 }
