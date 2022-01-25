@@ -322,16 +322,85 @@ func TestPostStream(t *testing.T) {
 }
 
 func TestPretrainSensor(t *testing.T) {
+
+	// test get pretrain
+	getPretrainResponse, aErr := testClient.GetPretrainState(testSensor)
+	require.Nil(t, aErr)
+	require.NotNil(t, getPretrainResponse)
+	require.Equal(t, "", getPretrainResponse.Message)
+	require.Equal(t, "None", *getPretrainResponse.State)
+
+	// stream the sensor with invalid sensor id
+	notASensor := "aaaaaaaaaaaaaaaaaaa"
+	getPretrainResponse, aErr = testClient.GetPretrainState(notASensor)
+	require.NotNil(t, aErr)
+	require.Nil(t, getPretrainResponse)
+	require.Equal(t, 404, int(aErr.Code))
+	require.Equal(t, "sensor aaaaaaaaaaaaaaaaaaa not found", aErr.Message)
+
+	// read entire data csv
+	csvData, err := loadCsvFileToString("examples/data.csv")
+	require.Nil(t, err)
+
+	// pretrain the sensor with
+	autoTuneConfig := true
+	postPretrainRequest := amberModels.PostPretrainRequest{
+		AutotuneConfig: &autoTuneConfig,
+		Data:           &csvData,
+	}
+	postPretrainResponse, aErr := testClient.PretrainSensor(testSensor, postPretrainRequest)
+	require.Nil(t, aErr)
+	require.NotNil(t, postPretrainResponse)
+	require.Equal(t, "", postPretrainResponse.Message)
+	require.Equal(t, "Pretraining", *postPretrainResponse.State)
+
+	pretrainState := *postPretrainResponse.State
+	for pretrainState == "Pretraining" {
+		// wait for 5 seconds between checking pretraining state
+		time.Sleep(5 * time.Second)
+		getPretrainResponse, aErr = testClient.GetPretrainState(testSensor)
+		require.Nil(t, aErr)
+		require.NotNil(t, getPretrainResponse)
+		pretrainState = *getPretrainResponse.State
+		require.True(t, pretrainState == "Pretraining" || pretrainState == "Pretrained")
+	}
 }
 
 func TestGetRootCause(t *testing.T) {
 }
 
 func TestGetStatus(t *testing.T) {
+	// test get status
+	response, aErr := testClient.GetStatus(testSensor)
+	require.Nil(t, aErr)
+	require.NotNil(t, response)
+	require.Equal(t, "Buffering", *response.State)
+
+	// test get status with invalid sensorID
+	notASensor := "aaaaaaaaaaaaaaaaaaa"
+	response, aErr = testClient.GetStatus(notASensor)
+	require.NotNil(t, aErr)
+	require.Equal(t, 404, int(aErr.Code))
+	require.Equal(t, "sensor aaaaaaaaaaaaaaaaaaa not found", aErr.Message)
 }
 
 func TestDeleteSensor(t *testing.T) {
+	// test delete sensor
+	aErr := testClient.DeleteSensor(testSensor)
+	require.Nil(t, aErr)
+
+	// test delete sensor with invalid sensorID
+	notASensor := "aaaaaaaaaaaaaaaaaaa"
+	aErr = testClient.DeleteSensor(notASensor)
+	require.NotNil(t, aErr)
+	require.Equal(t, 404, int(aErr.Code))
+	require.Equal(t, "sensor aaaaaaaaaaaaaaaaaaa not found", aErr.Message)
 }
 
 func TestGetVersion(t *testing.T) {
+	// test get version
+	response, aErr := testClient.GetVersion()
+	require.Nil(t, aErr)
+	require.NotNil(t, response)
+	require.Equal(t, "/v1", *response.APIVersion)
 }

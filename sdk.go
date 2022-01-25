@@ -1,6 +1,7 @@
 package amber_client
 
 import (
+	"encoding/csv"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -476,4 +477,32 @@ func (a *AmberClient) loadFromEnv() {
 	if cert := os.Getenv("AMBER_SSL_CERT"); cert != "" {
 		a.cert = strings.ToLower(cert)
 	}
+}
+
+// utility function to create csv payloads given a csv data file.
+// output will be one continuous string of comma separated values
+func loadCsvFileToString(csvFile string) (string, error) {
+
+	// open file
+	file, err := os.Open(csvFile)
+	if err != nil {
+		return "", err
+	}
+	defer file.Close()
+
+	var csvString string
+	csvReader := csv.NewReader(file)
+	data, err := csvReader.ReadAll()
+	if err != nil {
+		return "", nil
+	}
+	for _, line := range data {
+		val := strings.Join(line[:], ",")
+		if csvString == "" {
+			csvString = val
+		} else {
+			csvString = csvString + "," + val
+		}
+	}
+	return csvString, nil
 }
