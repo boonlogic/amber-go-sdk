@@ -6,7 +6,7 @@ A Go SDK for Boon Amber sensor analytics
 
 - __Website__: [boonlogic.com](https://boonlogic.com)
 - __Documentation__: [Boon Docs Main Page](https://docs.boonlogic.com)
-- __SDK Functional Breakdown__: [amber-go-sdk functional breakdown](https://boonlogic.github.io/amber-go-sdk/docs/functions.md)
+- __SDK Functional Breakdown__: [amber-go-sdk functional breakdown](https://boonlogic.github.io/amber-go-sdk/functions.md)
 
 ## Installation
 
