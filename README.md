@@ -36,7 +36,7 @@ The _~/.Amber.license_ file will be consulted by the Amber SDK to find and authe
 
 The following is a simple connectivity testing using the GetVersion function.
 
-[connect-example.go](examples/connect-example.go)
+[connect.go](examples/connect.go)
 
 ```go
 package main
