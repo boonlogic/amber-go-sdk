@@ -16,7 +16,7 @@ generate-client: ## generate amber swagger client code based on json schema file
 	bin/swagger generate client --keep-spec-order -f swagger.json
 
 docs: go-check ## generate documentation
-	 $(GOPATH)/bin/gomarkdoc --output functions.md . ./models
+	./generate-docs.sh
 
 # test-v1, test-v1next, test-dev, test-qa, test-aoc, test-oap
 # add additional .license files in test directory to expand / customize tests
