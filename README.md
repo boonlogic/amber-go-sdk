@@ -36,7 +36,7 @@ The _~/.Amber.license_ file will be consulted by the Amber SDK to find and authe
 
 The following is a simple connectivity testing using the GetVersion function.
 
-[connect-example.py](examples/connect-example.py)
+[connect-example.go](examples/connect-example.go)
 
 ```go
 package main
@@ -65,7 +65,7 @@ func main() {
 }
 ```
 
-Running the connect-example.py script should yield output like the following:
+Running the connect-example.go script should yield output like the following:
 
 `$ go run examples/connect.go`
 ```json
@@ -84,7 +84,7 @@ Running the connect-example.py script should yield output like the following:
 
 The following Go routine will demonstrate each API call in the Amber go SDK.
 
-[full-example.py](examples/full-example.py)
+[full-example.go](examples/full-example.go)
 
 ```go
 package main
@@ -242,7 +242,7 @@ func main() {
 
 The following will process a CSV file using batch-style streaming requests.  Full Amber analytic results will be displayed after each streaming request.  
 
-[stream-advanced.py](examples/stream-advanced.py)<br>
+[stream-advanced.go](examples/stream-advanced.go)<br>
 [output_current.csv](examples/output_current.csv)
 
 ```go
