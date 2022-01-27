@@ -7,6 +7,7 @@ import (
 	"fmt"
 	amberModels "github.com/boonlogic/amber-go-sdk/models"
 	"github.com/stretchr/testify/require"
+	"strings"
 	"testing"
 	"time"
 
@@ -339,14 +340,17 @@ func TestPretrainSensor(t *testing.T) {
 	require.Equal(t, "sensor aaaaaaaaaaaaaaaaaaa not found", aErr.Message)
 
 	// read entire data csv
-	csvData, err := loadCsvFileToString("examples/output_current.csv")
+	csvRecords, err := LoadCsvRecords("examples/output_current.csv")
 	require.Nil(t, err)
+
+	// generate one csv string from csv records
+	pretrainData := strings.Join(csvRecords, ",")
 
 	// pretrain the sensor with
 	autoTuneConfig := true
 	postPretrainRequest := amberModels.PostPretrainRequest{
 		AutotuneConfig: &autoTuneConfig,
-		Data:           &csvData,
+		Data:           &pretrainData,
 	}
 	postPretrainResponse, aErr := testClient.PretrainSensor(testSensor, postPretrainRequest)
 	require.Nil(t, aErr)

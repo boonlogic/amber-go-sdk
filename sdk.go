@@ -625,30 +625,29 @@ func (a *AmberClient) loadFromEnv() {
 
 // utility function to create csv payloads given a csv data file.
 // output will be one continuous string of comma separated values
-func loadCsvFileToString(csvFile string) (string, error) {
+func LoadCsvRecords(csvFile string) ([]string, error) {
 
 	// open file
 	file, err := os.Open(csvFile)
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 	defer file.Close()
 
-	var csvString string
 	csvReader := csv.NewReader(file)
 	data, err := csvReader.ReadAll()
 	if err != nil {
-		return "", nil
+		return nil, err
 	}
-	for _, line := range data {
-		val := strings.Join(line[:], ",")
-		if csvString == "" {
-			csvString = val
-		} else {
-			csvString = csvString + "," + val
+
+	// flatten
+	flattened := []string{}
+	for _, line := range data[:] {
+		for _, value := range line[:] {
+			flattened = append(flattened, value)
 		}
 	}
-	return csvString, nil
+	return flattened, nil
 }
 
 const unauthorized = "Unauthorized"
