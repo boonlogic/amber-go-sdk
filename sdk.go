@@ -358,6 +358,10 @@ func (a *AmberClient) StreamSensor(sensorId string, payload amberModels.PostStre
 		PostStreamRequest: &payload,
 		SensorID:          sensorId,
 	}
+	if params.PostStreamRequest.SaveImage == nil {
+		saveImage := true
+		params.PostStreamRequest.SaveImage = &saveImage
+	}
 	params.WithTimeout(a.timeout)
 	aok, err := a.amberServer.Operations.PostStream(params, a.authWriter)
 	if err != nil {
