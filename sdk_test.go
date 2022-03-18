@@ -11,12 +11,10 @@ import (
 	"testing"
 	"time"
 
-	// "fmt"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/secretsmanager"
 
-	// "io/ioutil"
 	_ "log"
 	"os"
 )
@@ -199,18 +197,18 @@ func TestAuthenticate(t *testing.T) {
 	require.True(t, timeNow.Before(amberClient.reauthTime))
 }
 
-func TestSensor(T *testing.T) {
+func TestSensor(t *testing.T) {
 
 	// the client and sensor that is created here will be used for the remainder of the tests
 	var err error
 	testClient, err = NewAmberClientFromProfile(licenseProfile)
-	require.Nil(T, err)
+	require.Nil(t, err)
 
 	// test sensor creation
 	sensorLabel := "amber-go-sdk-create"
 	response, aErr := testClient.CreateSensor(sensorLabel)
-	require.Nil(T, aErr)
-	require.Equal(T, sensorLabel, *response.Label)
+	require.Nil(t, aErr)
+	require.Equal(t, sensorLabel, *response.Label)
 	testSensor = *response.SensorID
 }
 
@@ -232,6 +230,7 @@ func TestUpdateSensor(t *testing.T) {
 }
 
 func TestGetSensor(t *testing.T) {
+
 	// test get sensor
 	response, aErr := testClient.GetSensor(testSensor)
 	require.Nil(t, aErr)
@@ -246,6 +245,7 @@ func TestGetSensor(t *testing.T) {
 }
 
 func TestListSensors(t *testing.T) {
+
 	// test list sensors
 	response, aErr := testClient.ListSensors()
 	require.Nil(t, aErr)
