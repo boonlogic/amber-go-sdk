@@ -1,6 +1,8 @@
 package amber_client
 
 import (
+	"bytes"
+	"compress/gzip"
 	"encoding/csv"
 	"encoding/json"
 	"errors"
@@ -11,7 +13,9 @@ import (
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
+	"io"
 	"io/ioutil"
+	"net/http"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -575,6 +579,49 @@ func (a *AmberClient) authenticate() (bool, *amberModels.Error) {
 	return true, nil
 }
 
+type CustomRoundTripper struct {
+	Proxied http.RoundTripper
+}
+
+func (crt CustomRoundTripper) RoundTrip(req *http.Request) (res *http.Response, e error) {
+
+	// compress the payload if content-length is getting big
+	if req.ContentLength > 10000 {
+		var err error
+
+		// squeeze out all white space
+		buf := new(bytes.Buffer)
+		if _, err = buf.ReadFrom(req.Body); err != nil {
+			return nil, err
+		}
+		newStr := buf.String()
+		newStr = strings.ReplaceAll(newStr, " ", "")
+
+		// gzip the buffer
+		var b bytes.Buffer
+		gz := gzip.NewWriter(&b)
+		if _, err = gz.Write([]byte(newStr)); err != nil {
+			return nil, err
+		}
+		if err = gz.Close(); err != nil {
+			return nil, err
+		}
+		reader := bytes.NewReader(b.Bytes())
+		req.Body = io.NopCloser(reader)
+
+		// set the content-encoding
+		req.Header.Set("content-encoding", "gzip")
+		req.Header.Set("content-type", "application/json")
+
+		// Set ContentLength to reflect the new size
+		req.ContentLength = int64(b.Len())
+	}
+
+	// Send the request, get the response
+	res, e = crt.Proxied.RoundTrip(req)
+	return res, e
+}
+
 func (a *AmberClient) updateHttpClients() {
 
 	// set default verify and cert
@@ -585,9 +632,12 @@ func (a *AmberClient) updateHttpClients() {
 	scheme, host, basePath, _ := parseServer(a.licenseProfile.Server)
 	if scheme == "https" {
 		httpClient, _ := httptransport.TLSClient(a.tlsOptions)
+		httpClient.Transport = CustomRoundTripper{http.DefaultTransport}
 		a.amberServer = amberClient.New(httptransport.NewWithClient(host, basePath, []string{scheme}, httpClient), strfmt.Default)
 	} else {
-		a.amberServer = amberClient.New(httptransport.New(host, basePath, []string{scheme}), strfmt.Default)
+		transport := httptransport.New(host, basePath, []string{scheme})
+		transport.Transport = CustomRoundTripper{http.DefaultTransport}
+		a.amberServer = amberClient.New(transport, strfmt.Default)
 	}
 
 	// set up oauth http client
