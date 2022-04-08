@@ -21,7 +21,7 @@ docs: go-check ## generate documentation
 # test-v1, test-v1next, test-dev, test-qa, test-aoc, test-oap
 # add additional .license files in test directory to expand / customize tests
 test-%: go-check
-	@AMBER_TEST_PROFILE=$* go test -modcacherw -timeout 30m -v -coverprofile .coverage.out .
+	AMBER_TEST_LICENSE_ID=$* go test -modcacherw -timeout 30m -v -coverprofile .coverage.out .
 
 go-check:
 ifndef GOPATH

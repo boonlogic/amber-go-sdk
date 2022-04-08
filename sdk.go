@@ -13,7 +13,6 @@ import (
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
-	"io"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -607,7 +606,7 @@ func (crt CustomRoundTripper) RoundTrip(req *http.Request) (res *http.Response, 
 			return nil, err
 		}
 		reader := bytes.NewReader(b.Bytes())
-		req.Body = io.NopCloser(reader)
+		req.Body = ioutil.NopCloser(reader)
 
 		// set the content-encoding
 		req.Header.Set("content-encoding", "gzip")
@@ -641,7 +640,7 @@ func (a *AmberClient) updateHttpClients() {
 	}
 
 	// set up oauth http client
-	_, host, basePath, _ = parseServer(a.licenseProfile.OauthServer)
+	scheme, host, basePath, _ = parseServer(a.licenseProfile.OauthServer)
 	if scheme == "https" {
 		httpClient, _ := httptransport.TLSClient(a.tlsOptions)
 		a.oauthServer = amberClient.New(httptransport.NewWithClient(host, basePath, []string{scheme}, httpClient), strfmt.Default)
