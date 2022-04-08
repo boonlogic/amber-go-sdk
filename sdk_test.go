@@ -19,32 +19,49 @@ import (
 	"os"
 )
 
-var licenseProfile LicenseProfile
+// we need a global AmberClient and sensor id
 var testClient *AmberClient
 var testSensor string
 
-func init() {
-	var err error
-	licenseProfile, err = getUserSecrets()
-	if err != nil {
-		fmt.Printf("getUserSecrets failed\n")
-		os.Exit(3)
+// secrets downloaded from points beyond
+func createAmberClient() *AmberClient {
+	amberLicenseFile := os.Getenv("AMBER_TEST_LICENSE_FILE")
+	amberLicenseId := os.Getenv("AMBER_TEST_LICENSE_ID")
+	if amberLicenseId == "" {
+		panic("AMBER_TEST_LICENSE_ID is missing in test environment")
 	}
+
+	// purge AMBER environment variables for key in Test_01_AmberInstance.saved_env.keys():
+	clearEnv()
+
+	var licenseProfile LicenseProfile
+	var amberClient *AmberClient
+	var err error
+
+	if amberLicenseFile != "" {
+		// load license profile using a local license file
+		amberClient, err = NewAmberClientFromFile(&amberLicenseId, &amberLicenseFile)
+		if err != nil {
+			panic(err)
+		}
+	} else {
+		// load license profile from secrets manager
+		licenseProfile, err = getUserSecrets(amberLicenseId)
+		if err != nil {
+			panic(err)
+		}
+		amberClient, err = NewAmberClientFromProfile(licenseProfile)
+	}
+
+	return amberClient
 }
 
-func getUserSecrets() (LicenseProfile, error) {
+func getUserSecrets(licenseId string) (LicenseProfile, error) {
 
 	var lp licenseProfiles
 
-	// retrieve the deployment from the environment.  If not set, default to 'qa'
-	deployment := os.Getenv("AMBER_TEST_PROFILE")
-	if deployment == "" {
-		deployment = "qa"
-	}
-
 	region := "us-east-1"
-	svc := secretsmanager.New(session.New(),
-		aws.NewConfig().WithRegion(region))
+	svc := secretsmanager.New(session.New(), aws.NewConfig().WithRegion(region))
 	input := &secretsmanager.GetSecretValueInput{
 		SecretId: aws.String("amber-test-users"),
 	}
@@ -58,20 +75,13 @@ func getUserSecrets() (LicenseProfile, error) {
 		return LicenseProfile{}, err
 	}
 
-	profile := lp[deployment]
+	profile := lp[licenseId]
 	if profile.Username == "" {
-		fmt.Printf("deployment %v not found\n", deployment)
+		fmt.Printf("deployment %v not found\n", licenseId)
 		os.Exit(3)
 	}
 
 	return profile, nil
-}
-
-func loadCredentialsIntoEnv() {
-	os.Setenv("AMBER_USERNAME", licenseProfile.Username)
-	os.Setenv("AMBER_PASSWORD", licenseProfile.Password)
-	os.Setenv("AMBER_SERVER", licenseProfile.Server)
-	os.Setenv("AMBER_OAUTH_SERVER", licenseProfile.OauthServer)
 }
 
 func clearEnv() {
@@ -79,14 +89,6 @@ func clearEnv() {
 	os.Unsetenv("AMBER_PASSWORD")
 	os.Unsetenv("AMBER_SERVER")
 	os.Unsetenv("AMBER_OAUTH_SERVER")
-}
-
-func restoreEnv(savedProfile LicenseProfile) {
-	clearEnv()
-	os.Setenv("AMBER_USERNAME", savedProfile.Username)
-	os.Setenv("AMBER_PASSWORD", savedProfile.Password)
-	os.Setenv("AMBER_SERVER", savedProfile.Server)
-	os.Setenv("AMBER_OAUTH_SERVER", savedProfile.OauthServer)
 }
 
 // Runs before each test. Initializes by setting env variables.
@@ -171,8 +173,7 @@ func TestAuthenticate(t *testing.T) {
 	// should error when specified license file does not exist
 	clearEnv()
 
-	amberClient, err := NewAmberClientFromProfile(licenseProfile)
-	require.Nil(t, err)
+	amberClient := createAmberClient()
 
 	// test authentication failure
 	savePassword := amberClient.licenseProfile.Password
@@ -200,9 +201,7 @@ func TestAuthenticate(t *testing.T) {
 func TestSensor(t *testing.T) {
 
 	// the client and sensor that is created here will be used for the remainder of the tests
-	var err error
-	testClient, err = NewAmberClientFromProfile(licenseProfile)
-	require.Nil(t, err)
+	testClient = createAmberClient()
 
 	// test sensor creation
 	sensorLabel := "amber-go-sdk-create"
@@ -356,9 +355,10 @@ func TestPretrainSensor(t *testing.T) {
 	require.Nil(t, aErr)
 	require.NotNil(t, postPretrainResponse)
 	require.Equal(t, "", postPretrainResponse.Message)
-	require.Equal(t, "Pretraining", *postPretrainResponse.State)
-
+	// some implementations of amber block until finished with request.  The state moves directly to "Pretrained"
 	pretrainState := *postPretrainResponse.State
+	require.True(t, pretrainState == "Pretrained" || pretrainState == "Pretraining")
+
 	for pretrainState == "Pretraining" {
 		// wait for 5 seconds between checking pretraining state
 		time.Sleep(5 * time.Second)
