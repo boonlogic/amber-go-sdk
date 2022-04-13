@@ -24,8 +24,7 @@ type PostStreamRequest struct {
 	Data *string `json:"data"`
 
 	// save the sensor after calculation
-	// Required: true
-	SaveImage *bool `json:"saveImage"`
+	SaveImage *bool `json:"saveImage,omitempty"`
 }
 
 // Validate validates this post stream request
@@ -33,10 +32,6 @@ func (m *PostStreamRequest) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateData(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateSaveImage(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -49,15 +44,6 @@ func (m *PostStreamRequest) Validate(formats strfmt.Registry) error {
 func (m *PostStreamRequest) validateData(formats strfmt.Registry) error {
 
 	if err := validate.Required("data", "body", m.Data); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *PostStreamRequest) validateSaveImage(formats strfmt.Registry) error {
-
-	if err := validate.Required("saveImage", "body", m.SaveImage); err != nil {
 		return err
 	}
 
