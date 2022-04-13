@@ -29,7 +29,7 @@ type PostConfigRequest struct {
 	FeatureCount *uint16 `json:"featureCount"`
 
 	// features
-	Features []*PostFeatureConfig `json:"features"`
+	Features []*FeatureConfig `json:"features"`
 
 	// learning graduation requirement for stopping learning upon reaching this cluster count
 	LearningMaxClusters *uint16 `json:"learningMaxClusters,omitempty"`

@@ -7,6 +7,7 @@ package models
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
@@ -19,19 +20,18 @@ import (
 // swagger:model featureConfig
 type FeatureConfig struct {
 
-	// version number
-	VersionNumber VersionNumber `json:"VersionNumber,omitempty"`
-
 	// label associated with feature
 	Label string `json:"label,omitempty"`
 
 	// corresponding maximum value
-	// Required: true
-	MaxVal *float32 `json:"maxVal"`
+	MaxVal float32 `json:"maxVal"`
 
 	// the value that should be considered the minimum value for this feature. This can be set to a value larger than the actual min if you want to treat all value less than that as the same (for instance, to keep a noise spike from having undue influence in the clustering
-	// Required: true
-	MinVal *float32 `json:"minVal"`
+	MinVal float32 `json:"minVal"`
+
+	// policy for submitting sensor fusion vector when this feature is updated. One of "submit", "nosubmit" (defaults to "submit")
+	// Enum: [submit nosubmit]
+	SubmitRule string `json:"submitRule,omitempty"`
 
 	// corresponding weight
 	Weight uint16 `json:"weight,omitempty"`
@@ -41,15 +41,7 @@ type FeatureConfig struct {
 func (m *FeatureConfig) Validate(formats strfmt.Registry) error {
 	var res []error
 
-	if err := m.validateVersionNumber(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateMaxVal(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateMinVal(formats); err != nil {
+	if err := m.validateSubmitRule(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -59,66 +51,50 @@ func (m *FeatureConfig) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *FeatureConfig) validateVersionNumber(formats strfmt.Registry) error {
-	if swag.IsZero(m.VersionNumber) { // not required
+var featureConfigTypeSubmitRulePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["submit","nosubmit"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		featureConfigTypeSubmitRulePropEnum = append(featureConfigTypeSubmitRulePropEnum, v)
+	}
+}
+
+const (
+
+	// FeatureConfigSubmitRuleSubmit captures enum value "submit"
+	FeatureConfigSubmitRuleSubmit string = "submit"
+
+	// FeatureConfigSubmitRuleNosubmit captures enum value "nosubmit"
+	FeatureConfigSubmitRuleNosubmit string = "nosubmit"
+)
+
+// prop value enum
+func (m *FeatureConfig) validateSubmitRuleEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, featureConfigTypeSubmitRulePropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *FeatureConfig) validateSubmitRule(formats strfmt.Registry) error {
+	if swag.IsZero(m.SubmitRule) { // not required
 		return nil
 	}
 
-	if err := m.VersionNumber.Validate(formats); err != nil {
-		if ve, ok := err.(*errors.Validation); ok {
-			return ve.ValidateName("VersionNumber")
-		} else if ce, ok := err.(*errors.CompositeError); ok {
-			return ce.ValidateName("VersionNumber")
-		}
+	// value enum
+	if err := m.validateSubmitRuleEnum("submitRule", "body", m.SubmitRule); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func (m *FeatureConfig) validateMaxVal(formats strfmt.Registry) error {
-
-	if err := validate.Required("maxVal", "body", m.MaxVal); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-func (m *FeatureConfig) validateMinVal(formats strfmt.Registry) error {
-
-	if err := validate.Required("minVal", "body", m.MinVal); err != nil {
-		return err
-	}
-
-	return nil
-}
-
-// ContextValidate validate this feature config based on the context it is used
+// ContextValidate validates this feature config based on context it is used
 func (m *FeatureConfig) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
-	var res []error
-
-	if err := m.contextValidateVersionNumber(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
-	if len(res) > 0 {
-		return errors.CompositeValidationError(res...)
-	}
-	return nil
-}
-
-func (m *FeatureConfig) contextValidateVersionNumber(ctx context.Context, formats strfmt.Registry) error {
-
-	if err := m.VersionNumber.ContextValidate(ctx, formats); err != nil {
-		if ve, ok := err.(*errors.Validation); ok {
-			return ve.ValidateName("VersionNumber")
-		} else if ce, ok := err.(*errors.CompositeError); ok {
-			return ce.ValidateName("VersionNumber")
-		}
-		return err
-	}
-
 	return nil
 }
 

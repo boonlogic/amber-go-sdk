@@ -301,6 +301,33 @@ func (a *AmberClient) ConfigureSensor(sensorId string, payload amberModels.PostC
 	return aok.Payload, nil
 }
 
+func (a *AmberClient) ConfigureFusion(sensorId string, payload amberModels.PutConfigRequest) (*amberModels.PutConfigResponse, *amberModels.Error) {
+	if result, aErr := a.authenticate(); result != true {
+		return nil, aErr
+	}
+	params := &amberOps.PutConfigParams{
+		PutConfigRequest: &payload,
+		SensorID:         sensorId,
+	}
+	params.WithTimeout(a.timeout)
+	aok, err := a.amberServer.Operations.PutConfig(params, a.authWriter)
+	if err != nil {
+		switch errToken(err) {
+		case unauthorized:
+			return nil, err.(*amberOps.PutConfigUnauthorized).Payload
+		case notFound:
+			return nil, err.(*amberOps.PutConfigNotFound).Payload
+		case badRequest:
+			return nil, err.(*amberOps.PutConfigBadRequest).Payload
+		case internalServerError:
+			return nil, err.(*amberOps.PutConfigInternalServerError).Payload
+		default:
+			return nil, &amberModels.Error{Code: 500, Message: err.Error()}
+		}
+	}
+	return aok.Payload, nil
+}
+
 func (a *AmberClient) GetConfig(sensorId string) (*amberModels.GetConfigResponse, *amberModels.Error) {
 	if result, aErr := a.authenticate(); result != true {
 		return nil, aErr
@@ -382,6 +409,41 @@ func (a *AmberClient) StreamSensor(sensorId string, payload amberModels.PostStre
 		}
 	}
 	return aok.Payload, nil
+}
+
+func (a *AmberClient) StreamFusion(sensorId string, payload amberModels.PutStreamRequest) (*amberModels.PutStreamResponse, *amberModels.Error) {
+	if result, aErr := a.authenticate(); result != true {
+		return nil, aErr
+	}
+	params := &amberOps.PutStreamParams{
+		PutStreamRequest: &payload,
+		SensorID:         sensorId,
+	}
+	params.WithTimeout(a.timeout)
+	aok200, aok202, err := a.amberServer.Operations.PutStream(params, a.authWriter)
+	if err != nil {
+		switch errToken(err) {
+		case unauthorized:
+			return nil, err.(*amberOps.PutStreamUnauthorized).Payload
+		case notFound:
+			return nil, err.(*amberOps.PutStreamNotFound).Payload
+		case badRequest:
+			return nil, err.(*amberOps.PutStreamBadRequest).Payload
+		case internalServerError:
+			return nil, err.(*amberOps.PutStreamInternalServerError).Payload
+		default:
+			return nil, &amberModels.Error{Code: 500, Message: err.Error()}
+		}
+	}
+
+	var putStreamResponse *amberModels.PutStreamResponse
+	if aok200 != nil {
+		putStreamResponse = aok200.Payload
+	} else {
+		putStreamResponse = aok202.Payload
+	}
+	putStreamResponse.VectorCSV = nil
+	return putStreamResponse, nil
 }
 
 func (a *AmberClient) GetStatus(sensorId string) (*amberModels.GetStatusResponse, *amberModels.Error) {

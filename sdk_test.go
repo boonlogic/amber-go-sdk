@@ -5,7 +5,7 @@ package amber_client
 import (
 	"encoding/json"
 	"fmt"
-	amberModels "github.com/boonlogic/amber-go-sdk/models"
+	am "github.com/boonlogic/amber-go-sdk/models"
 	"github.com/stretchr/testify/require"
 	"strings"
 	"testing"
@@ -93,7 +93,6 @@ func clearEnv() {
 
 // Runs before each test. Initializes by setting env variables.
 func TestNewAmberClientFromProfile(t *testing.T) {
-
 	clearEnv()
 
 	// expected license profile
@@ -124,7 +123,6 @@ func TestNewAmberClientFromProfile(t *testing.T) {
 }
 
 func TestNewAmberClientFromFile(t *testing.T) {
-
 	clearEnv()
 
 	id := "default"
@@ -169,7 +167,6 @@ func TestNewAmberClientNegative(t *testing.T) {
 }
 
 func TestAuthenticate(t *testing.T) {
-
 	// should error when specified license file does not exist
 	clearEnv()
 
@@ -199,7 +196,6 @@ func TestAuthenticate(t *testing.T) {
 }
 
 func TestSensor(t *testing.T) {
-
 	// the client and sensor that is created here will be used for the remainder of the tests
 	testClient = createAmberClient()
 
@@ -212,7 +208,6 @@ func TestSensor(t *testing.T) {
 }
 
 func TestUpdateSensor(t *testing.T) {
-
 	// test sensor update
 	sensorLabel := "amber-go-sdk-test"
 	response, aErr := testClient.UpdateLabel(testSensor, sensorLabel)
@@ -229,7 +224,6 @@ func TestUpdateSensor(t *testing.T) {
 }
 
 func TestGetSensor(t *testing.T) {
-
 	// test get sensor
 	response, aErr := testClient.GetSensor(testSensor)
 	require.Nil(t, aErr)
@@ -244,7 +238,6 @@ func TestGetSensor(t *testing.T) {
 }
 
 func TestListSensors(t *testing.T) {
-
 	// test list sensors
 	response, aErr := testClient.ListSensors()
 	require.Nil(t, aErr)
@@ -253,11 +246,10 @@ func TestListSensors(t *testing.T) {
 }
 
 func TestConfigureSensor(t *testing.T) {
-
 	// test sensor configuration
 	var featureCount uint16 = 1
 	var streamingWindowSize uint16 = 25
-	postConfigRequest := amberModels.PostConfigRequest{
+	postConfigRequest := am.PostConfigRequest{
 		AnomalyHistoryWindow:    nil,
 		FeatureCount:            &featureCount,
 		Features:                nil,
@@ -293,12 +285,116 @@ func TestConfigureSensor(t *testing.T) {
 	require.Equal(t, "sensor aaaaaaaaaaaaaaaaaaa not found", aErr.Message)
 }
 
-func TestPostStream(t *testing.T) {
+func TestConfigureFusion(t *testing.T) {
+	// setup: configure the sensor for fusion
+	fc := uint16(5)
+	sw := uint16(1)
+	postConfigRequest := am.PostConfigRequest{FeatureCount: &fc, StreamingWindowSize: &sw}
+	_, aErr := testClient.ConfigureSensor(testSensor, postConfigRequest)
+	if aErr != nil {
+		panic(aErr)
+	}
 
+	// test fusion configuration
+	f := make([]*am.FusionConfig, fc)
+	for i := 0; i < int(fc); i++ {
+		l := fmt.Sprintf("f%d", i)
+		f[i] = &am.FusionConfig{Label: &l, SubmitRule: "submit"}
+	}
+	request := am.PutConfigRequest{Features: f}
+	response, aErr := testClient.ConfigureFusion(testSensor, request)
+	require.Nil(t, aErr)
+	require.Equal(t, request.Features, response.Features)
+
+	// test fusion configuration with invalid sensorID
+	notASensor := "aaaaaaaaaaaaaaaaaaa"
+	response, aErr = testClient.ConfigureFusion(notASensor, request)
+	require.NotNil(t, aErr)
+	require.Equal(t, 404, int(aErr.Code))
+	require.Equal(t, "sensor aaaaaaaaaaaaaaaaaaa not found", aErr.Message)
+
+	// number of features doesn't match configured feature count
+	l := "f5"
+	fplus := append(f, &am.FusionConfig{Label: &l})
+	request = am.PutConfigRequest{Features: fplus}
+	response, aErr = testClient.ConfigureFusion(testSensor, request)
+	require.NotNil(t, aErr)
+	require.Equal(t, 400, int(aErr.Code))
+
+	// duplicate feature in configuration
+	fbad := make([]*am.FusionConfig, len(f))
+	copy(fbad, f)
+	fbad[3] = fbad[2]
+	request = am.PutConfigRequest{Features: fbad}
+	response, aErr = testClient.ConfigureFusion(testSensor, request)
+	require.NotNil(t, aErr)
+	require.Equal(t, 400, int(aErr.Code))
+
+	// unrecognized submit rule in configuration
+	copy(fbad, f)
+	fbad[2].SubmitRule = "badsubmitrule"
+	request = am.PutConfigRequest{Features: fbad}
+	response, aErr = testClient.ConfigureFusion(testSensor, request)
+	require.NotNil(t, aErr)
+	require.Equal(t, 400, int(aErr.Code))
+}
+
+func TestStreamFusion(t *testing.T) {
+	// stream partial vector (202 response)
+	var l1, l3 = "f1", "f3"
+	var v1, v3 float32 = 2, 4
+	v := []*am.PutStreamFeature{{Label: &l1, Value: &v1}, {Label: &l3, Value: &v3}}
+	expVec := am.MayContainNullsArray{nil, json.Number("2"), nil, json.Number("4"), nil}
+	request := am.PutStreamRequest{Vector: v}
+	response, aErr := testClient.StreamFusion(testSensor, request)
+	require.Nil(t, aErr)
+	require.Equal(t, expVec, response.Vector)
+	require.Nil(t, response.Results)
+	require.Nil(t, response.VectorCSV)
+
+	// stream full vector (200 response)
+	var l0, l2, l4 = "f0", "f2", "f4"
+	var v0, v2, v4 float32 = 1, 3, 5
+	v = []*am.PutStreamFeature{{Label: &l0, Value: &v0}, {Label: &l2, Value: &v2}, {Label: &l4, Value: &v4}}
+	expVec = am.MayContainNullsArray{json.Number("1"), json.Number("2"), json.Number("3"), json.Number("4"), json.Number("5")}
+	request = am.PutStreamRequest{Vector: v}
+	response, aErr = testClient.StreamFusion(testSensor, request)
+	require.Nil(t, aErr)
+	require.NotNil(t, response)
+	require.NotNil(t, response.Results)
+	require.Nil(t, response.VectorCSV)
+	require.Equal(t, expVec, response.Vector)
+
+	// fusion vector contains label not in fusion configuration
+	l0, l1 = "badfeature", "f3"
+	v = []*am.PutStreamFeature{{Label: &l0, Value: &v0}, {Label: &l1, Value: &v1}}
+	request = am.PutStreamRequest{Vector: v}
+	response, aErr = testClient.StreamFusion(testSensor, request)
+	require.NotNil(t, aErr)
+	require.Equal(t, 400, int(aErr.Code))
+
+	// fusion vector contains duplicate label
+	v[0].Label = v[1].Label
+	request = am.PutStreamRequest{Vector: v}
+	response, aErr = testClient.StreamFusion(testSensor, request)
+	require.NotNil(t, aErr)
+	require.Equal(t, 400, int(aErr.Code))
+
+	// teardown: re-configure the sensor for single feature streaming
+	fc := uint16(1)
+	sw := uint16(25)
+	postConfigRequest := am.PostConfigRequest{FeatureCount: &fc, StreamingWindowSize: &sw}
+	_, aErr = testClient.ConfigureSensor(testSensor, postConfigRequest)
+	if aErr != nil {
+		panic(aErr)
+	}
+}
+
+func TestPostStream(t *testing.T) {
 	// stream the sensor
 	data := "1.0,1.2,1.1,3.0"
 	saveImage := true
-	postStreamRequest := amberModels.PostStreamRequest{
+	postStreamRequest := am.PostStreamRequest{
 		Data:      &data,
 		SaveImage: &saveImage,
 	}
@@ -322,7 +418,6 @@ func TestPostStream(t *testing.T) {
 }
 
 func TestPretrainSensor(t *testing.T) {
-
 	// test get pretrain
 	getPretrainResponse, aErr := testClient.GetPretrainState(testSensor)
 	require.Nil(t, aErr)
@@ -347,7 +442,7 @@ func TestPretrainSensor(t *testing.T) {
 
 	// pretrain the sensor with
 	autoTuneConfig := true
-	postPretrainRequest := amberModels.PostPretrainRequest{
+	postPretrainRequest := am.PostPretrainRequest{
 		AutotuneConfig: &autoTuneConfig,
 		Data:           &pretrainData,
 	}
@@ -372,7 +467,6 @@ func TestPretrainSensor(t *testing.T) {
 }
 
 func TestGetRootCause(t *testing.T) {
-
 	// test get rootcause
 	clusterIds := "[1]"
 	patterns := ""

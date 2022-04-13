@@ -58,7 +58,11 @@ type ClientService interface {
 
 	PostStream(params *PostStreamParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PostStreamOK, error)
 
+	PutConfig(params *PutConfigParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PutConfigOK, error)
+
 	PutSensor(params *PutSensorParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PutSensorOK, error)
+
+	PutStream(params *PutStreamParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PutStreamOK, *PutStreamAccepted, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -646,6 +650,47 @@ func (a *Client) PostStream(params *PostStreamParams, authInfo runtime.ClientAut
 }
 
 /*
+  PutConfig updates configuration for a sensor instance
+
+  Updates the configuration for the sensor instance specified.
+*/
+func (a *Client) PutConfig(params *PutConfigParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PutConfigOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewPutConfigParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "putConfig",
+		Method:             "PUT",
+		PathPattern:        "/config",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &PutConfigReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*PutConfigOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for putConfig: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
   PutSensor updates label for a sensor instance
 
   Changes the label of an existing sensor instance to the new label specified.
@@ -683,6 +728,48 @@ func (a *Client) PutSensor(params *PutSensorParams, authInfo runtime.ClientAuthI
 	// unexpected success response
 	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
 	msg := fmt.Sprintf("unexpected success response for putSensor: API contract not enforced by server. Client expected to get an error, but got: %T", result)
+	panic(msg)
+}
+
+/*
+  PutStream streams data to a sensor fusion vector
+
+  Update fusion vector with new values for the given features, and optionally submit to Amber. Analytic results returned are the same as POST /stream.
+*/
+func (a *Client) PutStream(params *PutStreamParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PutStreamOK, *PutStreamAccepted, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewPutStreamParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "putStream",
+		Method:             "PUT",
+		PathPattern:        "/stream",
+		ProducesMediaTypes: []string{"application/json"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"http", "https"},
+		Params:             params,
+		Reader:             &PutStreamReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, nil, err
+	}
+	switch value := result.(type) {
+	case *PutStreamOK:
+		return value, nil, nil
+	case *PutStreamAccepted:
+		return nil, value, nil
+	}
+	// safeguard: normally, absent a default response, unknown success responses return an error above: so this is a codegen issue
+	msg := fmt.Sprintf("unexpected success response for operations: API contract not enforced by server. Client expected to get an error, but got: %T", result)
 	panic(msg)
 }
 

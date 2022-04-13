@@ -51,7 +51,7 @@ type GetStatusResponse struct {
 	// Required: true
 	Pca PCA `json:"pca"`
 
-	// state of the sensor, states will be prefixed with a state variable  followed by a colon followed by a message indicating progress.  Possible state variables  are: Not streaming, Buffering, Autotuning, Learning, Learning Complete, Monitoring,  Streaming error,  Autotuning error, Autotuning retry
+	// state of the sensor. Possible state variables are: Error, Buffering, Autotuning, Learning, Monitoring
 	// Required: true
 	State *string `json:"state"`
 
