@@ -177,13 +177,13 @@ func (a *AmberClient) ListSensors() (*amberModels.GetSensorsResponse, *amberMode
 	if err != nil {
 		switch errToken(err) {
 		case unauthorized:
-			return nil, err.(*amberOps.GetRootCauseUnauthorized).Payload
+			return nil, err.(*amberOps.GetSensorsUnauthorized).Payload
 		case notFound:
-			return nil, err.(*amberOps.GetRootCauseNotFound).Payload
+			return nil, err.(*amberOps.GetSensorsNotFound).Payload
 		case badRequest:
-			return nil, err.(*amberOps.GetRootCauseBadRequest).Payload
+			return nil, err.(*amberOps.GetSensorsBadRequest).Payload
 		case internalServerError:
-			return nil, err.(*amberOps.GetRootCauseInternalServerError).Payload
+			return nil, err.(*amberOps.GetSensorsInternalServerError).Payload
 		default:
 			return nil, &amberModels.Error{Code: 500, Message: err.Error()}
 		}
