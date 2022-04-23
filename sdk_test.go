@@ -250,15 +250,17 @@ func TestConfigureSensor(t *testing.T) {
 	var featureCount uint16 = 1
 	var streamingWindowSize uint16 = 25
 	postConfigRequest := am.PostConfigRequest{
-		AnomalyHistoryWindow:    nil,
-		FeatureCount:            &featureCount,
-		Features:                nil,
-		LearningMaxClusters:     nil,
-		LearningMaxSamples:      nil,
-		LearningRateDenominator: nil,
-		LearningRateNumerator:   nil,
-		SamplesToBuffer:         nil,
-		StreamingWindowSize:     &streamingWindowSize,
+		FeatureCount:        &featureCount,
+		Features:            nil,
+		SamplesToBuffer:     nil,
+		StreamingWindowSize: &streamingWindowSize,
+		StreamingParameters: am.StreamingParameters{
+			LearningMaxClusters:     nil,
+			LearningMaxSamples:      nil,
+			LearningRateDenominator: nil,
+			LearningRateNumerator:   nil,
+			AnomalyHistoryWindow:    nil,
+		},
 	}
 	response, aErr := testClient.ConfigureSensor(testSensor, postConfigRequest)
 	require.Nil(t, aErr)
@@ -496,6 +498,52 @@ func TestGetStatus(t *testing.T) {
 	require.NotNil(t, aErr)
 	require.Equal(t, 404, int(aErr.Code))
 	require.Equal(t, "sensor aaaaaaaaaaaaaaaaaaa not found", aErr.Message)
+}
+
+func TestEnableLearning(t *testing.T) {
+	putConfigRequest := am.PutConfigRequest{
+		Streaming: &am.StreamingParameters{
+			LearningMaxClusters:     nil,
+			LearningMaxSamples:      nil,
+			LearningRateDenominator: nil,
+			LearningRateNumerator:   nil,
+			AnomalyHistoryWindow:    nil,
+		},
+	}
+	response, aErr := testClient.EnableLearning(testSensor, putConfigRequest)
+	require.Nil(t, aErr)
+	require.Equal(t, putConfigRequest.Streaming.AnomalyHistoryWindow, response.Streaming.AnomalyHistoryWindow)
+	require.Equal(t, putConfigRequest.Streaming.LearningMaxSamples, response.Streaming.LearningMaxSamples)
+
+	// test sensor configuration with invalid sensorID
+	notASensor := "aaaaaaaaaaaaaaaaaaa"
+	response, aErr = testClient.EnableLearning(notASensor, putConfigRequest)
+	require.NotNil(t, aErr)
+	require.Equal(t, 404, int(aErr.Code))
+	require.Equal(t, "sensor aaaaaaaaaaaaaaaaaaa not found", aErr.Message)
+
+	// failed because not in learning/monitoring
+	var featureCount uint16 = 1
+	var streamingWindowSize uint16 = 25
+	postConfigRequest := am.PostConfigRequest{
+		FeatureCount:        &featureCount,
+		Features:            nil,
+		SamplesToBuffer:     nil,
+		StreamingWindowSize: &streamingWindowSize,
+		StreamingParameters: am.StreamingParameters{
+			LearningMaxClusters:     nil,
+			LearningMaxSamples:      nil,
+			LearningRateDenominator: nil,
+			LearningRateNumerator:   nil,
+			AnomalyHistoryWindow:    nil,
+		},
+	}
+	_, aErr = testClient.ConfigureSensor(testSensor, postConfigRequest)
+	require.Nil(t, aErr)
+	response, aErr = testClient.EnableLearning(testSensor, putConfigRequest)
+	require.NotNil(t, aErr)
+	require.Equal(t, 400, int(aErr.Code))
+
 }
 
 func TestDeleteSensor(t *testing.T) {

@@ -19,9 +19,7 @@ import (
 //
 // swagger:model postConfigRequest
 type PostConfigRequest struct {
-
-	// the number of samples to use when calculating AH
-	AnomalyHistoryWindow *uint32 `json:"anomalyHistoryWindow,omitempty"`
+	StreamingParameters
 
 	// number of features per sample
 	// Required: true
@@ -30,18 +28,6 @@ type PostConfigRequest struct {
 
 	// features
 	Features []*FeatureConfig `json:"features"`
-
-	// learning graduation requirement for stopping learning upon reaching this cluster count
-	LearningMaxClusters *uint16 `json:"learningMaxClusters,omitempty"`
-
-	// learning graduation requirement for stopping learning after acquiring this many samples
-	LearningMaxSamples *uint64 `json:"learningMaxSamples,omitempty"`
-
-	// enables graduation requirements for learning
-	LearningRateDenominator *uint64 `json:"learningRateDenominator,omitempty"`
-
-	// enables graduation requirements for learning
-	LearningRateNumerator *uint64 `json:"learningRateNumerator,omitempty"`
 
 	// the number of samples to be applied before autotuning begins
 	SamplesToBuffer *uint32 `json:"samplesToBuffer,omitempty"`
@@ -52,9 +38,83 @@ type PostConfigRequest struct {
 	StreamingWindowSize *uint16 `json:"streamingWindowSize"`
 }
 
+// UnmarshalJSON unmarshals this object from a JSON structure
+func (m *PostConfigRequest) UnmarshalJSON(raw []byte) error {
+	// AO0
+	var aO0 StreamingParameters
+	if err := swag.ReadJSON(raw, &aO0); err != nil {
+		return err
+	}
+	m.StreamingParameters = aO0
+
+	// AO1
+	var dataAO1 struct {
+		FeatureCount *uint16 `json:"featureCount"`
+
+		Features []*FeatureConfig `json:"features"`
+
+		SamplesToBuffer *uint32 `json:"samplesToBuffer,omitempty"`
+
+		StreamingWindowSize *uint16 `json:"streamingWindowSize"`
+	}
+	if err := swag.ReadJSON(raw, &dataAO1); err != nil {
+		return err
+	}
+
+	m.FeatureCount = dataAO1.FeatureCount
+
+	m.Features = dataAO1.Features
+
+	m.SamplesToBuffer = dataAO1.SamplesToBuffer
+
+	m.StreamingWindowSize = dataAO1.StreamingWindowSize
+
+	return nil
+}
+
+// MarshalJSON marshals this object to a JSON structure
+func (m PostConfigRequest) MarshalJSON() ([]byte, error) {
+	_parts := make([][]byte, 0, 2)
+
+	aO0, err := swag.WriteJSON(m.StreamingParameters)
+	if err != nil {
+		return nil, err
+	}
+	_parts = append(_parts, aO0)
+	var dataAO1 struct {
+		FeatureCount *uint16 `json:"featureCount"`
+
+		Features []*FeatureConfig `json:"features"`
+
+		SamplesToBuffer *uint32 `json:"samplesToBuffer,omitempty"`
+
+		StreamingWindowSize *uint16 `json:"streamingWindowSize"`
+	}
+
+	dataAO1.FeatureCount = m.FeatureCount
+
+	dataAO1.Features = m.Features
+
+	dataAO1.SamplesToBuffer = m.SamplesToBuffer
+
+	dataAO1.StreamingWindowSize = m.StreamingWindowSize
+
+	jsonDataAO1, errAO1 := swag.WriteJSON(dataAO1)
+	if errAO1 != nil {
+		return nil, errAO1
+	}
+	_parts = append(_parts, jsonDataAO1)
+	return swag.ConcatJSON(_parts...), nil
+}
+
 // Validate validates this post config request
 func (m *PostConfigRequest) Validate(formats strfmt.Registry) error {
 	var res []error
+
+	// validation for a type composition with StreamingParameters
+	if err := m.StreamingParameters.Validate(formats); err != nil {
+		res = append(res, err)
+	}
 
 	if err := m.validateFeatureCount(formats); err != nil {
 		res = append(res, err)
@@ -88,6 +148,7 @@ func (m *PostConfigRequest) validateFeatureCount(formats strfmt.Registry) error 
 }
 
 func (m *PostConfigRequest) validateFeatures(formats strfmt.Registry) error {
+
 	if swag.IsZero(m.Features) { // not required
 		return nil
 	}
@@ -129,6 +190,11 @@ func (m *PostConfigRequest) validateStreamingWindowSize(formats strfmt.Registry)
 // ContextValidate validate this post config request based on the context it is used
 func (m *PostConfigRequest) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
+
+	// validation for a type composition with StreamingParameters
+	if err := m.StreamingParameters.ContextValidate(ctx, formats); err != nil {
+		res = append(res, err)
+	}
 
 	if err := m.contextValidateFeatures(ctx, formats); err != nil {
 		res = append(res, err)
