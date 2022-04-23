@@ -1,5 +1,7 @@
 #!/bin/bash
 
+go install github.com/princjef/gomarkdoc/cmd/gomarkdoc@latest
+
 ${GOPATH}/bin/gomarkdoc . ./models \
 	--repository.default-branch master \
 	--repository.url https://github.com/boonlogic/amber-go-sdk > docs/user-docs.md 

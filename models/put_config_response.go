@@ -12,7 +12,6 @@ import (
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
-	"github.com/go-openapi/validate"
 )
 
 // PutConfigResponse put config response
@@ -21,8 +20,10 @@ import (
 type PutConfigResponse struct {
 
 	// features
-	// Required: true
 	Features []*FusionConfig `json:"features"`
+
+	// streaming
+	Streaming *StreamingParameters `json:"streaming,omitempty"`
 }
 
 // Validate validates this put config response
@@ -33,6 +34,10 @@ func (m *PutConfigResponse) Validate(formats strfmt.Registry) error {
 		res = append(res, err)
 	}
 
+	if err := m.validateStreaming(formats); err != nil {
+		res = append(res, err)
+	}
+
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
@@ -40,9 +45,8 @@ func (m *PutConfigResponse) Validate(formats strfmt.Registry) error {
 }
 
 func (m *PutConfigResponse) validateFeatures(formats strfmt.Registry) error {
-
-	if err := validate.Required("features", "body", m.Features); err != nil {
-		return err
+	if swag.IsZero(m.Features) { // not required
+		return nil
 	}
 
 	for i := 0; i < len(m.Features); i++ {
@@ -66,11 +70,34 @@ func (m *PutConfigResponse) validateFeatures(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *PutConfigResponse) validateStreaming(formats strfmt.Registry) error {
+	if swag.IsZero(m.Streaming) { // not required
+		return nil
+	}
+
+	if m.Streaming != nil {
+		if err := m.Streaming.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("streaming")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("streaming")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 // ContextValidate validate this put config response based on the context it is used
 func (m *PutConfigResponse) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.contextValidateFeatures(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateStreaming(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -95,6 +122,22 @@ func (m *PutConfigResponse) contextValidateFeatures(ctx context.Context, formats
 			}
 		}
 
+	}
+
+	return nil
+}
+
+func (m *PutConfigResponse) contextValidateStreaming(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Streaming != nil {
+		if err := m.Streaming.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("streaming")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("streaming")
+			}
+			return err
+		}
 	}
 
 	return nil

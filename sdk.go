@@ -328,6 +328,33 @@ func (a *AmberClient) ConfigureFusion(sensorId string, payload amberModels.PutCo
 	return aok.Payload, nil
 }
 
+func (a *AmberClient) EnableLearning(sensorId string, payload amberModels.PutConfigRequest) (*amberModels.PutConfigResponse, *amberModels.Error) {
+	if result, aErr := a.authenticate(); result != true {
+		return nil, aErr
+	}
+	params := &amberOps.PutConfigParams{
+		PutConfigRequest: &payload,
+		SensorID:         sensorId,
+	}
+	params.WithTimeout(a.timeout)
+	aok, err := a.amberServer.Operations.PutConfig(params, a.authWriter)
+	if err != nil {
+		switch errToken(err) {
+		case unauthorized:
+			return nil, err.(*amberOps.PutConfigUnauthorized).Payload
+		case notFound:
+			return nil, err.(*amberOps.PutConfigNotFound).Payload
+		case badRequest:
+			return nil, err.(*amberOps.PutConfigBadRequest).Payload
+		case internalServerError:
+			return nil, err.(*amberOps.PutConfigInternalServerError).Payload
+		default:
+			return nil, &amberModels.Error{Code: 500, Message: err.Error()}
+		}
+	}
+	return aok.Payload, nil
+}
+
 func (a *AmberClient) GetConfig(sensorId string) (*amberModels.GetConfigResponse, *amberModels.Error) {
 	if result, aErr := a.authenticate(); result != true {
 		return nil, aErr
