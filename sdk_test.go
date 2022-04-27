@@ -346,26 +346,24 @@ func TestStreamFusion(t *testing.T) {
 	var l1, l3 = "f1", "f3"
 	var v1, v3 float32 = 2, 4
 	v := []*am.PutStreamFeature{{Label: &l1, Value: &v1}, {Label: &l3, Value: &v3}}
-	expVec := am.MayContainNullsArray{nil, json.Number("2"), nil, json.Number("4"), nil}
+	expVec := "None,2,None,4,None"
 	request := am.PutStreamRequest{Vector: v}
 	response, aErr := testClient.StreamFusion(testSensor, request)
 	require.Nil(t, aErr)
-	require.Equal(t, expVec, response.Vector)
+	require.Equal(t, expVec, *response.Vector)
 	require.Nil(t, response.Results)
-	require.Nil(t, response.VectorCSV)
 
 	// stream full vector (200 response)
 	var l0, l2, l4 = "f0", "f2", "f4"
 	var v0, v2, v4 float32 = 1, 3, 5
 	v = []*am.PutStreamFeature{{Label: &l0, Value: &v0}, {Label: &l2, Value: &v2}, {Label: &l4, Value: &v4}}
-	expVec = am.MayContainNullsArray{json.Number("1"), json.Number("2"), json.Number("3"), json.Number("4"), json.Number("5")}
+	expVec = "1,2,3,4,5"
 	request = am.PutStreamRequest{Vector: v}
 	response, aErr = testClient.StreamFusion(testSensor, request)
 	require.Nil(t, aErr)
 	require.NotNil(t, response)
 	require.NotNil(t, response.Results)
-	require.Nil(t, response.VectorCSV)
-	require.Equal(t, expVec, response.Vector)
+	require.Equal(t, expVec, *response.Vector)
 
 	// fusion vector contains label not in fusion configuration
 	l0, l1 = "badfeature", "f3"

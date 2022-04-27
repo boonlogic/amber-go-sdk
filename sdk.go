@@ -469,7 +469,6 @@ func (a *AmberClient) StreamFusion(sensorId string, payload amberModels.PutStrea
 	} else {
 		putStreamResponse = aok202.Payload
 	}
-	putStreamResponse.VectorCSV = nil
 	return putStreamResponse, nil
 }
 
