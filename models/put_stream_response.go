@@ -22,13 +22,9 @@ type PutStreamResponse struct {
 	// streaming results when available
 	Results *PostStreamResponse `json:"results,omitempty"`
 
-	// updated sensor fusion vector
-	// Required: true
-	Vector MayContainNullsArray `json:"vector"`
-
 	// updated sensor fusion vector as a string of comma-separated values
 	// Required: true
-	VectorCSV *string `json:"vectorCSV"`
+	Vector *string `json:"vector"`
 }
 
 // Validate validates this put stream response
@@ -40,10 +36,6 @@ func (m *PutStreamResponse) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateVector(formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.validateVectorCSV(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -78,24 +70,6 @@ func (m *PutStreamResponse) validateVector(formats strfmt.Registry) error {
 		return err
 	}
 
-	if err := m.Vector.Validate(formats); err != nil {
-		if ve, ok := err.(*errors.Validation); ok {
-			return ve.ValidateName("vector")
-		} else if ce, ok := err.(*errors.CompositeError); ok {
-			return ce.ValidateName("vector")
-		}
-		return err
-	}
-
-	return nil
-}
-
-func (m *PutStreamResponse) validateVectorCSV(formats strfmt.Registry) error {
-
-	if err := validate.Required("vectorCSV", "body", m.VectorCSV); err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -104,10 +78,6 @@ func (m *PutStreamResponse) ContextValidate(ctx context.Context, formats strfmt.
 	var res []error
 
 	if err := m.contextValidateResults(ctx, formats); err != nil {
-		res = append(res, err)
-	}
-
-	if err := m.contextValidateVector(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -128,20 +98,6 @@ func (m *PutStreamResponse) contextValidateResults(ctx context.Context, formats 
 			}
 			return err
 		}
-	}
-
-	return nil
-}
-
-func (m *PutStreamResponse) contextValidateVector(ctx context.Context, formats strfmt.Registry) error {
-
-	if err := m.Vector.ContextValidate(ctx, formats); err != nil {
-		if ve, ok := err.(*errors.Validation); ok {
-			return ve.ValidateName("vector")
-		} else if ce, ok := err.(*errors.CompositeError); ok {
-			return ce.ValidateName("vector")
-		}
-		return err
 	}
 
 	return nil
