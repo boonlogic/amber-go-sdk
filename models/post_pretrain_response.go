@@ -19,10 +19,16 @@ import (
 // swagger:model postPretrainResponse
 type PostPretrainResponse struct {
 
+	// amber chunk
+	AmberChunk string `json:"amberChunk,omitempty"`
+
+	// amber transaction
+	AmberTransaction string `json:"amberTransaction,omitempty"`
+
 	// latest pretrain message
 	Message string `json:"message,omitempty"`
 
-	// state of pretraining, None, Pretraining, Pretrained
+	// state of pretraining, one of: Chunking, Pretraining, Pretrained, Error
 	// Required: true
 	State *string `json:"state"`
 }

@@ -466,6 +466,51 @@ func TestPretrainSensor(t *testing.T) {
 	require.Equal(t, "Pretrained", pretrainState)
 }
 
+func TestPretrainSensorXL(t *testing.T) {
+	var getPretrainResponse *am.GetPretrainResponse
+	var postPretrainRequest *am.PostPretrainRequest
+	var postPretrainResponse *am.PostPretrainResponse
+	var aErr *am.Error
+
+	// test get pretrain
+
+	getPretrainResponse, aErr = testClient.GetPretrainState(testSensor)
+	require.Nil(t, aErr)
+	require.NotNil(t, getPretrainResponse)
+
+	// read a larger data source
+	csvRecords, err := LoadCsvRecords("examples/output_current.csv")
+	require.Nil(t, err)
+
+	// generate one csv string from csv records
+	pretrainData := strings.Join(csvRecords, ",")
+
+	// pretrain the sensor with
+	autoTuneConfig := true
+	postPretrainRequest = &am.PostPretrainRequest{
+		AutotuneConfig: &autoTuneConfig,
+		Data:           &pretrainData,
+	}
+	postPretrainResponse, aErr = testClient.PretrainSensorXL(testSensor, *postPretrainRequest)
+	require.Nil(t, aErr)
+	require.NotNil(t, postPretrainResponse)
+	require.Equal(t, "", postPretrainResponse.Message)
+	// some implementations of amber block until finished with request.  The state moves directly to "Pretrained"
+	pretrainState := *postPretrainResponse.State
+	require.True(t, pretrainState == "Pretrained" || pretrainState == "Pretraining")
+
+	for pretrainState == "Pretraining" {
+		// wait for 5 seconds between checking pretraining state
+		time.Sleep(5 * time.Second)
+		getPretrainResponse, aErr = testClient.GetPretrainState(testSensor)
+		require.Nil(t, aErr)
+		require.NotNil(t, getPretrainResponse)
+		pretrainState = *getPretrainResponse.State
+		require.True(t, pretrainState == "Pretraining" || pretrainState == "Pretrained" || pretrainState == "None")
+	}
+	require.Equal(t, "Pretrained", pretrainState)
+}
+
 func TestGetRootCause(t *testing.T) {
 	// test get rootcause
 	clusterIds := "[1]"

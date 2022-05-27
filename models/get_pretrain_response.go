@@ -22,7 +22,7 @@ type GetPretrainResponse struct {
 	// latest pretrain message
 	Message string `json:"message,omitempty"`
 
-	// state of pretraining, None, Pretraining, Pretrained, Error
+	// state of pretraining, one of: None, Chunking, Pretraining, Pretrained, Error
 	// Required: true
 	State *string `json:"state"`
 }

@@ -25,6 +25,9 @@ type PostPretrainRequest struct {
 	// data
 	// Required: true
 	Data *string `json:"data"`
+
+	// format of 'data' field, [csv | b64float]
+	Format *string `json:"format,omitempty"`
 }
 
 // Validate validates this post pretrain request
