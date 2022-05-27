@@ -112,6 +112,8 @@ func NewPostPretrainAccepted() *PostPretrainAccepted {
 Operation was accepted
 */
 type PostPretrainAccepted struct {
+	AmberTransaction string
+
 	Payload *models.PostPretrainResponse
 }
 
@@ -123,6 +125,13 @@ func (o *PostPretrainAccepted) GetPayload() *models.PostPretrainResponse {
 }
 
 func (o *PostPretrainAccepted) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	// hydrates response header amberTransaction
+	hdrAmberTransaction := response.GetHeader("amberTransaction")
+
+	if hdrAmberTransaction != "" {
+		o.AmberTransaction = hdrAmberTransaction
+	}
 
 	o.Payload = new(models.PostPretrainResponse)
 

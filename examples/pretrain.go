@@ -38,17 +38,12 @@ func main() {
 		// configure the sensor
 		featureCount := uint16(1)
 		streamingWindowSize := uint16(25)
-		learningMaxSamples := uint64(3000)
-		samplesToBuffer := uint32(1000)
-		learningRateNumerator := uint64(1)
-		learningRateDenominator := uint64(1000)
+		// set just the basics as pretraining sets the rest
 		configRequest := amberModels.PostConfigRequest{
-			FeatureCount:            &featureCount,
-			StreamingWindowSize:     &streamingWindowSize,
-			LearningMaxSamples:      &learningMaxSamples,
-			LearningRateNumerator:   &learningRateNumerator,
-			LearningRateDenominator: &learningRateDenominator,
-			SamplesToBuffer:         &samplesToBuffer,
+			StreamingParameters: amberModels.StreamingParameters{},
+			FeatureCount:        &featureCount,
+			StreamingWindowSize: &streamingWindowSize,
+			Features:            nil,
 		}
 		configSensorResponse, aErr := ac.ConfigureSensor(sensorId, configRequest)
 		if aErr != nil {

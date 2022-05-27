@@ -3,6 +3,8 @@ package amber_client
 import (
 	"bytes"
 	"compress/gzip"
+	"encoding/base64"
+	"encoding/binary"
 	"encoding/csv"
 	"encoding/json"
 	"errors"
@@ -14,6 +16,7 @@ import (
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 	"io/ioutil"
+	"math"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -532,6 +535,99 @@ func (a *AmberClient) PretrainSensor(sensorId string, payload amberModels.PostPr
 	return aok.Payload, nil
 }
 
+func (a *AmberClient) PretrainSensorXL(sensorId string, request amberModels.PostPretrainRequest) (*amberModels.PostPretrainResponse, *amberModels.Error) {
+
+	var err error
+
+	if result, aErr := a.authenticate(); result != true {
+		return nil, aErr
+	}
+
+	// send payload in chunks by default
+	floatFormat := "packed-float"
+	request.Format = &floatFormat
+
+	// convert to packed floats
+	packedFloats, err := PackCsvAsByteSlice(*request.Data)
+	if err != nil {
+		return nil, &amberModels.Error{Code: 400, Message: err.Error()}
+	}
+
+	// post chunks of 4MB
+	chunkSize := 4000000
+	chunkMax := len(packedFloats) / chunkSize
+	if len(packedFloats)%chunkSize != 0 {
+		chunkMax += 1
+	}
+
+	params := &amberOps.PostPretrainParams{
+		PostPretrainRequest: &request,
+		SensorID:            sensorId,
+	}
+
+	var aok *amberOps.PostPretrainOK
+	var accepted *amberOps.PostPretrainAccepted
+	for chunkIdx := 0; chunkIdx < chunkMax; chunkIdx++ {
+
+		start := chunkIdx * chunkSize
+		end := (chunkIdx + 1) * chunkSize
+		if end > len(packedFloats) {
+			end = len(packedFloats)
+		}
+
+		// prepare next chunk
+		next := packedFloats[start:end]
+		chunk := base64.StdEncoding.EncodeToString(next)
+		params.PostPretrainRequest.Data = &chunk
+
+		// apply amberchunk http header
+		amberChunk := fmt.Sprintf("%v:%v", chunkIdx+1, chunkMax)
+		params.AmberChunk = &amberChunk
+
+		params.WithTimeout(a.timeout)
+		aok, accepted, err = a.amberServer.Operations.PostPretrain(params, a.authWriter)
+		if err != nil {
+			switch errToken(err) {
+			case unauthorized:
+				return nil, err.(*amberOps.PostPretrainUnauthorized).Payload
+			case notFound:
+				return nil, err.(*amberOps.PostPretrainNotFound).Payload
+			case badRequest:
+				return nil, err.(*amberOps.PostPretrainBadRequest).Payload
+			case internalServerError:
+				return nil, err.(*amberOps.PostPretrainInternalServerError).Payload
+			default:
+				return nil, &amberModels.Error{Code: 500, Message: err.Error()}
+			}
+		}
+		if accepted != nil {
+			// accepted responses will have ambertransaction in the header
+			params.AmberTransaction = &accepted.AmberTransaction
+		}
+	}
+
+	if aok != nil {
+		// pretraining complete
+		aokResponse := amberModels.PostPretrainResponse{
+			State:   aok.Payload.State,
+			Message: aok.Payload.Message,
+		}
+		return &aokResponse, nil
+	}
+
+	if accepted != nil {
+		// pretraining still running
+		acceptedResponse := amberModels.PostPretrainResponse{
+			State:   accepted.Payload.State,
+			Message: accepted.Payload.Message,
+		}
+		return &acceptedResponse, nil
+	}
+
+	// if this code is reached, all of the chunks were sent but pretraining did not complete
+	return nil, err.(*amberOps.PostPretrainInternalServerError).Payload
+}
+
 func (a *AmberClient) GetPretrainState(sensorId string) (*amberModels.GetPretrainResponse, *amberModels.Error) {
 	if result, aErr := a.authenticate(); result != true {
 		return nil, aErr
@@ -811,4 +907,20 @@ func errToken(err error) string {
 	}
 
 	return unknown
+}
+
+func PackCsvAsByteSlice(csv string) ([]byte, error) {
+	csv = strings.TrimSpace(csv)
+	csvSlice := strings.Split(csv, ",")
+	sampleCnt := len(csvSlice)
+	floatBuf := make([]byte, sampleCnt*4)
+	for i, arg := range csvSlice {
+		if n, err := strconv.ParseFloat(arg, 32); err == nil {
+			binary.LittleEndian.PutUint32(floatBuf[i*4:], math.Float32bits(float32(n)))
+		} else {
+			// data not properly formatted
+			return nil, fmt.Errorf("csv string not formatted properly")
+		}
+	}
+	return floatBuf, nil
 }

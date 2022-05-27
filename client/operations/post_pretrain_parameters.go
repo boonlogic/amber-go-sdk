@@ -61,6 +61,18 @@ func NewPostPretrainParamsWithHTTPClient(client *http.Client) *PostPretrainParam
 */
 type PostPretrainParams struct {
 
+	/* AmberChunk.
+
+	   Specification of chunk, 1:3 2:3 3:3 for example
+	*/
+	AmberChunk *string
+
+	/* AmberTransaction.
+
+	   Unique identifier for chunk transactions
+	*/
+	AmberTransaction *string
+
 	/* PostPretrainRequest.
 
 	   Data to be streamed to sensor. Should be formatted as a simple string of comma-separated numbers with no spaces (e.g. "0,0.5,1,1.5,2").
@@ -126,6 +138,28 @@ func (o *PostPretrainParams) SetHTTPClient(client *http.Client) {
 	o.HTTPClient = client
 }
 
+// WithAmberChunk adds the amberChunk to the post pretrain params
+func (o *PostPretrainParams) WithAmberChunk(amberChunk *string) *PostPretrainParams {
+	o.SetAmberChunk(amberChunk)
+	return o
+}
+
+// SetAmberChunk adds the amberChunk to the post pretrain params
+func (o *PostPretrainParams) SetAmberChunk(amberChunk *string) {
+	o.AmberChunk = amberChunk
+}
+
+// WithAmberTransaction adds the amberTransaction to the post pretrain params
+func (o *PostPretrainParams) WithAmberTransaction(amberTransaction *string) *PostPretrainParams {
+	o.SetAmberTransaction(amberTransaction)
+	return o
+}
+
+// SetAmberTransaction adds the amberTransaction to the post pretrain params
+func (o *PostPretrainParams) SetAmberTransaction(amberTransaction *string) {
+	o.AmberTransaction = amberTransaction
+}
+
 // WithPostPretrainRequest adds the postPretrainRequest to the post pretrain params
 func (o *PostPretrainParams) WithPostPretrainRequest(postPretrainRequest *models.PostPretrainRequest) *PostPretrainParams {
 	o.SetPostPretrainRequest(postPretrainRequest)
@@ -155,6 +189,22 @@ func (o *PostPretrainParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.
 		return err
 	}
 	var res []error
+
+	if o.AmberChunk != nil {
+
+		// header param amberChunk
+		if err := r.SetHeaderParam("amberChunk", *o.AmberChunk); err != nil {
+			return err
+		}
+	}
+
+	if o.AmberTransaction != nil {
+
+		// header param amberTransaction
+		if err := r.SetHeaderParam("amberTransaction", *o.AmberTransaction); err != nil {
+			return err
+		}
+	}
 	if o.PostPretrainRequest != nil {
 		if err := r.SetBodyParam(o.PostPretrainRequest); err != nil {
 			return err
