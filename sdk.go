@@ -661,13 +661,43 @@ func (a *AmberClient) GetPretrainState(sensorId string) (*amberModels.GetPretrai
 	return aok.Payload, nil
 }
 
-func (a *AmberClient) GetRootCause(sensorId string, clusterId *string, pattern *string) (*amberModels.GetRootCauseResponse, *amberModels.Error) {
+func (a *AmberClient) GetRootCause(sensorId string, clusterIds []int32, patterns [][]float32) (*amberModels.GetRootCauseResponse, *amberModels.Error) {
 	if result, aErr := a.authenticate(); result != true {
 		return nil, aErr
 	}
+
+	lenc := len(clusterIds)
+	lenp := len(patterns)
+
+	if lenc == 0 && lenp == 0 { // neither specified
+		err := &amberModels.Error{Code: 400, Message: "Must specify either patterns or cluster IDs for analysis"}
+		return nil, err
+	}
+	if lenc > 0 && lenp > 0 { // both specified
+		err := &amberModels.Error{Code: 400, Message: "Cannot specify both patterns and cluster IDs for analysis"}
+		return nil, err
+	}
+
+	var patternp *string
+	var clusterp *string
+
+	if lenc > 0 {
+		clusterb, e := json.Marshal(clusterIds)
+		if e == nil {
+			c := string(clusterb)
+			clusterp = &c
+		}
+	} else {
+		patternb, e := json.Marshal(patterns)
+		if e == nil {
+			p := string(patternb)
+			patternp = &p
+		}
+	}
+
 	params := &amberOps.GetRootCauseParams{
-		ClusterID: clusterId,
-		Pattern:   pattern,
+		ClusterID: clusterp,
+		Pattern:   patternp,
 		SensorID:  sensorId,
 	}
 	params.WithTimeout(a.timeout)

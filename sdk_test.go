@@ -512,16 +512,33 @@ func TestPretrainSensorXL(t *testing.T) {
 }
 
 func TestGetRootCause(t *testing.T) {
-	// test get rootcause
-	clusterIds := "[1]"
-	patterns := ""
-	getRootCauseResponse, aErr := testClient.GetRootCause(testSensor, &clusterIds, &patterns)
+	// test get rootcause error (neigher param specified)
+	clusterIds := []int32{}
+	patterns := [][]float32{}
+	getRootCauseResponse, aErr := testClient.GetRootCause(testSensor, clusterIds, patterns)
+	require.NotNil(t, aErr)
+	require.Nil(t, getRootCauseResponse)
+	require.Equal(t, 400, int(aErr.Code))
+	require.Equal(t, "Must specify either patterns or cluster IDs for analysis", aErr.Message)
+
+	// test get rootcause error (both params specified)
+	clusterIds = []int32{1}
+	patterns = [][]float32{{1.0}}
+	getRootCauseResponse, aErr = testClient.GetRootCause(testSensor, clusterIds, patterns)
+	require.NotNil(t, aErr)
+	require.Nil(t, getRootCauseResponse)
+	require.Equal(t, 400, int(aErr.Code))
+	require.Equal(t, "Cannot specify both patterns and cluster IDs for analysis", aErr.Message)
+
+	// test get rootcause for success
+	patterns = [][]float32{}
+	getRootCauseResponse, aErr = testClient.GetRootCause(testSensor, clusterIds, patterns)
 	require.Nil(t, aErr)
 	require.NotNil(t, getRootCauseResponse)
 
 	// stream the sensor with invalid sensor id
 	notASensor := "aaaaaaaaaaaaaaaaaaa"
-	getRootCauseResponse, aErr = testClient.GetRootCause(notASensor, &clusterIds, &patterns)
+	getRootCauseResponse, aErr = testClient.GetRootCause(notASensor, clusterIds, patterns)
 	require.NotNil(t, aErr)
 	require.Nil(t, getRootCauseResponse)
 	require.Equal(t, 404, int(aErr.Code))
