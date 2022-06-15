@@ -4,13 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	amberClient "github.com/boonlogic/amber-go-sdk"
-	"os"
 	"syscall"
 )
 
 func main() {
 
-	os.Setenv("AMBER_PASSWORD", "xyz")
 	ac, err := amberClient.NewAmberClientFromFile(nil, nil)
 	if err != nil {
 		fmt.Printf("%v\n", err)

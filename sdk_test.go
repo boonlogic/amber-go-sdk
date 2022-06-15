@@ -603,7 +603,22 @@ func TestEnableLearning(t *testing.T) {
 	response, aErr = testClient.EnableLearning(testSensor, putConfigRequest)
 	require.NotNil(t, aErr)
 	require.Equal(t, 400, int(aErr.Code))
+}
 
+func TestPostOutage(t *testing.T) {
+	response, aErr := testClient.PostOutage(testSensor)
+	require.Nil(t, aErr)
+	require.Equal(t, "Buffering", *response.State)
+	require.Equal(t, uint16(0), *response.Progress)
+	require.Equal(t, uint32(0), *response.ClusterCount)
+	require.Equal(t, uint16(0), *response.RetryCount)
+
+	// test sensor configuration with invalid sensorID
+	notASensor := "aaaaaaaaaaaaaaaaaaa"
+	response, aErr = testClient.PostOutage(notASensor)
+	require.NotNil(t, aErr)
+	require.Equal(t, 404, int(aErr.Code))
+	require.Equal(t, "sensor aaaaaaaaaaaaaaaaaaa not found", aErr.Message)
 }
 
 func TestDeleteSensor(t *testing.T) {

@@ -108,12 +108,17 @@ func main() {
 		learningRateNumerator := uint64(1)
 		learningRateDenominator := uint64(1000)
 		configRequest := amberModels.PostConfigRequest{
-			FeatureCount:            &featureCount,
-			StreamingWindowSize:     &streamingWindowSize,
-			LearningMaxSamples:      &learningMaxSamples,
-			LearningRateNumerator:   &learningRateNumerator,
-			LearningRateDenominator: &learningRateDenominator,
-			SamplesToBuffer:         &samplesToBuffer,
+			StreamingParameters: amberModels.StreamingParameters{
+				AnomalyHistoryWindow:    nil,
+				LearningMaxClusters:     nil,
+				LearningMaxSamples:      &learningMaxSamples,
+				LearningRateDenominator: &learningRateDenominator,
+				LearningRateNumerator:   &learningRateNumerator,
+			},
+			FeatureCount:        &featureCount,
+			Features:            nil,
+			SamplesToBuffer:     &samplesToBuffer,
+			StreamingWindowSize: &streamingWindowSize,
 		}
 		configSensorResponse, aErr := ac.ConfigureSensor(sensorId, configRequest)
 		if aErr != nil {
