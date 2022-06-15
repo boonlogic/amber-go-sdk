@@ -47,6 +47,10 @@ type SensorUsageInfo struct {
 	// Required: true
 	PostConfig *EndpointUsageInfo `json:"postConfig"`
 
+	// postOutage endpoint usage info
+	// Required: true
+	PostOutage *EndpointUsageInfo `json:"postOutage"`
+
 	// postPretrain endpoint usage info
 	// Required: true
 	PostPretrain *EndpointUsageInfo `json:"postPretrain"`
@@ -89,6 +93,10 @@ func (m *SensorUsageInfo) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validatePostConfig(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validatePostOutage(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -250,6 +258,26 @@ func (m *SensorUsageInfo) validatePostConfig(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *SensorUsageInfo) validatePostOutage(formats strfmt.Registry) error {
+
+	if err := validate.Required("postOutage", "body", m.PostOutage); err != nil {
+		return err
+	}
+
+	if m.PostOutage != nil {
+		if err := m.PostOutage.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("postOutage")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("postOutage")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
 func (m *SensorUsageInfo) validatePostPretrain(formats strfmt.Registry) error {
 
 	if err := validate.Required("postPretrain", "body", m.PostPretrain); err != nil {
@@ -339,6 +367,10 @@ func (m *SensorUsageInfo) ContextValidate(ctx context.Context, formats strfmt.Re
 	}
 
 	if err := m.contextValidatePostConfig(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidatePostOutage(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -464,6 +496,22 @@ func (m *SensorUsageInfo) contextValidatePostConfig(ctx context.Context, formats
 				return ve.ValidateName("postConfig")
 			} else if ce, ok := err.(*errors.CompositeError); ok {
 				return ce.ValidateName("postConfig")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (m *SensorUsageInfo) contextValidatePostOutage(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.PostOutage != nil {
+		if err := m.PostOutage.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("postOutage")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("postOutage")
 			}
 			return err
 		}

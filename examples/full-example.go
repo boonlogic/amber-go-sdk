@@ -74,15 +74,17 @@ func main() {
 	var featureCount uint16 = 1
 	var streamingWindowSize uint16 = 25
 	postConfigRequest := amberModels.PostConfigRequest{
-		AnomalyHistoryWindow:    nil,
-		FeatureCount:            &featureCount,
-		Features:                nil,
-		LearningMaxClusters:     nil,
-		LearningMaxSamples:      nil,
-		LearningRateDenominator: nil,
-		LearningRateNumerator:   nil,
-		SamplesToBuffer:         nil,
-		StreamingWindowSize:     &streamingWindowSize,
+		StreamingParameters: amberModels.StreamingParameters{
+			AnomalyHistoryWindow:    nil,
+			LearningMaxClusters:     nil,
+			LearningMaxSamples:      nil,
+			LearningRateDenominator: nil,
+			LearningRateNumerator:   nil,
+		},
+		FeatureCount:        &featureCount,
+		Features:            nil,
+		SamplesToBuffer:     nil,
+		StreamingWindowSize: &streamingWindowSize,
 	}
 	configSensorResponse, aErr := ac.ConfigureSensor(sensorId, postConfigRequest)
 	if err != nil {
@@ -138,6 +140,15 @@ func main() {
 		formatted, _ = json.MarshalIndent(*getRootCause, "", "\t")
 		fmt.Printf("%v\n", string(formatted))
 	*/
+
+	fmt.Printf("post outage\n")
+	postOutageResponse, aErr := ac.PostOutage(sensorId)
+	if aErr != nil {
+		fmt.Printf("%v\n", aErr)
+		syscall.Exit(1)
+	}
+	formatted, _ = json.MarshalIndent(*postOutageResponse, "", "\t")
+	fmt.Printf("%v\n", string(formatted))
 
 	fmt.Printf("delete sensor instance\n")
 	aErr = ac.DeleteSensor(sensorId)

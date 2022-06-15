@@ -1,6 +1,6 @@
 # Copyright 2018, Boon Logic Inc
 
-.PHONY: test format format-check clean generate-client docs go-check
+.PHONY: examples test format format-check clean generate-client docs go-check
 
 # load top-level makefile variables
 TOP?=$(shell cd .. && git rev-parse --show-toplevel)
@@ -9,6 +9,12 @@ CWD=$(shell pwd)
 
 format: go-check ## Run the formatter on go code
 	go fmt ./...
+
+examples:
+	go build examples/connect.go && \
+	go build examples/full-example.go && \
+	go build examples/pretrain.go && \
+	go build examples/stream-advanced.go
 
 format-check: format ## Run the formatter and perform diff (for pipeline)
 	git diff --exit-code; if [ $$? -ne 0 ]; then echo "format-check failed"; exit 1; fi; \

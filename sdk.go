@@ -304,6 +304,32 @@ func (a *AmberClient) ConfigureSensor(sensorId string, payload amberModels.PostC
 	return aok.Payload, nil
 }
 
+func (a *AmberClient) PostOutage(sensorId string) (*amberModels.PostOutageResponse, *amberModels.Error) {
+	if result, aErr := a.authenticate(); result != true {
+		return nil, aErr
+	}
+	params := &amberOps.PostOutageParams{
+		SensorID: sensorId,
+	}
+	params.WithTimeout(a.timeout)
+	aok, err := a.amberServer.Operations.PostOutage(params, a.authWriter)
+	if err != nil {
+		switch errToken(err) {
+		case unauthorized:
+			return nil, err.(*amberOps.PostOutageUnauthorized).Payload
+		case notFound:
+			return nil, err.(*amberOps.PostOutageNotFound).Payload
+		case badRequest:
+			return nil, err.(*amberOps.PostOutageBadRequest).Payload
+		case internalServerError:
+			return nil, err.(*amberOps.PostOutageInternalServerError).Payload
+		default:
+			return nil, &amberModels.Error{Code: 500, Message: err.Error()}
+		}
+	}
+	return aok.Payload, nil
+}
+
 func (a *AmberClient) ConfigureFusion(sensorId string, payload amberModels.PutConfigRequest) (*amberModels.PutConfigResponse, *amberModels.Error) {
 	if result, aErr := a.authenticate(); result != true {
 		return nil, aErr
