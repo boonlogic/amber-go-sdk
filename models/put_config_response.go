@@ -23,7 +23,7 @@ type PutConfigResponse struct {
 	Features []*FusionConfig `json:"features"`
 
 	// streaming
-	Streaming *StreamingParameters `json:"streaming,omitempty"`
+	Streaming *LearningParameters `json:"streaming,omitempty"`
 }
 
 // Validate validates this put config response

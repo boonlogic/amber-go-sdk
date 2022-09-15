@@ -29,6 +29,9 @@ type PostConfigRequest struct {
 	// features
 	Features []*FeatureConfig `json:"features"`
 
+	// override autotuned percent variation with this value
+	PercentVariationOverride *float32 `json:"percentVariationOverride,omitempty"`
+
 	// the number of samples to be applied before autotuning begins
 	SamplesToBuffer *uint32 `json:"samplesToBuffer,omitempty"`
 
@@ -53,6 +56,8 @@ func (m *PostConfigRequest) UnmarshalJSON(raw []byte) error {
 
 		Features []*FeatureConfig `json:"features"`
 
+		PercentVariationOverride *float32 `json:"percentVariationOverride,omitempty"`
+
 		SamplesToBuffer *uint32 `json:"samplesToBuffer,omitempty"`
 
 		StreamingWindowSize *uint16 `json:"streamingWindowSize"`
@@ -64,6 +69,8 @@ func (m *PostConfigRequest) UnmarshalJSON(raw []byte) error {
 	m.FeatureCount = dataAO1.FeatureCount
 
 	m.Features = dataAO1.Features
+
+	m.PercentVariationOverride = dataAO1.PercentVariationOverride
 
 	m.SamplesToBuffer = dataAO1.SamplesToBuffer
 
@@ -86,6 +93,8 @@ func (m PostConfigRequest) MarshalJSON() ([]byte, error) {
 
 		Features []*FeatureConfig `json:"features"`
 
+		PercentVariationOverride *float32 `json:"percentVariationOverride,omitempty"`
+
 		SamplesToBuffer *uint32 `json:"samplesToBuffer,omitempty"`
 
 		StreamingWindowSize *uint16 `json:"streamingWindowSize"`
@@ -94,6 +103,8 @@ func (m PostConfigRequest) MarshalJSON() ([]byte, error) {
 	dataAO1.FeatureCount = m.FeatureCount
 
 	dataAO1.Features = m.Features
+
+	dataAO1.PercentVariationOverride = m.PercentVariationOverride
 
 	dataAO1.SamplesToBuffer = m.SamplesToBuffer
 

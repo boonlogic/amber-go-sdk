@@ -561,19 +561,22 @@ func TestGetStatus(t *testing.T) {
 }
 
 func TestEnableLearning(t *testing.T) {
+	// get the sensor config
+	getConfigResponse, aErr := testClient.GetConfig(testSensor)
+	require.Nil(t, aErr)
+
 	putConfigRequest := am.PutConfigRequest{
-		Streaming: &am.StreamingParameters{
+		Streaming: &am.LearningParameters{
 			LearningMaxClusters:     nil,
 			LearningMaxSamples:      nil,
 			LearningRateDenominator: nil,
 			LearningRateNumerator:   nil,
-			AnomalyHistoryWindow:    nil,
 		},
 	}
 	response, aErr := testClient.EnableLearning(testSensor, putConfigRequest)
 	require.Nil(t, aErr)
-	require.Equal(t, putConfigRequest.Streaming.AnomalyHistoryWindow, response.Streaming.AnomalyHistoryWindow)
-	require.Equal(t, putConfigRequest.Streaming.LearningMaxSamples, response.Streaming.LearningMaxSamples)
+	require.Equal(t, getConfigResponse.StreamingParameters.LearningMaxSamples, response.Streaming.LearningMaxSamples)
+	require.Equal(t, getConfigResponse.StreamingParameters.LearningRateNumerator, response.Streaming.LearningRateNumerator)
 
 	// test sensor configuration with invalid sensorID
 	notASensor := "aaaaaaaaaaaaaaaaaaa"

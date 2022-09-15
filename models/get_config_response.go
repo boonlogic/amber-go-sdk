@@ -33,6 +33,9 @@ type GetConfigResponse struct {
 	// Required: true
 	PercentVariation *float32 `json:"percentVariation"`
 
+	// override autotuned percent variation with this value
+	PercentVariationOverride float32 `json:"percentVariationOverride,omitempty"`
+
 	// the number of samples to be applied before autotuning begins
 	// Required: true
 	SamplesToBuffer *uint32 `json:"samplesToBuffer"`
@@ -60,6 +63,8 @@ func (m *GetConfigResponse) UnmarshalJSON(raw []byte) error {
 
 		PercentVariation *float32 `json:"percentVariation"`
 
+		PercentVariationOverride float32 `json:"percentVariationOverride,omitempty"`
+
 		SamplesToBuffer *uint32 `json:"samplesToBuffer"`
 
 		StreamingWindowSize *uint16 `json:"streamingWindowSize"`
@@ -73,6 +78,8 @@ func (m *GetConfigResponse) UnmarshalJSON(raw []byte) error {
 	m.Features = dataAO1.Features
 
 	m.PercentVariation = dataAO1.PercentVariation
+
+	m.PercentVariationOverride = dataAO1.PercentVariationOverride
 
 	m.SamplesToBuffer = dataAO1.SamplesToBuffer
 
@@ -97,6 +104,8 @@ func (m GetConfigResponse) MarshalJSON() ([]byte, error) {
 
 		PercentVariation *float32 `json:"percentVariation"`
 
+		PercentVariationOverride float32 `json:"percentVariationOverride,omitempty"`
+
 		SamplesToBuffer *uint32 `json:"samplesToBuffer"`
 
 		StreamingWindowSize *uint16 `json:"streamingWindowSize"`
@@ -107,6 +116,8 @@ func (m GetConfigResponse) MarshalJSON() ([]byte, error) {
 	dataAO1.Features = m.Features
 
 	dataAO1.PercentVariation = m.PercentVariation
+
+	dataAO1.PercentVariationOverride = m.PercentVariationOverride
 
 	dataAO1.SamplesToBuffer = m.SamplesToBuffer
 
