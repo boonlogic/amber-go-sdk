@@ -40,6 +40,18 @@ type PostStreamResponse struct {
 	// Required: true
 	ID Int32Array `json:"ID"`
 
+	// n i
+	// Required: true
+	NI Uint16Array `json:"NI"`
+
+	// n s
+	// Required: true
+	NS Uint16Array `json:"NS"`
+
+	// n w
+	// Required: true
+	NW Float32Array `json:"NW"`
+
 	// r i
 	// Required: true
 	RI Uint16Array `json:"RI"`
@@ -70,6 +82,12 @@ func (m *PostStreamResponse) UnmarshalJSON(raw []byte) error {
 
 		ID Int32Array `json:"ID"`
 
+		NI Uint16Array `json:"NI"`
+
+		NS Uint16Array `json:"NS"`
+
+		NW Float32Array `json:"NW"`
+
 		RI Uint16Array `json:"RI"`
 
 		SI Uint16Array `json:"SI"`
@@ -87,6 +105,12 @@ func (m *PostStreamResponse) UnmarshalJSON(raw []byte) error {
 	m.AW = dataAO1.AW
 
 	m.ID = dataAO1.ID
+
+	m.NI = dataAO1.NI
+
+	m.NS = dataAO1.NS
+
+	m.NW = dataAO1.NW
 
 	m.RI = dataAO1.RI
 
@@ -115,6 +139,12 @@ func (m PostStreamResponse) MarshalJSON() ([]byte, error) {
 
 		ID Int32Array `json:"ID"`
 
+		NI Uint16Array `json:"NI"`
+
+		NS Uint16Array `json:"NS"`
+
+		NW Float32Array `json:"NW"`
+
 		RI Uint16Array `json:"RI"`
 
 		SI Uint16Array `json:"SI"`
@@ -129,6 +159,12 @@ func (m PostStreamResponse) MarshalJSON() ([]byte, error) {
 	dataAO1.AW = m.AW
 
 	dataAO1.ID = m.ID
+
+	dataAO1.NI = m.NI
+
+	dataAO1.NS = m.NS
+
+	dataAO1.NW = m.NW
 
 	dataAO1.RI = m.RI
 
@@ -168,6 +204,18 @@ func (m *PostStreamResponse) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateID(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateNI(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateNS(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateNW(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -275,6 +323,60 @@ func (m *PostStreamResponse) validateID(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *PostStreamResponse) validateNI(formats strfmt.Registry) error {
+
+	if err := validate.Required("NI", "body", m.NI); err != nil {
+		return err
+	}
+
+	if err := m.NI.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("NI")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("NI")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *PostStreamResponse) validateNS(formats strfmt.Registry) error {
+
+	if err := validate.Required("NS", "body", m.NS); err != nil {
+		return err
+	}
+
+	if err := m.NS.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("NS")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("NS")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *PostStreamResponse) validateNW(formats strfmt.Registry) error {
+
+	if err := validate.Required("NW", "body", m.NW); err != nil {
+		return err
+	}
+
+	if err := m.NW.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("NW")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("NW")
+		}
+		return err
+	}
+
+	return nil
+}
+
 func (m *PostStreamResponse) validateRI(formats strfmt.Registry) error {
 
 	if err := validate.Required("RI", "body", m.RI); err != nil {
@@ -337,6 +439,18 @@ func (m *PostStreamResponse) ContextValidate(ctx context.Context, formats strfmt
 	}
 
 	if err := m.contextValidateID(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateNI(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateNS(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateNW(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -417,6 +531,48 @@ func (m *PostStreamResponse) contextValidateID(ctx context.Context, formats strf
 			return ve.ValidateName("ID")
 		} else if ce, ok := err.(*errors.CompositeError); ok {
 			return ce.ValidateName("ID")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *PostStreamResponse) contextValidateNI(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.NI.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("NI")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("NI")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *PostStreamResponse) contextValidateNS(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.NS.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("NS")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("NS")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *PostStreamResponse) contextValidateNW(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.NW.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("NW")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("NW")
 		}
 		return err
 	}

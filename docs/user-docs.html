@@ -3491,7 +3491,7 @@ it is used</p>
 <h3 id="func-poststreamrequest-validate">func (*PostStreamRequest) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_request.go#L31">Validate</a></h3>
 <div class="sourceCode" id="cb246"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb246-1"><a href="#cb246-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> <span class="op">(</span>m <span class="op">*</span>PostStreamRequest<span class="op">)</span> Validate<span class="op">(</span>formats strfmt<span class="op">.</span>Registry<span class="op">)</span> <span class="dt">error</span></span></code></pre></div>
 <p>Validate validates this post stream request</p>
-<h2 id="type-poststreamresponse">type <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L20-L50">PostStreamResponse</a></h2>
+<h2 id="type-poststreamresponse">type <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L20-L62">PostStreamResponse</a></h2>
 <h3 id="poststreamresponse-post-stream-response">PostStreamResponse post
 stream response</h3>
 <p>swagger:model postStreamResponse</p>
@@ -3518,36 +3518,48 @@ stream response</h3>
 <span id="cb247-21"><a href="#cb247-21" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Required: true</span></span>
 <span id="cb247-22"><a href="#cb247-22" aria-hidden="true" tabindex="-1"></a>    ID  Int32Array <span class="st">`json:&quot;ID&quot;`</span></span>
 <span id="cb247-23"><a href="#cb247-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb247-24"><a href="#cb247-24" aria-hidden="true" tabindex="-1"></a>    <span class="co">// r i</span></span>
+<span id="cb247-24"><a href="#cb247-24" aria-hidden="true" tabindex="-1"></a>    <span class="co">// n i</span></span>
 <span id="cb247-25"><a href="#cb247-25" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Required: true</span></span>
-<span id="cb247-26"><a href="#cb247-26" aria-hidden="true" tabindex="-1"></a>    RI  Uint16Array <span class="st">`json:&quot;RI&quot;`</span></span>
+<span id="cb247-26"><a href="#cb247-26" aria-hidden="true" tabindex="-1"></a>    NI  Uint16Array <span class="st">`json:&quot;NI&quot;`</span></span>
 <span id="cb247-27"><a href="#cb247-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb247-28"><a href="#cb247-28" aria-hidden="true" tabindex="-1"></a>    <span class="co">// s i</span></span>
+<span id="cb247-28"><a href="#cb247-28" aria-hidden="true" tabindex="-1"></a>    <span class="co">// n s</span></span>
 <span id="cb247-29"><a href="#cb247-29" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Required: true</span></span>
-<span id="cb247-30"><a href="#cb247-30" aria-hidden="true" tabindex="-1"></a>    SI  Uint16Array <span class="st">`json:&quot;SI&quot;`</span></span>
-<span id="cb247-31"><a href="#cb247-31" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<span id="cb247-30"><a href="#cb247-30" aria-hidden="true" tabindex="-1"></a>    NS  Uint16Array <span class="st">`json:&quot;NS&quot;`</span></span>
+<span id="cb247-31"><a href="#cb247-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb247-32"><a href="#cb247-32" aria-hidden="true" tabindex="-1"></a>    <span class="co">// n w</span></span>
+<span id="cb247-33"><a href="#cb247-33" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Required: true</span></span>
+<span id="cb247-34"><a href="#cb247-34" aria-hidden="true" tabindex="-1"></a>    NW  Float32Array <span class="st">`json:&quot;NW&quot;`</span></span>
+<span id="cb247-35"><a href="#cb247-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb247-36"><a href="#cb247-36" aria-hidden="true" tabindex="-1"></a>    <span class="co">// r i</span></span>
+<span id="cb247-37"><a href="#cb247-37" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Required: true</span></span>
+<span id="cb247-38"><a href="#cb247-38" aria-hidden="true" tabindex="-1"></a>    RI  Uint16Array <span class="st">`json:&quot;RI&quot;`</span></span>
+<span id="cb247-39"><a href="#cb247-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb247-40"><a href="#cb247-40" aria-hidden="true" tabindex="-1"></a>    <span class="co">// s i</span></span>
+<span id="cb247-41"><a href="#cb247-41" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Required: true</span></span>
+<span id="cb247-42"><a href="#cb247-42" aria-hidden="true" tabindex="-1"></a>    SI  Uint16Array <span class="st">`json:&quot;SI&quot;`</span></span>
+<span id="cb247-43"><a href="#cb247-43" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <h3 id="func-poststreamresponse-contextvalidate">func
-(*PostStreamResponse) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L315">ContextValidate</a></h3>
+(*PostStreamResponse) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L417">ContextValidate</a></h3>
 <div class="sourceCode" id="cb248"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb248-1"><a href="#cb248-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> <span class="op">(</span>m <span class="op">*</span>PostStreamResponse<span class="op">)</span> ContextValidate<span class="op">(</span>ctx context<span class="op">.</span>Context<span class="op">,</span> formats strfmt<span class="op">.</span>Registry<span class="op">)</span> <span class="dt">error</span></span></code></pre></div>
 <p>ContextValidate validate this post stream response based on the
 context it is used</p>
 <h3 id="func-poststreamresponse-marshalbinary">func
-(*PostStreamResponse) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L456">MarshalBinary</a></h3>
+(*PostStreamResponse) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L612">MarshalBinary</a></h3>
 <div class="sourceCode" id="cb249"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb249-1"><a href="#cb249-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> <span class="op">(</span>m <span class="op">*</span>PostStreamResponse<span class="op">)</span> MarshalBinary<span class="op">()</span> <span class="op">([]</span><span class="dt">byte</span><span class="op">,</span> <span class="dt">error</span><span class="op">)</span></span></code></pre></div>
 <p>MarshalBinary interface implementation</p>
 <h3 id="func-poststreamresponse-marshaljson">func (PostStreamResponse)
-<a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L99">MarshalJSON</a></h3>
+<a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L123">MarshalJSON</a></h3>
 <div class="sourceCode" id="cb250"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb250-1"><a href="#cb250-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> <span class="op">(</span>m PostStreamResponse<span class="op">)</span> MarshalJSON<span class="op">()</span> <span class="op">([]</span><span class="dt">byte</span><span class="op">,</span> <span class="dt">error</span><span class="op">)</span></span></code></pre></div>
 <p>MarshalJSON marshals this object to a JSON structure</p>
 <h3 id="func-poststreamresponse-unmarshalbinary">func
-(*PostStreamResponse) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L464">UnmarshalBinary</a></h3>
+(*PostStreamResponse) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L620">UnmarshalBinary</a></h3>
 <div class="sourceCode" id="cb251"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb251-1"><a href="#cb251-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> <span class="op">(</span>m <span class="op">*</span>PostStreamResponse<span class="op">)</span> UnmarshalBinary<span class="op">(</span>b <span class="op">[]</span><span class="dt">byte</span><span class="op">)</span> <span class="dt">error</span></span></code></pre></div>
 <p>UnmarshalBinary interface implementation</p>
 <h3 id="func-poststreamresponse-unmarshaljson">func
-(*PostStreamResponse) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L53">UnmarshalJSON</a></h3>
+(*PostStreamResponse) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L65">UnmarshalJSON</a></h3>
 <div class="sourceCode" id="cb252"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb252-1"><a href="#cb252-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> <span class="op">(</span>m <span class="op">*</span>PostStreamResponse<span class="op">)</span> UnmarshalJSON<span class="op">(</span>raw <span class="op">[]</span><span class="dt">byte</span><span class="op">)</span> <span class="dt">error</span></span></code></pre></div>
 <p>UnmarshalJSON unmarshals this object from a JSON structure</p>
-<h3 id="func-poststreamresponse-validate">func (*PostStreamResponse) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L146">Validate</a></h3>
+<h3 id="func-poststreamresponse-validate">func (*PostStreamResponse) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L182">Validate</a></h3>
 <div class="sourceCode" id="cb253"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb253-1"><a href="#cb253-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> <span class="op">(</span>m <span class="op">*</span>PostStreamResponse<span class="op">)</span> Validate<span class="op">(</span>formats strfmt<span class="op">.</span>Registry<span class="op">)</span> <span class="dt">error</span></span></code></pre></div>
 <p>Validate validates this post stream response</p>
 <h2 id="type-putconfigrequest">type <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/put_config_request.go#L20-L27">PutConfigRequest</a></h2>

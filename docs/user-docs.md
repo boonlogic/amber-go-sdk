@@ -3009,7 +3009,7 @@ func (m *PostStreamRequest) Validate(formats strfmt.Registry) error
 
 Validate validates this post stream request
 
-## type [PostStreamResponse](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L20-L50>)
+## type [PostStreamResponse](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L20-L62>)
 
 ### PostStreamResponse post stream response
 
@@ -3039,6 +3039,18 @@ type PostStreamResponse struct {
     // Required: true
     ID  Int32Array `json:"ID"`
 
+    // n i
+    // Required: true
+    NI  Uint16Array `json:"NI"`
+
+    // n s
+    // Required: true
+    NS  Uint16Array `json:"NS"`
+
+    // n w
+    // Required: true
+    NW  Float32Array `json:"NW"`
+
     // r i
     // Required: true
     RI  Uint16Array `json:"RI"`
@@ -3049,7 +3061,7 @@ type PostStreamResponse struct {
 }
 ```
 
-### func \(\*PostStreamResponse\) [ContextValidate](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L315>)
+### func \(\*PostStreamResponse\) [ContextValidate](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L417>)
 
 ```go
 func (m *PostStreamResponse) ContextValidate(ctx context.Context, formats strfmt.Registry) error
@@ -3057,7 +3069,7 @@ func (m *PostStreamResponse) ContextValidate(ctx context.Context, formats strfmt
 
 ContextValidate validate this post stream response based on the context it is used
 
-### func \(\*PostStreamResponse\) [MarshalBinary](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L456>)
+### func \(\*PostStreamResponse\) [MarshalBinary](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L612>)
 
 ```go
 func (m *PostStreamResponse) MarshalBinary() ([]byte, error)
@@ -3065,7 +3077,7 @@ func (m *PostStreamResponse) MarshalBinary() ([]byte, error)
 
 MarshalBinary interface implementation
 
-### func \(PostStreamResponse\) [MarshalJSON](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L99>)
+### func \(PostStreamResponse\) [MarshalJSON](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L123>)
 
 ```go
 func (m PostStreamResponse) MarshalJSON() ([]byte, error)
@@ -3073,7 +3085,7 @@ func (m PostStreamResponse) MarshalJSON() ([]byte, error)
 
 MarshalJSON marshals this object to a JSON structure
 
-### func \(\*PostStreamResponse\) [UnmarshalBinary](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L464>)
+### func \(\*PostStreamResponse\) [UnmarshalBinary](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L620>)
 
 ```go
 func (m *PostStreamResponse) UnmarshalBinary(b []byte) error
@@ -3081,7 +3093,7 @@ func (m *PostStreamResponse) UnmarshalBinary(b []byte) error
 
 UnmarshalBinary interface implementation
 
-### func \(\*PostStreamResponse\) [UnmarshalJSON](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L53>)
+### func \(\*PostStreamResponse\) [UnmarshalJSON](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L65>)
 
 ```go
 func (m *PostStreamResponse) UnmarshalJSON(raw []byte) error
@@ -3089,7 +3101,7 @@ func (m *PostStreamResponse) UnmarshalJSON(raw []byte) error
 
 UnmarshalJSON unmarshals this object from a JSON structure
 
-### func \(\*PostStreamResponse\) [Validate](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L146>)
+### func \(\*PostStreamResponse\) [Validate](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L182>)
 
 ```go
 func (m *PostStreamResponse) Validate(formats strfmt.Registry) error
