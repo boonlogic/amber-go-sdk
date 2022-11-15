@@ -54,10 +54,12 @@ func NewPutConfigParamsWithHTTPClient(client *http.Client) *PutConfigParams {
 	}
 }
 
-/* PutConfigParams contains all the parameters to send to the API endpoint
-   for the put config operation.
+/*
+PutConfigParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the put config operation.
+
+	Typically these are written to a http.Request.
 */
 type PutConfigParams struct {
 

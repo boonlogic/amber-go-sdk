@@ -51,7 +51,8 @@ func NewPostOauth2OK() *PostOauth2OK {
 	return &PostOauth2OK{}
 }
 
-/* PostOauth2OK describes a response with status code 200, with default header values.
+/*
+	PostOauth2OK describes a response with status code 200, with default header values.
 
 Operation was successful
 */
@@ -83,7 +84,8 @@ func NewPostOauth2Unauthorized() *PostOauth2Unauthorized {
 	return &PostOauth2Unauthorized{}
 }
 
-/* PostOauth2Unauthorized describes a response with status code 401, with default header values.
+/*
+	PostOauth2Unauthorized describes a response with status code 401, with default header values.
 
 Unauthorized
 */
@@ -115,7 +117,8 @@ func NewPostOauth2InternalServerError() *PostOauth2InternalServerError {
 	return &PostOauth2InternalServerError{}
 }
 
-/* PostOauth2InternalServerError describes a response with status code 500, with default header values.
+/*
+	PostOauth2InternalServerError describes a response with status code 500, with default header values.
 
 Internal server error
 */

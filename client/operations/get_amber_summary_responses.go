@@ -63,7 +63,8 @@ func NewGetAmberSummaryOK() *GetAmberSummaryOK {
 	return &GetAmberSummaryOK{}
 }
 
-/* GetAmberSummaryOK describes a response with status code 200, with default header values.
+/*
+	GetAmberSummaryOK describes a response with status code 200, with default header values.
 
 Operation was successful
 */
@@ -95,7 +96,8 @@ func NewGetAmberSummaryBadRequest() *GetAmberSummaryBadRequest {
 	return &GetAmberSummaryBadRequest{}
 }
 
-/* GetAmberSummaryBadRequest describes a response with status code 400, with default header values.
+/*
+	GetAmberSummaryBadRequest describes a response with status code 400, with default header values.
 
 Bad request
 */
@@ -127,7 +129,8 @@ func NewGetAmberSummaryUnauthorized() *GetAmberSummaryUnauthorized {
 	return &GetAmberSummaryUnauthorized{}
 }
 
-/* GetAmberSummaryUnauthorized describes a response with status code 401, with default header values.
+/*
+	GetAmberSummaryUnauthorized describes a response with status code 401, with default header values.
 
 Unauthorized
 */
@@ -159,7 +162,8 @@ func NewGetAmberSummaryNotFound() *GetAmberSummaryNotFound {
 	return &GetAmberSummaryNotFound{}
 }
 
-/* GetAmberSummaryNotFound describes a response with status code 404, with default header values.
+/*
+	GetAmberSummaryNotFound describes a response with status code 404, with default header values.
 
 The specified resource was not found
 */
@@ -191,7 +195,8 @@ func NewGetAmberSummaryInternalServerError() *GetAmberSummaryInternalServerError
 	return &GetAmberSummaryInternalServerError{}
 }
 
-/* GetAmberSummaryInternalServerError describes a response with status code 500, with default header values.
+/*
+	GetAmberSummaryInternalServerError describes a response with status code 500, with default header values.
 
 Internal server error
 */

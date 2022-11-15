@@ -54,10 +54,12 @@ func NewPutStreamParamsWithHTTPClient(client *http.Client) *PutStreamParams {
 	}
 }
 
-/* PutStreamParams contains all the parameters to send to the API endpoint
-   for the put stream operation.
+/*
+PutStreamParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the put stream operation.
+
+	Typically these are written to a http.Request.
 */
 type PutStreamParams struct {
 

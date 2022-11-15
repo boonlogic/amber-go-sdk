@@ -54,10 +54,12 @@ func NewPutSensorParamsWithHTTPClient(client *http.Client) *PutSensorParams {
 	}
 }
 
-/* PutSensorParams contains all the parameters to send to the API endpoint
-   for the put sensor operation.
+/*
+PutSensorParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the put sensor operation.
+
+	Typically these are written to a http.Request.
 */
 type PutSensorParams struct {
 

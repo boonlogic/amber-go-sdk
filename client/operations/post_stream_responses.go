@@ -69,7 +69,8 @@ func NewPostStreamOK() *PostStreamOK {
 	return &PostStreamOK{}
 }
 
-/* PostStreamOK describes a response with status code 200, with default header values.
+/*
+	PostStreamOK describes a response with status code 200, with default header values.
 
 Operation was successful
 */
@@ -101,7 +102,8 @@ func NewPostStreamBadRequest() *PostStreamBadRequest {
 	return &PostStreamBadRequest{}
 }
 
-/* PostStreamBadRequest describes a response with status code 400, with default header values.
+/*
+	PostStreamBadRequest describes a response with status code 400, with default header values.
 
 Bad request
 */
@@ -133,7 +135,8 @@ func NewPostStreamUnauthorized() *PostStreamUnauthorized {
 	return &PostStreamUnauthorized{}
 }
 
-/* PostStreamUnauthorized describes a response with status code 401, with default header values.
+/*
+	PostStreamUnauthorized describes a response with status code 401, with default header values.
 
 Unauthorized
 */
@@ -165,7 +168,8 @@ func NewPostStreamNotFound() *PostStreamNotFound {
 	return &PostStreamNotFound{}
 }
 
-/* PostStreamNotFound describes a response with status code 404, with default header values.
+/*
+	PostStreamNotFound describes a response with status code 404, with default header values.
 
 The specified resource was not found
 */
@@ -197,7 +201,8 @@ func NewPostStreamInternalServerError() *PostStreamInternalServerError {
 	return &PostStreamInternalServerError{}
 }
 
-/* PostStreamInternalServerError describes a response with status code 500, with default header values.
+/*
+	PostStreamInternalServerError describes a response with status code 500, with default header values.
 
 Internal server error
 */
@@ -229,7 +234,8 @@ func NewPostStreamServiceUnavailable() *PostStreamServiceUnavailable {
 	return &PostStreamServiceUnavailable{}
 }
 
-/* PostStreamServiceUnavailable describes a response with status code 503, with default header values.
+/*
+	PostStreamServiceUnavailable describes a response with status code 503, with default header values.
 
 Server busy
 */

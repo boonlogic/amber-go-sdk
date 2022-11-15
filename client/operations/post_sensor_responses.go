@@ -63,7 +63,8 @@ func NewPostSensorOK() *PostSensorOK {
 	return &PostSensorOK{}
 }
 
-/* PostSensorOK describes a response with status code 200, with default header values.
+/*
+	PostSensorOK describes a response with status code 200, with default header values.
 
 Operation was successful
 */
@@ -95,7 +96,8 @@ func NewPostSensorBadRequest() *PostSensorBadRequest {
 	return &PostSensorBadRequest{}
 }
 
-/* PostSensorBadRequest describes a response with status code 400, with default header values.
+/*
+	PostSensorBadRequest describes a response with status code 400, with default header values.
 
 Bad request
 */
@@ -127,7 +129,8 @@ func NewPostSensorUnauthorized() *PostSensorUnauthorized {
 	return &PostSensorUnauthorized{}
 }
 
-/* PostSensorUnauthorized describes a response with status code 401, with default header values.
+/*
+	PostSensorUnauthorized describes a response with status code 401, with default header values.
 
 Unauthorized
 */
@@ -159,7 +162,8 @@ func NewPostSensorNotFound() *PostSensorNotFound {
 	return &PostSensorNotFound{}
 }
 
-/* PostSensorNotFound describes a response with status code 404, with default header values.
+/*
+	PostSensorNotFound describes a response with status code 404, with default header values.
 
 The specified resource was not found
 */
@@ -191,7 +195,8 @@ func NewPostSensorInternalServerError() *PostSensorInternalServerError {
 	return &PostSensorInternalServerError{}
 }
 
-/* PostSensorInternalServerError describes a response with status code 500, with default header values.
+/*
+	PostSensorInternalServerError describes a response with status code 500, with default header values.
 
 Internal server error
 */

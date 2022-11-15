@@ -63,7 +63,8 @@ func NewGetSensorsOK() *GetSensorsOK {
 	return &GetSensorsOK{}
 }
 
-/* GetSensorsOK describes a response with status code 200, with default header values.
+/*
+	GetSensorsOK describes a response with status code 200, with default header values.
 
 Operation was successful
 */
@@ -93,7 +94,8 @@ func NewGetSensorsBadRequest() *GetSensorsBadRequest {
 	return &GetSensorsBadRequest{}
 }
 
-/* GetSensorsBadRequest describes a response with status code 400, with default header values.
+/*
+	GetSensorsBadRequest describes a response with status code 400, with default header values.
 
 Bad request
 */
@@ -125,7 +127,8 @@ func NewGetSensorsUnauthorized() *GetSensorsUnauthorized {
 	return &GetSensorsUnauthorized{}
 }
 
-/* GetSensorsUnauthorized describes a response with status code 401, with default header values.
+/*
+	GetSensorsUnauthorized describes a response with status code 401, with default header values.
 
 Unauthorized
 */
@@ -157,7 +160,8 @@ func NewGetSensorsNotFound() *GetSensorsNotFound {
 	return &GetSensorsNotFound{}
 }
 
-/* GetSensorsNotFound describes a response with status code 404, with default header values.
+/*
+	GetSensorsNotFound describes a response with status code 404, with default header values.
 
 The specified resource was not found
 */
@@ -189,7 +193,8 @@ func NewGetSensorsInternalServerError() *GetSensorsInternalServerError {
 	return &GetSensorsInternalServerError{}
 }
 
-/* GetSensorsInternalServerError describes a response with status code 500, with default header values.
+/*
+	GetSensorsInternalServerError describes a response with status code 500, with default header values.
 
 Internal server error
 */

@@ -52,10 +52,12 @@ func NewDeleteSensorParamsWithHTTPClient(client *http.Client) *DeleteSensorParam
 	}
 }
 
-/* DeleteSensorParams contains all the parameters to send to the API endpoint
-   for the delete sensor operation.
+/*
+DeleteSensorParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the delete sensor operation.
+
+	Typically these are written to a http.Request.
 */
 type DeleteSensorParams struct {
 

@@ -54,10 +54,12 @@ func NewPostPretrainParamsWithHTTPClient(client *http.Client) *PostPretrainParam
 	}
 }
 
-/* PostPretrainParams contains all the parameters to send to the API endpoint
-   for the post pretrain operation.
+/*
+PostPretrainParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the post pretrain operation.
+
+	Typically these are written to a http.Request.
 */
 type PostPretrainParams struct {
 
@@ -78,6 +80,12 @@ type PostPretrainParams struct {
 	   Data to be streamed to sensor. Should be formatted as a simple string of comma-separated numbers with no spaces (e.g. "0,0.5,1,1.5,2").
 	*/
 	PostPretrainRequest *models.PostPretrainRequest
+
+	/* PretrainAsync.
+
+	   Internal header for async lambda processing
+	*/
+	PretrainAsync *string
 
 	/* SensorID.
 
@@ -171,6 +179,17 @@ func (o *PostPretrainParams) SetPostPretrainRequest(postPretrainRequest *models.
 	o.PostPretrainRequest = postPretrainRequest
 }
 
+// WithPretrainAsync adds the pretrainAsync to the post pretrain params
+func (o *PostPretrainParams) WithPretrainAsync(pretrainAsync *string) *PostPretrainParams {
+	o.SetPretrainAsync(pretrainAsync)
+	return o
+}
+
+// SetPretrainAsync adds the pretrainAsync to the post pretrain params
+func (o *PostPretrainParams) SetPretrainAsync(pretrainAsync *string) {
+	o.PretrainAsync = pretrainAsync
+}
+
 // WithSensorID adds the sensorID to the post pretrain params
 func (o *PostPretrainParams) WithSensorID(sensorID string) *PostPretrainParams {
 	o.SetSensorID(sensorID)
@@ -207,6 +226,14 @@ func (o *PostPretrainParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.
 	}
 	if o.PostPretrainRequest != nil {
 		if err := r.SetBodyParam(o.PostPretrainRequest); err != nil {
+			return err
+		}
+	}
+
+	if o.PretrainAsync != nil {
+
+		// header param pretrain-async
+		if err := r.SetHeaderParam("pretrain-async", *o.PretrainAsync); err != nil {
 			return err
 		}
 	}

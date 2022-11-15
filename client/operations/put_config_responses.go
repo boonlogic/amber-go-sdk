@@ -69,7 +69,8 @@ func NewPutConfigOK() *PutConfigOK {
 	return &PutConfigOK{}
 }
 
-/* PutConfigOK describes a response with status code 200, with default header values.
+/*
+	PutConfigOK describes a response with status code 200, with default header values.
 
 Operation was successful
 */
@@ -101,7 +102,8 @@ func NewPutConfigBadRequest() *PutConfigBadRequest {
 	return &PutConfigBadRequest{}
 }
 
-/* PutConfigBadRequest describes a response with status code 400, with default header values.
+/*
+	PutConfigBadRequest describes a response with status code 400, with default header values.
 
 Bad request
 */
@@ -133,7 +135,8 @@ func NewPutConfigUnauthorized() *PutConfigUnauthorized {
 	return &PutConfigUnauthorized{}
 }
 
-/* PutConfigUnauthorized describes a response with status code 401, with default header values.
+/*
+	PutConfigUnauthorized describes a response with status code 401, with default header values.
 
 Unauthorized
 */
@@ -165,7 +168,8 @@ func NewPutConfigNotFound() *PutConfigNotFound {
 	return &PutConfigNotFound{}
 }
 
-/* PutConfigNotFound describes a response with status code 404, with default header values.
+/*
+	PutConfigNotFound describes a response with status code 404, with default header values.
 
 The specified resource was not found
 */
@@ -197,7 +201,8 @@ func NewPutConfigInternalServerError() *PutConfigInternalServerError {
 	return &PutConfigInternalServerError{}
 }
 
-/* PutConfigInternalServerError describes a response with status code 500, with default header values.
+/*
+	PutConfigInternalServerError describes a response with status code 500, with default header values.
 
 Internal server error
 */
@@ -229,7 +234,8 @@ func NewPutConfigServiceUnavailable() *PutConfigServiceUnavailable {
 	return &PutConfigServiceUnavailable{}
 }
 
-/* PutConfigServiceUnavailable describes a response with status code 503, with default header values.
+/*
+	PutConfigServiceUnavailable describes a response with status code 503, with default header values.
 
 Server busy
 */

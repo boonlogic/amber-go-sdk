@@ -63,7 +63,8 @@ func NewGetStatusOK() *GetStatusOK {
 	return &GetStatusOK{}
 }
 
-/* GetStatusOK describes a response with status code 200, with default header values.
+/*
+	GetStatusOK describes a response with status code 200, with default header values.
 
 Operation was successful
 */
@@ -95,7 +96,8 @@ func NewGetStatusBadRequest() *GetStatusBadRequest {
 	return &GetStatusBadRequest{}
 }
 
-/* GetStatusBadRequest describes a response with status code 400, with default header values.
+/*
+	GetStatusBadRequest describes a response with status code 400, with default header values.
 
 Bad request
 */
@@ -127,7 +129,8 @@ func NewGetStatusUnauthorized() *GetStatusUnauthorized {
 	return &GetStatusUnauthorized{}
 }
 
-/* GetStatusUnauthorized describes a response with status code 401, with default header values.
+/*
+	GetStatusUnauthorized describes a response with status code 401, with default header values.
 
 Unauthorized
 */
@@ -159,7 +162,8 @@ func NewGetStatusNotFound() *GetStatusNotFound {
 	return &GetStatusNotFound{}
 }
 
-/* GetStatusNotFound describes a response with status code 404, with default header values.
+/*
+	GetStatusNotFound describes a response with status code 404, with default header values.
 
 The specified resource was not found
 */
@@ -191,7 +195,8 @@ func NewGetStatusInternalServerError() *GetStatusInternalServerError {
 	return &GetStatusInternalServerError{}
 }
 
-/* GetStatusInternalServerError describes a response with status code 500, with default header values.
+/*
+	GetStatusInternalServerError describes a response with status code 500, with default header values.
 
 Internal server error
 */

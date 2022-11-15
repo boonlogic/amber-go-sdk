@@ -75,7 +75,8 @@ func NewPutStreamOK() *PutStreamOK {
 	return &PutStreamOK{}
 }
 
-/* PutStreamOK describes a response with status code 200, with default header values.
+/*
+	PutStreamOK describes a response with status code 200, with default header values.
 
 Vector has been updated and analytics were run.
 */
@@ -107,7 +108,8 @@ func NewPutStreamAccepted() *PutStreamAccepted {
 	return &PutStreamAccepted{}
 }
 
-/* PutStreamAccepted describes a response with status code 202, with default header values.
+/*
+	PutStreamAccepted describes a response with status code 202, with default header values.
 
 Vector has been updated but no analytics were run.
 */
@@ -139,7 +141,8 @@ func NewPutStreamBadRequest() *PutStreamBadRequest {
 	return &PutStreamBadRequest{}
 }
 
-/* PutStreamBadRequest describes a response with status code 400, with default header values.
+/*
+	PutStreamBadRequest describes a response with status code 400, with default header values.
 
 Bad request
 */
@@ -171,7 +174,8 @@ func NewPutStreamUnauthorized() *PutStreamUnauthorized {
 	return &PutStreamUnauthorized{}
 }
 
-/* PutStreamUnauthorized describes a response with status code 401, with default header values.
+/*
+	PutStreamUnauthorized describes a response with status code 401, with default header values.
 
 Unauthorized
 */
@@ -203,7 +207,8 @@ func NewPutStreamNotFound() *PutStreamNotFound {
 	return &PutStreamNotFound{}
 }
 
-/* PutStreamNotFound describes a response with status code 404, with default header values.
+/*
+	PutStreamNotFound describes a response with status code 404, with default header values.
 
 The specified resource was not found
 */
@@ -235,7 +240,8 @@ func NewPutStreamInternalServerError() *PutStreamInternalServerError {
 	return &PutStreamInternalServerError{}
 }
 
-/* PutStreamInternalServerError describes a response with status code 500, with default header values.
+/*
+	PutStreamInternalServerError describes a response with status code 500, with default header values.
 
 Internal server error
 */
@@ -267,7 +273,8 @@ func NewPutStreamServiceUnavailable() *PutStreamServiceUnavailable {
 	return &PutStreamServiceUnavailable{}
 }
 
-/* PutStreamServiceUnavailable describes a response with status code 503, with default header values.
+/*
+	PutStreamServiceUnavailable describes a response with status code 503, with default header values.
 
 Server busy
 */

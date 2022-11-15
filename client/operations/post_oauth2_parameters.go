@@ -54,10 +54,12 @@ func NewPostOauth2ParamsWithHTTPClient(client *http.Client) *PostOauth2Params {
 	}
 }
 
-/* PostOauth2Params contains all the parameters to send to the API endpoint
-   for the post oauth2 operation.
+/*
+PostOauth2Params contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the post oauth2 operation.
+
+	Typically these are written to a http.Request.
 */
 type PostOauth2Params struct {
 

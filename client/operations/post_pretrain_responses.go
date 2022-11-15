@@ -75,7 +75,8 @@ func NewPostPretrainOK() *PostPretrainOK {
 	return &PostPretrainOK{}
 }
 
-/* PostPretrainOK describes a response with status code 200, with default header values.
+/*
+	PostPretrainOK describes a response with status code 200, with default header values.
 
 Operation was successful
 */
@@ -107,12 +108,14 @@ func NewPostPretrainAccepted() *PostPretrainAccepted {
 	return &PostPretrainAccepted{}
 }
 
-/* PostPretrainAccepted describes a response with status code 202, with default header values.
+/*
+	PostPretrainAccepted describes a response with status code 202, with default header values.
 
 Operation was accepted
 */
 type PostPretrainAccepted struct {
 	AmberTransaction string
+	PretrainAsync    string
 
 	Payload *models.PostPretrainResponse
 }
@@ -133,6 +136,13 @@ func (o *PostPretrainAccepted) readResponse(response runtime.ClientResponse, con
 		o.AmberTransaction = hdrAmberTransaction
 	}
 
+	// hydrates response header pretrain-async
+	hdrPretrainAsync := response.GetHeader("pretrain-async")
+
+	if hdrPretrainAsync != "" {
+		o.PretrainAsync = hdrPretrainAsync
+	}
+
 	o.Payload = new(models.PostPretrainResponse)
 
 	// response payload
@@ -148,7 +158,8 @@ func NewPostPretrainBadRequest() *PostPretrainBadRequest {
 	return &PostPretrainBadRequest{}
 }
 
-/* PostPretrainBadRequest describes a response with status code 400, with default header values.
+/*
+	PostPretrainBadRequest describes a response with status code 400, with default header values.
 
 Bad request
 */
@@ -180,7 +191,8 @@ func NewPostPretrainUnauthorized() *PostPretrainUnauthorized {
 	return &PostPretrainUnauthorized{}
 }
 
-/* PostPretrainUnauthorized describes a response with status code 401, with default header values.
+/*
+	PostPretrainUnauthorized describes a response with status code 401, with default header values.
 
 Unauthorized
 */
@@ -212,7 +224,8 @@ func NewPostPretrainNotFound() *PostPretrainNotFound {
 	return &PostPretrainNotFound{}
 }
 
-/* PostPretrainNotFound describes a response with status code 404, with default header values.
+/*
+	PostPretrainNotFound describes a response with status code 404, with default header values.
 
 The specified resource was not found
 */
@@ -244,7 +257,8 @@ func NewPostPretrainInternalServerError() *PostPretrainInternalServerError {
 	return &PostPretrainInternalServerError{}
 }
 
-/* PostPretrainInternalServerError describes a response with status code 500, with default header values.
+/*
+	PostPretrainInternalServerError describes a response with status code 500, with default header values.
 
 Internal server error
 */
@@ -276,7 +290,8 @@ func NewPostPretrainServiceUnavailable() *PostPretrainServiceUnavailable {
 	return &PostPretrainServiceUnavailable{}
 }
 
-/* PostPretrainServiceUnavailable describes a response with status code 503, with default header values.
+/*
+	PostPretrainServiceUnavailable describes a response with status code 503, with default header values.
 
 Server is busy
 */

@@ -54,10 +54,12 @@ func NewPostSensorParamsWithHTTPClient(client *http.Client) *PostSensorParams {
 	}
 }
 
-/* PostSensorParams contains all the parameters to send to the API endpoint
-   for the post sensor operation.
+/*
+PostSensorParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the post sensor operation.
+
+	Typically these are written to a http.Request.
 */
 type PostSensorParams struct {
 
