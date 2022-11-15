@@ -69,7 +69,8 @@ func NewGetPretrainOK() *GetPretrainOK {
 	return &GetPretrainOK{}
 }
 
-/* GetPretrainOK describes a response with status code 200, with default header values.
+/*
+	GetPretrainOK describes a response with status code 200, with default header values.
 
 Sensor is not pretraining
 */
@@ -101,7 +102,8 @@ func NewGetPretrainAccepted() *GetPretrainAccepted {
 	return &GetPretrainAccepted{}
 }
 
-/* GetPretrainAccepted describes a response with status code 202, with default header values.
+/*
+	GetPretrainAccepted describes a response with status code 202, with default header values.
 
 Sensor is currently pretraining
 */
@@ -133,7 +135,8 @@ func NewGetPretrainBadRequest() *GetPretrainBadRequest {
 	return &GetPretrainBadRequest{}
 }
 
-/* GetPretrainBadRequest describes a response with status code 400, with default header values.
+/*
+	GetPretrainBadRequest describes a response with status code 400, with default header values.
 
 Bad request
 */
@@ -165,7 +168,8 @@ func NewGetPretrainUnauthorized() *GetPretrainUnauthorized {
 	return &GetPretrainUnauthorized{}
 }
 
-/* GetPretrainUnauthorized describes a response with status code 401, with default header values.
+/*
+	GetPretrainUnauthorized describes a response with status code 401, with default header values.
 
 Unauthorized
 */
@@ -197,7 +201,8 @@ func NewGetPretrainNotFound() *GetPretrainNotFound {
 	return &GetPretrainNotFound{}
 }
 
-/* GetPretrainNotFound describes a response with status code 404, with default header values.
+/*
+	GetPretrainNotFound describes a response with status code 404, with default header values.
 
 The specified resource was not found
 */
@@ -229,7 +234,8 @@ func NewGetPretrainInternalServerError() *GetPretrainInternalServerError {
 	return &GetPretrainInternalServerError{}
 }
 
-/* GetPretrainInternalServerError describes a response with status code 500, with default header values.
+/*
+	GetPretrainInternalServerError describes a response with status code 500, with default header values.
 
 Internal server error
 */

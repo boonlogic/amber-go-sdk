@@ -52,10 +52,12 @@ func NewGetAmberSummaryParamsWithHTTPClient(client *http.Client) *GetAmberSummar
 	}
 }
 
-/* GetAmberSummaryParams contains all the parameters to send to the API endpoint
-   for the get amber summary operation.
+/*
+GetAmberSummaryParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the get amber summary operation.
+
+	Typically these are written to a http.Request.
 */
 type GetAmberSummaryParams struct {
 

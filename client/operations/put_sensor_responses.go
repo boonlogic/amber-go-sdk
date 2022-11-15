@@ -63,7 +63,8 @@ func NewPutSensorOK() *PutSensorOK {
 	return &PutSensorOK{}
 }
 
-/* PutSensorOK describes a response with status code 200, with default header values.
+/*
+	PutSensorOK describes a response with status code 200, with default header values.
 
 Operation was successful
 */
@@ -95,7 +96,8 @@ func NewPutSensorBadRequest() *PutSensorBadRequest {
 	return &PutSensorBadRequest{}
 }
 
-/* PutSensorBadRequest describes a response with status code 400, with default header values.
+/*
+	PutSensorBadRequest describes a response with status code 400, with default header values.
 
 Bad request
 */
@@ -127,7 +129,8 @@ func NewPutSensorUnauthorized() *PutSensorUnauthorized {
 	return &PutSensorUnauthorized{}
 }
 
-/* PutSensorUnauthorized describes a response with status code 401, with default header values.
+/*
+	PutSensorUnauthorized describes a response with status code 401, with default header values.
 
 Unauthorized
 */
@@ -159,7 +162,8 @@ func NewPutSensorNotFound() *PutSensorNotFound {
 	return &PutSensorNotFound{}
 }
 
-/* PutSensorNotFound describes a response with status code 404, with default header values.
+/*
+	PutSensorNotFound describes a response with status code 404, with default header values.
 
 The specified resource was not found
 */
@@ -191,7 +195,8 @@ func NewPutSensorInternalServerError() *PutSensorInternalServerError {
 	return &PutSensorInternalServerError{}
 }
 
-/* PutSensorInternalServerError describes a response with status code 500, with default header values.
+/*
+	PutSensorInternalServerError describes a response with status code 500, with default header values.
 
 Internal server error
 */

@@ -52,6 +52,10 @@ type PostStreamResponse struct {
 	// Required: true
 	NW Float32Array `json:"NW"`
 
+	// o m
+	// Required: true
+	OM Float32Array `json:"OM"`
+
 	// r i
 	// Required: true
 	RI Uint16Array `json:"RI"`
@@ -88,6 +92,8 @@ func (m *PostStreamResponse) UnmarshalJSON(raw []byte) error {
 
 		NW Float32Array `json:"NW"`
 
+		OM Float32Array `json:"OM"`
+
 		RI Uint16Array `json:"RI"`
 
 		SI Uint16Array `json:"SI"`
@@ -111,6 +117,8 @@ func (m *PostStreamResponse) UnmarshalJSON(raw []byte) error {
 	m.NS = dataAO1.NS
 
 	m.NW = dataAO1.NW
+
+	m.OM = dataAO1.OM
 
 	m.RI = dataAO1.RI
 
@@ -145,6 +153,8 @@ func (m PostStreamResponse) MarshalJSON() ([]byte, error) {
 
 		NW Float32Array `json:"NW"`
 
+		OM Float32Array `json:"OM"`
+
 		RI Uint16Array `json:"RI"`
 
 		SI Uint16Array `json:"SI"`
@@ -165,6 +175,8 @@ func (m PostStreamResponse) MarshalJSON() ([]byte, error) {
 	dataAO1.NS = m.NS
 
 	dataAO1.NW = m.NW
+
+	dataAO1.OM = m.OM
 
 	dataAO1.RI = m.RI
 
@@ -216,6 +228,10 @@ func (m *PostStreamResponse) Validate(formats strfmt.Registry) error {
 	}
 
 	if err := m.validateNW(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateOM(formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -377,6 +393,24 @@ func (m *PostStreamResponse) validateNW(formats strfmt.Registry) error {
 	return nil
 }
 
+func (m *PostStreamResponse) validateOM(formats strfmt.Registry) error {
+
+	if err := validate.Required("OM", "body", m.OM); err != nil {
+		return err
+	}
+
+	if err := m.OM.Validate(formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("OM")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("OM")
+		}
+		return err
+	}
+
+	return nil
+}
+
 func (m *PostStreamResponse) validateRI(formats strfmt.Registry) error {
 
 	if err := validate.Required("RI", "body", m.RI); err != nil {
@@ -451,6 +485,10 @@ func (m *PostStreamResponse) ContextValidate(ctx context.Context, formats strfmt
 	}
 
 	if err := m.contextValidateNW(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.contextValidateOM(ctx, formats); err != nil {
 		res = append(res, err)
 	}
 
@@ -573,6 +611,20 @@ func (m *PostStreamResponse) contextValidateNW(ctx context.Context, formats strf
 			return ve.ValidateName("NW")
 		} else if ce, ok := err.(*errors.CompositeError); ok {
 			return ce.ValidateName("NW")
+		}
+		return err
+	}
+
+	return nil
+}
+
+func (m *PostStreamResponse) contextValidateOM(ctx context.Context, formats strfmt.Registry) error {
+
+	if err := m.OM.ContextValidate(ctx, formats); err != nil {
+		if ve, ok := err.(*errors.Validation); ok {
+			return ve.ValidateName("OM")
+		} else if ce, ok := err.(*errors.CompositeError); ok {
+			return ce.ValidateName("OM")
 		}
 		return err
 	}

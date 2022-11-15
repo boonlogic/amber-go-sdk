@@ -63,7 +63,8 @@ func NewDeleteSensorOK() *DeleteSensorOK {
 	return &DeleteSensorOK{}
 }
 
-/* DeleteSensorOK describes a response with status code 200, with default header values.
+/*
+	DeleteSensorOK describes a response with status code 200, with default header values.
 
 Operation was successful
 */
@@ -95,7 +96,8 @@ func NewDeleteSensorBadRequest() *DeleteSensorBadRequest {
 	return &DeleteSensorBadRequest{}
 }
 
-/* DeleteSensorBadRequest describes a response with status code 400, with default header values.
+/*
+	DeleteSensorBadRequest describes a response with status code 400, with default header values.
 
 Bad request
 */
@@ -127,7 +129,8 @@ func NewDeleteSensorUnauthorized() *DeleteSensorUnauthorized {
 	return &DeleteSensorUnauthorized{}
 }
 
-/* DeleteSensorUnauthorized describes a response with status code 401, with default header values.
+/*
+	DeleteSensorUnauthorized describes a response with status code 401, with default header values.
 
 Unauthorized
 */
@@ -159,7 +162,8 @@ func NewDeleteSensorNotFound() *DeleteSensorNotFound {
 	return &DeleteSensorNotFound{}
 }
 
-/* DeleteSensorNotFound describes a response with status code 404, with default header values.
+/*
+	DeleteSensorNotFound describes a response with status code 404, with default header values.
 
 The specified resource was not found
 */
@@ -191,7 +195,8 @@ func NewDeleteSensorInternalServerError() *DeleteSensorInternalServerError {
 	return &DeleteSensorInternalServerError{}
 }
 
-/* DeleteSensorInternalServerError describes a response with status code 500, with default header values.
+/*
+	DeleteSensorInternalServerError describes a response with status code 500, with default header values.
 
 Internal server error
 */

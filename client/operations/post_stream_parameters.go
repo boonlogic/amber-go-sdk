@@ -54,10 +54,12 @@ func NewPostStreamParamsWithHTTPClient(client *http.Client) *PostStreamParams {
 	}
 }
 
-/* PostStreamParams contains all the parameters to send to the API endpoint
-   for the post stream operation.
+/*
+PostStreamParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the post stream operation.
+
+	Typically these are written to a http.Request.
 */
 type PostStreamParams struct {
 

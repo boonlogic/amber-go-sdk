@@ -52,10 +52,12 @@ func NewGetPretrainParamsWithHTTPClient(client *http.Client) *GetPretrainParams 
 	}
 }
 
-/* GetPretrainParams contains all the parameters to send to the API endpoint
-   for the get pretrain operation.
+/*
+GetPretrainParams contains all the parameters to send to the API endpoint
 
-   Typically these are written to a http.Request.
+	for the get pretrain operation.
+
+	Typically these are written to a http.Request.
 */
 type GetPretrainParams struct {
 

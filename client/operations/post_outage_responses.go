@@ -63,7 +63,8 @@ func NewPostOutageOK() *PostOutageOK {
 	return &PostOutageOK{}
 }
 
-/* PostOutageOK describes a response with status code 200, with default header values.
+/*
+	PostOutageOK describes a response with status code 200, with default header values.
 
 Operation was successful
 */
@@ -95,7 +96,8 @@ func NewPostOutageBadRequest() *PostOutageBadRequest {
 	return &PostOutageBadRequest{}
 }
 
-/* PostOutageBadRequest describes a response with status code 400, with default header values.
+/*
+	PostOutageBadRequest describes a response with status code 400, with default header values.
 
 Bad request
 */
@@ -127,7 +129,8 @@ func NewPostOutageUnauthorized() *PostOutageUnauthorized {
 	return &PostOutageUnauthorized{}
 }
 
-/* PostOutageUnauthorized describes a response with status code 401, with default header values.
+/*
+	PostOutageUnauthorized describes a response with status code 401, with default header values.
 
 Unauthorized
 */
@@ -159,7 +162,8 @@ func NewPostOutageNotFound() *PostOutageNotFound {
 	return &PostOutageNotFound{}
 }
 
-/* PostOutageNotFound describes a response with status code 404, with default header values.
+/*
+	PostOutageNotFound describes a response with status code 404, with default header values.
 
 The specified resource was not found
 */
@@ -191,7 +195,8 @@ func NewPostOutageInternalServerError() *PostOutageInternalServerError {
 	return &PostOutageInternalServerError{}
 }
 
-/* PostOutageInternalServerError describes a response with status code 500, with default header values.
+/*
+	PostOutageInternalServerError describes a response with status code 500, with default header values.
 
 Internal server error
 */

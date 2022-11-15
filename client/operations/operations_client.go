@@ -70,9 +70,9 @@ type ClientService interface {
 }
 
 /*
-  DeleteSensor deletes a sensor instance
+DeleteSensor deletes a sensor instance
 
-  Deletes the sensor instance with the specified sensorId.
+Deletes the sensor instance with the specified sensorId.
 */
 func (a *Client) DeleteSensor(params *DeleteSensorParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*DeleteSensorOK, error) {
 	// TODO: Validate the params before sending
@@ -111,9 +111,9 @@ func (a *Client) DeleteSensor(params *DeleteSensorParams, authInfo runtime.Clien
 }
 
 /*
-  GetAmberSummary gets the JSON block of the amber image
+GetAmberSummary gets the JSON block of the amber image
 
-  Returns the json block of the amber sensor
+Returns the json block of the amber sensor
 */
 func (a *Client) GetAmberSummary(params *GetAmberSummaryParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetAmberSummaryOK, error) {
 	// TODO: Validate the params before sending
@@ -152,9 +152,9 @@ func (a *Client) GetAmberSummary(params *GetAmberSummaryParams, authInfo runtime
 }
 
 /*
-  GetConfig gets the current configuration of a sensor instance
+GetConfig gets the current configuration of a sensor instance
 
-  Returns the current configuration of the sensor instance specified.
+Returns the current configuration of the sensor instance specified.
 */
 func (a *Client) GetConfig(params *GetConfigParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetConfigOK, error) {
 	// TODO: Validate the params before sending
@@ -193,9 +193,9 @@ func (a *Client) GetConfig(params *GetConfigParams, authInfo runtime.ClientAuthI
 }
 
 /*
-  GetPretrain gets status of pretrain operation
+GetPretrain gets status of pretrain operation
 
-  Get status of a sensor which is currently pretraining.
+Get status of a sensor which is currently pretraining.
 */
 func (a *Client) GetPretrain(params *GetPretrainParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetPretrainOK, *GetPretrainAccepted, error) {
 	// TODO: Validate the params before sending
@@ -235,9 +235,9 @@ func (a *Client) GetPretrain(params *GetPretrainParams, authInfo runtime.ClientA
 }
 
 /*
-  GetRootCause gets root cause analysis information from a sensor
+GetRootCause gets root cause analysis information from a sensor
 
-  Returns analytic information on the root cause for the clusters provided.
+Returns analytic information on the root cause for the clusters provided.
 */
 func (a *Client) GetRootCause(params *GetRootCauseParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetRootCauseOK, error) {
 	// TODO: Validate the params before sending
@@ -276,9 +276,9 @@ func (a *Client) GetRootCause(params *GetRootCauseParams, authInfo runtime.Clien
 }
 
 /*
-  GetSensor gets basic information about a sensor instance
+GetSensor gets basic information about a sensor instance
 
-  Returns basic information about an existing sensor instance.
+Returns basic information about an existing sensor instance.
 */
 func (a *Client) GetSensor(params *GetSensorParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetSensorOK, error) {
 	// TODO: Validate the params before sending
@@ -317,9 +317,9 @@ func (a *Client) GetSensor(params *GetSensorParams, authInfo runtime.ClientAuthI
 }
 
 /*
-  GetSensors lists all sensors for this user
+GetSensors lists all sensors for this user
 
-  Returns a list of all current sensor instances for this user.
+Returns a list of all current sensor instances for this user.
 */
 func (a *Client) GetSensors(params *GetSensorsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetSensorsOK, error) {
 	// TODO: Validate the params before sending
@@ -358,9 +358,9 @@ func (a *Client) GetSensors(params *GetSensorsParams, authInfo runtime.ClientAut
 }
 
 /*
-  GetStatus gets analytic information from a sensor
+GetStatus gets analytic information from a sensor
 
-  Returns analytic information derived from data processed by a sensor thus far.
+Returns analytic information derived from data processed by a sensor thus far.
 */
 func (a *Client) GetStatus(params *GetStatusParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetStatusOK, error) {
 	// TODO: Validate the params before sending
@@ -399,7 +399,7 @@ func (a *Client) GetStatus(params *GetStatusParams, authInfo runtime.ClientAuthI
 }
 
 /*
-  GetVersion retrieves API version information
+GetVersion retrieves API version information
 */
 func (a *Client) GetVersion(params *GetVersionParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetVersionOK, error) {
 	// TODO: Validate the params before sending
@@ -438,9 +438,9 @@ func (a *Client) GetVersion(params *GetVersionParams, authInfo runtime.ClientAut
 }
 
 /*
-  PostConfig applies configuration to a sensor instance
+PostConfig applies configuration to a sensor instance
 
-  Applies the provided configuration to the sensor instance specified.
+Applies the provided configuration to the sensor instance specified.
 */
 func (a *Client) PostConfig(params *PostConfigParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PostConfigOK, error) {
 	// TODO: Validate the params before sending
@@ -479,9 +479,9 @@ func (a *Client) PostConfig(params *PostConfigParams, authInfo runtime.ClientAut
 }
 
 /*
-  PostOauth2 requests a bearer token using amber account credentials
+PostOauth2 requests a bearer token using amber account credentials
 
-  Requests a bearer token using Amber account credentials. The requested bearer token is returned as the "id-token" response attribute. This token is to be used for authenticating API requests throughout a usage session and expires after 60 minutes.
+Requests a bearer token using Amber account credentials. The requested bearer token is returned as the "id-token" response attribute. This token is to be used for authenticating API requests throughout a usage session and expires after 60 minutes.
 */
 func (a *Client) PostOauth2(params *PostOauth2Params, opts ...ClientOption) (*PostOauth2OK, error) {
 	// TODO: Validate the params before sending
@@ -519,9 +519,9 @@ func (a *Client) PostOauth2(params *PostOauth2Params, opts ...ClientOption) (*Po
 }
 
 /*
-  PostOutage informs the server of an outage
+PostOutage informs the server of an outage
 
-  Clears the load buffer of streaming window and resets statistics. Returns stream status
+Clears the load buffer of streaming window and resets statistics. Returns stream status
 */
 func (a *Client) PostOutage(params *PostOutageParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PostOutageOK, error) {
 	// TODO: Validate the params before sending
@@ -560,9 +560,9 @@ func (a *Client) PostOutage(params *PostOutageParams, authInfo runtime.ClientAut
 }
 
 /*
-  PostPretrain pretrains a sensor using historical data
+PostPretrain pretrains a sensor using historical data
 
-  Pretrains a sensor. Ingoing data should be formatted as a simple string of comma-separated numbers with no spaces.
+Pretrains a sensor. Ingoing data should be formatted as a simple string of comma-separated numbers with no spaces.
 */
 func (a *Client) PostPretrain(params *PostPretrainParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PostPretrainOK, *PostPretrainAccepted, error) {
 	// TODO: Validate the params before sending
@@ -602,9 +602,9 @@ func (a *Client) PostPretrain(params *PostPretrainParams, authInfo runtime.Clien
 }
 
 /*
-  PostSensor creates a new a sensor instance
+PostSensor creates a new a sensor instance
 
-  Spawns a new sensor instance, returning its unique sensorId.
+Spawns a new sensor instance, returning its unique sensorId.
 */
 func (a *Client) PostSensor(params *PostSensorParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PostSensorOK, error) {
 	// TODO: Validate the params before sending
@@ -643,18 +643,23 @@ func (a *Client) PostSensor(params *PostSensorParams, authInfo runtime.ClientAut
 }
 
 /*
-  PostStream streams data to a sensor
+	PostStream streams data to a sensor
 
-  Sends data to a sensor. Ingoing data should be formatted as a simple string of comma-separated numbers with no spaces.
+	Sends data to a sensor. Ingoing data should be formatted as a simple string of comma-separated numbers with no spaces.
 
 The following analytic results are returned:
 - state : sensor state as of this call (one of: "Buffering", "Autotuning", "Learning", "Monitoring", "Error")
 - ID : array of cluster IDs. These correspond one-to-one with input samples, indicating the cluster to which each input pattern was assigned.
+- RI : array of values ranging from 0 to 1000 that give a gauge as to how uncommon the sample's cluster is.
 - SI : array of smoothed anomaly index values. These values correspond one-to-one with the input samples and range between 0 and 1000. Values closer to 0 represent input patterns which are ordinary given the data seen so far on this sensor. Values closer to 1000 represent novel patterns which are anomalous with respect to data seen before.
 - AD : array of 0's and 1's as anomaly detection indicators. These correspond one-to-one with input samples and are produced by thresholding the smoothed anomaly index (SI). The threshold is determined automatically from the SI values. A value of 0 indicates that the SI has not exceeded the anomaly detection threshold. A value of 1 indicates it has, signaling an anomaly at the corresponding input sample.
 - AH : array of anomaly history values. These values are a moving-window sum of the AD, giving the number of anomaly detections (1's) present in the AD signal over a "recent history" window whose length is the buffer size.
 - AM : array of Amber Metric values. These are floating-point values between 0.0 and 1.0 indicating the extent to which the AH contains an unusually high number of anomalies in recent history. The values are derived statistically from a Poisson model, with values close to 0.0 signaling a lower, and values close to 1.0 signaling a higher, frequency of anomalies than usual.
 - AW : array of Amber Warning Level values. This index is produced by thresholding the Amber Metric (AM) and takes on the values 0, 1 or 2 representing a discrete "warning level" for an asset based on the frequency of anomalies within recent history. 0 = normal, 1 = asset changing, 2 = asset critical. The default thresholds for the two warning levels are the standard statistical values of 0.95 (outlier, asset chaing) and 0.997 (extreme outlier, asset critical).
+- NI : array of values ranging from 0 to 1000 to give a rating for unseen clusters on how new the data points are compared the the rest of the model's clusters.
+- NS : array of values ranging from 0 to 1000 that is a weighted average of the time series of NI.
+- NW : an array of NS values that are normalized to range from 0 to 2.
+- OM : an array of floats signifying roughly the operational mode that the state is in based on a sliding window average cluster ID.
 */
 func (a *Client) PostStream(params *PostStreamParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PostStreamOK, error) {
 	// TODO: Validate the params before sending
@@ -693,9 +698,9 @@ func (a *Client) PostStream(params *PostStreamParams, authInfo runtime.ClientAut
 }
 
 /*
-  PutConfig updates configuration for a sensor instance
+PutConfig updates configuration for a sensor instance
 
-  Updates the configuration for the sensor instance specified.
+Updates the configuration for the sensor instance specified.
 */
 func (a *Client) PutConfig(params *PutConfigParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PutConfigOK, error) {
 	// TODO: Validate the params before sending
@@ -734,9 +739,9 @@ func (a *Client) PutConfig(params *PutConfigParams, authInfo runtime.ClientAuthI
 }
 
 /*
-  PutSensor updates label for a sensor instance
+PutSensor updates label for a sensor instance
 
-  Changes the label of an existing sensor instance to the new label specified.
+Changes the label of an existing sensor instance to the new label specified.
 */
 func (a *Client) PutSensor(params *PutSensorParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PutSensorOK, error) {
 	// TODO: Validate the params before sending
@@ -775,9 +780,9 @@ func (a *Client) PutSensor(params *PutSensorParams, authInfo runtime.ClientAuthI
 }
 
 /*
-  PutStream streams data to a sensor fusion vector
+PutStream streams data to a sensor fusion vector
 
-  Update fusion vector with new values for the given features, and optionally submit to Amber. Analytic results returned are the same as POST /stream.
+Update fusion vector with new values for the given features, and optionally submit to Amber. Analytic results returned are the same as POST /stream.
 */
 func (a *Client) PutStream(params *PutStreamParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PutStreamOK, *PutStreamAccepted, error) {
 	// TODO: Validate the params before sending

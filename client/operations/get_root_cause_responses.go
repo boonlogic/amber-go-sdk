@@ -63,7 +63,8 @@ func NewGetRootCauseOK() *GetRootCauseOK {
 	return &GetRootCauseOK{}
 }
 
-/* GetRootCauseOK describes a response with status code 200, with default header values.
+/*
+	GetRootCauseOK describes a response with status code 200, with default header values.
 
 Operation was successful
 */
@@ -93,7 +94,8 @@ func NewGetRootCauseBadRequest() *GetRootCauseBadRequest {
 	return &GetRootCauseBadRequest{}
 }
 
-/* GetRootCauseBadRequest describes a response with status code 400, with default header values.
+/*
+	GetRootCauseBadRequest describes a response with status code 400, with default header values.
 
 Bad request
 */
@@ -125,7 +127,8 @@ func NewGetRootCauseUnauthorized() *GetRootCauseUnauthorized {
 	return &GetRootCauseUnauthorized{}
 }
 
-/* GetRootCauseUnauthorized describes a response with status code 401, with default header values.
+/*
+	GetRootCauseUnauthorized describes a response with status code 401, with default header values.
 
 Unauthorized
 */
@@ -157,7 +160,8 @@ func NewGetRootCauseNotFound() *GetRootCauseNotFound {
 	return &GetRootCauseNotFound{}
 }
 
-/* GetRootCauseNotFound describes a response with status code 404, with default header values.
+/*
+	GetRootCauseNotFound describes a response with status code 404, with default header values.
 
 The specified resource was not found
 */
@@ -189,7 +193,8 @@ func NewGetRootCauseInternalServerError() *GetRootCauseInternalServerError {
 	return &GetRootCauseInternalServerError{}
 }
 
-/* GetRootCauseInternalServerError describes a response with status code 500, with default header values.
+/*
+	GetRootCauseInternalServerError describes a response with status code 500, with default header values.
 
 Internal server error
 */
