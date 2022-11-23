@@ -15,7 +15,7 @@ import (
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
-	"io/ioutil"
+	"io"
 	"math"
 	"net/http"
 	"os"
@@ -130,7 +130,7 @@ func NewAmberClientFromFile(licenseId *string, licenseFile *string) (*AmberClien
 
 	var lp licenseProfiles
 	if _, err := os.Stat(file); err == nil {
-		blob, err := ioutil.ReadFile(file)
+		blob, err := os.ReadFile(file)
 		if err != nil {
 			return nil, err
 		}
@@ -147,8 +147,8 @@ func NewAmberClientFromFile(licenseId *string, licenseFile *string) (*AmberClien
 	return NewAmberClientFromProfile(profile)
 }
 
-func (a *AmberClient) SetNoVerify(verify bool) error {
-	a.verify = !verify
+func (a *AmberClient) SetVerify(value bool) error {
+	a.verify = value
 	a.updateHttpClients()
 	return nil
 }
@@ -846,7 +846,7 @@ func (crt CustomRoundTripper) RoundTrip(req *http.Request) (res *http.Response, 
 			return nil, err
 		}
 		reader := bytes.NewReader(b.Bytes())
-		req.Body = ioutil.NopCloser(reader)
+		req.Body = io.NopCloser(reader)
 
 		// set the content-encoding
 		req.Header.Set("content-encoding", "gzip")
@@ -871,11 +871,12 @@ func (a *AmberClient) updateHttpClients() {
 	scheme, host, basePath, _ := parseServer(a.licenseProfile.Server)
 	if scheme == "https" {
 		httpClient, _ := httptransport.TLSClient(a.tlsOptions)
-		httpClient.Transport = CustomRoundTripper{http.DefaultTransport}
-		a.amberServer = amberClient.New(httptransport.NewWithClient(host, basePath, []string{scheme}, httpClient), strfmt.Default)
+		httpClient.Transport = CustomRoundTripper{httpClient.Transport}
+		clientRuntime := httptransport.NewWithClient(host, basePath, []string{scheme}, httpClient)
+		a.amberServer = amberClient.New(clientRuntime, strfmt.Default)
 	} else {
 		transport := httptransport.New(host, basePath, []string{scheme})
-		transport.Transport = CustomRoundTripper{http.DefaultTransport}
+		transport.Transport = CustomRoundTripper{transport.Transport}
 		a.amberServer = amberClient.New(transport, strfmt.Default)
 	}
 
@@ -883,7 +884,9 @@ func (a *AmberClient) updateHttpClients() {
 	scheme, host, basePath, _ = parseServer(a.licenseProfile.OauthServer)
 	if scheme == "https" {
 		httpClient, _ := httptransport.TLSClient(a.tlsOptions)
-		a.oauthServer = amberClient.New(httptransport.NewWithClient(host, basePath, []string{scheme}, httpClient), strfmt.Default)
+		httpClient.Transport = CustomRoundTripper{httpClient.Transport}
+		clientRuntime := httptransport.NewWithClient(host, basePath, []string{scheme}, httpClient)
+		a.oauthServer = amberClient.New(clientRuntime, strfmt.Default)
 	} else {
 		a.oauthServer = amberClient.New(httptransport.New(host, basePath, []string{scheme}), strfmt.Default)
 	}
@@ -905,6 +908,7 @@ func (a *AmberClient) loadFromEnv() {
 		a.licenseProfile.OauthServer = oauthServer
 	}
 	verifyEnv := os.Getenv("AMBER_SSL_VERIFY")
+	a.verify = true
 	if strings.ToLower(verifyEnv) == "false" {
 		a.verify = false
 	}
