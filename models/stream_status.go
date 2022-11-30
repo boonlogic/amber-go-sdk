@@ -23,6 +23,12 @@ type StreamStatus struct {
 	// Required: true
 	ClusterCount *uint32 `json:"clusterCount"`
 
+	// Unix time stamp of the last posted stream data
+	LastModified uint64 `json:"lastModified,omitempty"`
+
+	// number of seconds since the last posted stream data
+	LastModifiedDelta uint64 `json:"lastModifiedDelta,omitempty"`
+
 	// message to accompany the current state
 	// Required: true
 	Message *string `json:"message"`

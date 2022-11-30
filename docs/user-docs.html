@@ -9,7 +9,7 @@
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
-div.column{flex: 1;}
+div.column{flex: auto; overflow-x: auto;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
 ul.task-list{list-style: none;}
 ul.task-list li input[type="checkbox"] {
@@ -327,11 +327,11 @@ PretrainSensor</a></li>
 <li><a href="#func-amberclient-pretrainsensorxl" id="toc-func-amberclient-pretrainsensorxl">func (*AmberClient)
 PretrainSensorXL</a></li>
 <li><a href="#func-amberclient-setcert" id="toc-func-amberclient-setcert">func (*AmberClient) SetCert</a></li>
-<li><a href="#func-amberclient-setnoverify" id="toc-func-amberclient-setnoverify">func (*AmberClient)
-SetNoVerify</a></li>
 <li><a href="#func-amberclient-setproxy" id="toc-func-amberclient-setproxy">func (*AmberClient) SetProxy</a></li>
 <li><a href="#func-amberclient-settimeout" id="toc-func-amberclient-settimeout">func (*AmberClient)
 SetTimeout</a></li>
+<li><a href="#func-amberclient-setverify" id="toc-func-amberclient-setverify">func (*AmberClient)
+SetVerify</a></li>
 <li><a href="#func-amberclient-streamfusion" id="toc-func-amberclient-streamfusion">func (*AmberClient)
 StreamFusion</a></li>
 <li><a href="#func-amberclient-streamsensor" id="toc-func-amberclient-streamsensor">func (*AmberClient)
@@ -1182,12 +1182,12 @@ amberModels.PostPretrainRequest) (</em>amberModels.PostPretrainResponse,
 *amberModels.Error)</a></li>
 <li><a href="#func-amberclient-setcert">func (a *AmberClient)
 SetCert(cert string) error</a></li>
-<li><a href="#func-amberclient-setnoverify">func (a *AmberClient)
-SetNoVerify(verify bool) error</a></li>
 <li><a href="#func-amberclient-setproxy">func (a *AmberClient)
 SetProxy(proxy string) error</a></li>
 <li><a href="#func-amberclient-settimeout">func (a *AmberClient)
 SetTimeout(timeout int) error</a></li>
+<li><a href="#func-amberclient-setverify">func (a *AmberClient)
+SetVerify(value bool) error</a></li>
 <li><a href="#func-amberclient-streamfusion">func (a <em>AmberClient)
 StreamFusion(sensorId string, payload amberModels.PutStreamRequest)
 (</em>amberModels.PutStreamResponse, *amberModels.Error)</a></li>
@@ -1206,11 +1206,11 @@ CustomRoundTripper) RoundTrip(req <em>http.Request) (res
 </ul></li>
 <li><a href="#type-licenseprofile">type LicenseProfile</a></li>
 </ul>
-<h2 id="func-loadcsvrecords">func <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/sdk.go#L921">LoadCsvRecords</a></h2>
+<h2 id="func-loadcsvrecords">func <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/sdk.go#L925">LoadCsvRecords</a></h2>
 <div class="sourceCode" id="cb2"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> LoadCsvRecords<span class="op">(</span>csvFile <span class="dt">string</span><span class="op">)</span> <span class="op">([]</span><span class="dt">string</span><span class="op">,</span> <span class="dt">error</span><span class="op">)</span></span></code></pre></div>
 <p>utility function to create csv payloads given a csv data file. output
 will be one continuous string of comma separated values</p>
-<h2 id="func-packcsvasbyteslice">func <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/sdk.go#L968">PackCsvAsByteSlice</a></h2>
+<h2 id="func-packcsvasbyteslice">func <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/sdk.go#L972">PackCsvAsByteSlice</a></h2>
 <div class="sourceCode" id="cb3"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> PackCsvAsByteSlice<span class="op">(</span>csv <span class="dt">string</span><span class="op">)</span> <span class="op">([]</span><span class="dt">byte</span><span class="op">,</span> <span class="dt">error</span><span class="op">)</span></span></code></pre></div>
 <h2 id="type-amberclient">type <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/sdk.go#L38-L51">AmberClient</a></h2>
 <div class="sourceCode" id="cb4"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> AmberClient <span class="kw">struct</span> <span class="op">{</span></span>
@@ -1254,12 +1254,12 @@ will be one continuous string of comma separated values</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> <span class="op">(</span>a <span class="op">*</span>AmberClient<span class="op">)</span> PretrainSensorXL<span class="op">(</span>sensorId <span class="dt">string</span><span class="op">,</span> request amberModels<span class="op">.</span>PostPretrainRequest<span class="op">)</span> <span class="op">(*</span>amberModels<span class="op">.</span>PostPretrainResponse<span class="op">,</span> <span class="op">*</span>amberModels<span class="op">.</span>Error<span class="op">)</span></span></code></pre></div>
 <h3 id="func-amberclient-setcert">func (*AmberClient) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/sdk.go#L156">SetCert</a></h3>
 <div class="sourceCode" id="cb22"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> <span class="op">(</span>a <span class="op">*</span>AmberClient<span class="op">)</span> SetCert<span class="op">(</span>cert <span class="dt">string</span><span class="op">)</span> <span class="dt">error</span></span></code></pre></div>
-<h3 id="func-amberclient-setnoverify">func (*AmberClient) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/sdk.go#L150">SetNoVerify</a></h3>
-<div class="sourceCode" id="cb23"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> <span class="op">(</span>a <span class="op">*</span>AmberClient<span class="op">)</span> SetNoVerify<span class="op">(</span>verify <span class="dt">bool</span><span class="op">)</span> <span class="dt">error</span></span></code></pre></div>
 <h3 id="func-amberclient-setproxy">func (*AmberClient) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/sdk.go#L167">SetProxy</a></h3>
-<div class="sourceCode" id="cb24"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> <span class="op">(</span>a <span class="op">*</span>AmberClient<span class="op">)</span> SetProxy<span class="op">(</span>proxy <span class="dt">string</span><span class="op">)</span> <span class="dt">error</span></span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> <span class="op">(</span>a <span class="op">*</span>AmberClient<span class="op">)</span> SetProxy<span class="op">(</span>proxy <span class="dt">string</span><span class="op">)</span> <span class="dt">error</span></span></code></pre></div>
 <h3 id="func-amberclient-settimeout">func (*AmberClient) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/sdk.go#L162">SetTimeout</a></h3>
-<div class="sourceCode" id="cb25"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> <span class="op">(</span>a <span class="op">*</span>AmberClient<span class="op">)</span> SetTimeout<span class="op">(</span>timeout <span class="dt">int</span><span class="op">)</span> <span class="dt">error</span></span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> <span class="op">(</span>a <span class="op">*</span>AmberClient<span class="op">)</span> SetTimeout<span class="op">(</span>timeout <span class="dt">int</span><span class="op">)</span> <span class="dt">error</span></span></code></pre></div>
+<h3 id="func-amberclient-setverify">func (*AmberClient) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/sdk.go#L150">SetVerify</a></h3>
+<div class="sourceCode" id="cb25"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> <span class="op">(</span>a <span class="op">*</span>AmberClient<span class="op">)</span> SetVerify<span class="op">(</span>value <span class="dt">bool</span><span class="op">)</span> <span class="dt">error</span></span></code></pre></div>
 <h3 id="func-amberclient-streamfusion">func (*AmberClient) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/sdk.go#L470">StreamFusion</a></h3>
 <div class="sourceCode" id="cb26"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> <span class="op">(</span>a <span class="op">*</span>AmberClient<span class="op">)</span> StreamFusion<span class="op">(</span>sensorId <span class="dt">string</span><span class="op">,</span> payload amberModels<span class="op">.</span>PutStreamRequest<span class="op">)</span> <span class="op">(*</span>amberModels<span class="op">.</span>PutStreamResponse<span class="op">,</span> <span class="op">*</span>amberModels<span class="op">.</span>Error<span class="op">)</span></span></code></pre></div>
 <h3 id="func-amberclient-streamsensor">func (*AmberClient) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/sdk.go#L439">StreamSensor</a></h3>
@@ -3491,7 +3491,7 @@ it is used</p>
 <h3 id="func-poststreamrequest-validate">func (*PostStreamRequest) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_request.go#L31">Validate</a></h3>
 <div class="sourceCode" id="cb246"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb246-1"><a href="#cb246-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> <span class="op">(</span>m <span class="op">*</span>PostStreamRequest<span class="op">)</span> Validate<span class="op">(</span>formats strfmt<span class="op">.</span>Registry<span class="op">)</span> <span class="dt">error</span></span></code></pre></div>
 <p>Validate validates this post stream request</p>
-<h2 id="type-poststreamresponse">type <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L20-L62">PostStreamResponse</a></h2>
+<h2 id="type-poststreamresponse">type <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L20-L66">PostStreamResponse</a></h2>
 <h3 id="poststreamresponse-post-stream-response">PostStreamResponse post
 stream response</h3>
 <p>swagger:model postStreamResponse</p>
@@ -3530,36 +3530,40 @@ stream response</h3>
 <span id="cb247-33"><a href="#cb247-33" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Required: true</span></span>
 <span id="cb247-34"><a href="#cb247-34" aria-hidden="true" tabindex="-1"></a>    NW  Float32Array <span class="st">`json:&quot;NW&quot;`</span></span>
 <span id="cb247-35"><a href="#cb247-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb247-36"><a href="#cb247-36" aria-hidden="true" tabindex="-1"></a>    <span class="co">// r i</span></span>
+<span id="cb247-36"><a href="#cb247-36" aria-hidden="true" tabindex="-1"></a>    <span class="co">// o m</span></span>
 <span id="cb247-37"><a href="#cb247-37" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Required: true</span></span>
-<span id="cb247-38"><a href="#cb247-38" aria-hidden="true" tabindex="-1"></a>    RI  Uint16Array <span class="st">`json:&quot;RI&quot;`</span></span>
+<span id="cb247-38"><a href="#cb247-38" aria-hidden="true" tabindex="-1"></a>    OM  Float32Array <span class="st">`json:&quot;OM&quot;`</span></span>
 <span id="cb247-39"><a href="#cb247-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb247-40"><a href="#cb247-40" aria-hidden="true" tabindex="-1"></a>    <span class="co">// s i</span></span>
+<span id="cb247-40"><a href="#cb247-40" aria-hidden="true" tabindex="-1"></a>    <span class="co">// r i</span></span>
 <span id="cb247-41"><a href="#cb247-41" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Required: true</span></span>
-<span id="cb247-42"><a href="#cb247-42" aria-hidden="true" tabindex="-1"></a>    SI  Uint16Array <span class="st">`json:&quot;SI&quot;`</span></span>
-<span id="cb247-43"><a href="#cb247-43" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<span id="cb247-42"><a href="#cb247-42" aria-hidden="true" tabindex="-1"></a>    RI  Uint16Array <span class="st">`json:&quot;RI&quot;`</span></span>
+<span id="cb247-43"><a href="#cb247-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb247-44"><a href="#cb247-44" aria-hidden="true" tabindex="-1"></a>    <span class="co">// s i</span></span>
+<span id="cb247-45"><a href="#cb247-45" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Required: true</span></span>
+<span id="cb247-46"><a href="#cb247-46" aria-hidden="true" tabindex="-1"></a>    SI  Uint16Array <span class="st">`json:&quot;SI&quot;`</span></span>
+<span id="cb247-47"><a href="#cb247-47" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <h3 id="func-poststreamresponse-contextvalidate">func
-(*PostStreamResponse) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L417">ContextValidate</a></h3>
+(*PostStreamResponse) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L451">ContextValidate</a></h3>
 <div class="sourceCode" id="cb248"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb248-1"><a href="#cb248-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> <span class="op">(</span>m <span class="op">*</span>PostStreamResponse<span class="op">)</span> ContextValidate<span class="op">(</span>ctx context<span class="op">.</span>Context<span class="op">,</span> formats strfmt<span class="op">.</span>Registry<span class="op">)</span> <span class="dt">error</span></span></code></pre></div>
 <p>ContextValidate validate this post stream response based on the
 context it is used</p>
 <h3 id="func-poststreamresponse-marshalbinary">func
-(*PostStreamResponse) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L612">MarshalBinary</a></h3>
+(*PostStreamResponse) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L664">MarshalBinary</a></h3>
 <div class="sourceCode" id="cb249"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb249-1"><a href="#cb249-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> <span class="op">(</span>m <span class="op">*</span>PostStreamResponse<span class="op">)</span> MarshalBinary<span class="op">()</span> <span class="op">([]</span><span class="dt">byte</span><span class="op">,</span> <span class="dt">error</span><span class="op">)</span></span></code></pre></div>
 <p>MarshalBinary interface implementation</p>
 <h3 id="func-poststreamresponse-marshaljson">func (PostStreamResponse)
-<a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L123">MarshalJSON</a></h3>
+<a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L131">MarshalJSON</a></h3>
 <div class="sourceCode" id="cb250"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb250-1"><a href="#cb250-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> <span class="op">(</span>m PostStreamResponse<span class="op">)</span> MarshalJSON<span class="op">()</span> <span class="op">([]</span><span class="dt">byte</span><span class="op">,</span> <span class="dt">error</span><span class="op">)</span></span></code></pre></div>
 <p>MarshalJSON marshals this object to a JSON structure</p>
 <h3 id="func-poststreamresponse-unmarshalbinary">func
-(*PostStreamResponse) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L620">UnmarshalBinary</a></h3>
+(*PostStreamResponse) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L672">UnmarshalBinary</a></h3>
 <div class="sourceCode" id="cb251"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb251-1"><a href="#cb251-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> <span class="op">(</span>m <span class="op">*</span>PostStreamResponse<span class="op">)</span> UnmarshalBinary<span class="op">(</span>b <span class="op">[]</span><span class="dt">byte</span><span class="op">)</span> <span class="dt">error</span></span></code></pre></div>
 <p>UnmarshalBinary interface implementation</p>
 <h3 id="func-poststreamresponse-unmarshaljson">func
-(*PostStreamResponse) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L65">UnmarshalJSON</a></h3>
+(*PostStreamResponse) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L69">UnmarshalJSON</a></h3>
 <div class="sourceCode" id="cb252"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb252-1"><a href="#cb252-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> <span class="op">(</span>m <span class="op">*</span>PostStreamResponse<span class="op">)</span> UnmarshalJSON<span class="op">(</span>raw <span class="op">[]</span><span class="dt">byte</span><span class="op">)</span> <span class="dt">error</span></span></code></pre></div>
 <p>UnmarshalJSON unmarshals this object from a JSON structure</p>
-<h3 id="func-poststreamresponse-validate">func (*PostStreamResponse) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L182">Validate</a></h3>
+<h3 id="func-poststreamresponse-validate">func (*PostStreamResponse) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L194">Validate</a></h3>
 <div class="sourceCode" id="cb253"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb253-1"><a href="#cb253-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> <span class="op">(</span>m <span class="op">*</span>PostStreamResponse<span class="op">)</span> Validate<span class="op">(</span>formats strfmt<span class="op">.</span>Registry<span class="op">)</span> <span class="dt">error</span></span></code></pre></div>
 <p>Validate validates this post stream response</p>
 <h2 id="type-putconfigrequest">type <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/put_config_request.go#L20-L27">PutConfigRequest</a></h2>
@@ -3852,7 +3856,7 @@ it is used</p>
 <h3 id="func-sensorusageinfo-validate">func (*SensorUsageInfo) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/sensor_usage_info.go#L68">Validate</a></h3>
 <div class="sourceCode" id="cb298"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb298-1"><a href="#cb298-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> <span class="op">(</span>m <span class="op">*</span>SensorUsageInfo<span class="op">)</span> Validate<span class="op">(</span>formats strfmt<span class="op">.</span>Registry<span class="op">)</span> <span class="dt">error</span></span></code></pre></div>
 <p>Validate validates this sensor usage info</p>
-<h2 id="type-streamstatus">type <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/stream_status.go#L20-L49">StreamStatus</a></h2>
+<h2 id="type-streamstatus">type <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/stream_status.go#L20-L55">StreamStatus</a></h2>
 <h3 id="streamstatus-stream-status">StreamStatus stream status</h3>
 <p>swagger:model streamStatus</p>
 <div class="sourceCode" id="cb299"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb299-1"><a href="#cb299-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> StreamStatus <span class="kw">struct</span> <span class="op">{</span></span>
@@ -3861,41 +3865,47 @@ it is used</p>
 <span id="cb299-4"><a href="#cb299-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Required: true</span></span>
 <span id="cb299-5"><a href="#cb299-5" aria-hidden="true" tabindex="-1"></a>    ClusterCount <span class="op">*</span><span class="dt">uint32</span> <span class="st">`json:&quot;clusterCount&quot;`</span></span>
 <span id="cb299-6"><a href="#cb299-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb299-7"><a href="#cb299-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">// message to accompany the current state</span></span>
-<span id="cb299-8"><a href="#cb299-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Required: true</span></span>
-<span id="cb299-9"><a href="#cb299-9" aria-hidden="true" tabindex="-1"></a>    Message <span class="op">*</span><span class="dt">string</span> <span class="st">`json:&quot;message&quot;`</span></span>
-<span id="cb299-10"><a href="#cb299-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb299-11"><a href="#cb299-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">// completion percentage (applies to Buffering and Autotuning states)</span></span>
-<span id="cb299-12"><a href="#cb299-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Required: true</span></span>
-<span id="cb299-13"><a href="#cb299-13" aria-hidden="true" tabindex="-1"></a>    Progress <span class="op">*</span><span class="dt">uint16</span> <span class="st">`json:&quot;progress&quot;`</span></span>
-<span id="cb299-14"><a href="#cb299-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb299-15"><a href="#cb299-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">// number of restarts that have happened during autotuning</span></span>
-<span id="cb299-16"><a href="#cb299-16" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Required: true</span></span>
-<span id="cb299-17"><a href="#cb299-17" aria-hidden="true" tabindex="-1"></a>    RetryCount <span class="op">*</span><span class="dt">uint16</span> <span class="st">`json:&quot;retryCount&quot;`</span></span>
-<span id="cb299-18"><a href="#cb299-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb299-19"><a href="#cb299-19" aria-hidden="true" tabindex="-1"></a>    <span class="co">// state of the sensor, states will be prefixed with a state variable  followed by a colon followed by a message indicating progress.  Possible state variables  are: Not streaming, Buffering, Autotuning, Learning, Learning Complete, Monitoring,  Streaming error,  Autotuning error, Autotuning retry</span></span>
-<span id="cb299-20"><a href="#cb299-20" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Required: true</span></span>
-<span id="cb299-21"><a href="#cb299-21" aria-hidden="true" tabindex="-1"></a>    State <span class="op">*</span><span class="dt">string</span> <span class="st">`json:&quot;state&quot;`</span></span>
-<span id="cb299-22"><a href="#cb299-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb299-23"><a href="#cb299-23" aria-hidden="true" tabindex="-1"></a>    <span class="co">// the current streaming window size that is being used</span></span>
-<span id="cb299-24"><a href="#cb299-24" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Required: true</span></span>
-<span id="cb299-25"><a href="#cb299-25" aria-hidden="true" tabindex="-1"></a>    StreamingWindowSize <span class="op">*</span><span class="dt">uint16</span> <span class="st">`json:&quot;streamingWindowSize&quot;`</span></span>
-<span id="cb299-26"><a href="#cb299-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb299-27"><a href="#cb299-27" aria-hidden="true" tabindex="-1"></a>    <span class="co">// inferences since the most recent restart</span></span>
-<span id="cb299-28"><a href="#cb299-28" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Required: true</span></span>
-<span id="cb299-29"><a href="#cb299-29" aria-hidden="true" tabindex="-1"></a>    TotalInferences <span class="op">*</span><span class="dt">uint64</span> <span class="st">`json:&quot;totalInferences&quot;`</span></span>
-<span id="cb299-30"><a href="#cb299-30" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<h3 id="func-streamstatus-contextvalidate">func (*StreamStatus) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/stream_status.go#L153">ContextValidate</a></h3>
+<span id="cb299-7"><a href="#cb299-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Unix time stamp of the last posted stream data</span></span>
+<span id="cb299-8"><a href="#cb299-8" aria-hidden="true" tabindex="-1"></a>    LastModified <span class="dt">uint64</span> <span class="st">`json:&quot;lastModified,omitempty&quot;`</span></span>
+<span id="cb299-9"><a href="#cb299-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb299-10"><a href="#cb299-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">// number of seconds since the last posted stream data</span></span>
+<span id="cb299-11"><a href="#cb299-11" aria-hidden="true" tabindex="-1"></a>    LastModifiedDelta <span class="dt">uint64</span> <span class="st">`json:&quot;lastModifiedDelta,omitempty&quot;`</span></span>
+<span id="cb299-12"><a href="#cb299-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb299-13"><a href="#cb299-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">// message to accompany the current state</span></span>
+<span id="cb299-14"><a href="#cb299-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Required: true</span></span>
+<span id="cb299-15"><a href="#cb299-15" aria-hidden="true" tabindex="-1"></a>    Message <span class="op">*</span><span class="dt">string</span> <span class="st">`json:&quot;message&quot;`</span></span>
+<span id="cb299-16"><a href="#cb299-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb299-17"><a href="#cb299-17" aria-hidden="true" tabindex="-1"></a>    <span class="co">// completion percentage (applies to Buffering and Autotuning states)</span></span>
+<span id="cb299-18"><a href="#cb299-18" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Required: true</span></span>
+<span id="cb299-19"><a href="#cb299-19" aria-hidden="true" tabindex="-1"></a>    Progress <span class="op">*</span><span class="dt">uint16</span> <span class="st">`json:&quot;progress&quot;`</span></span>
+<span id="cb299-20"><a href="#cb299-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb299-21"><a href="#cb299-21" aria-hidden="true" tabindex="-1"></a>    <span class="co">// number of restarts that have happened during autotuning</span></span>
+<span id="cb299-22"><a href="#cb299-22" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Required: true</span></span>
+<span id="cb299-23"><a href="#cb299-23" aria-hidden="true" tabindex="-1"></a>    RetryCount <span class="op">*</span><span class="dt">uint16</span> <span class="st">`json:&quot;retryCount&quot;`</span></span>
+<span id="cb299-24"><a href="#cb299-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb299-25"><a href="#cb299-25" aria-hidden="true" tabindex="-1"></a>    <span class="co">// state of the sensor, states will be prefixed with a state variable  followed by a colon followed by a message indicating progress.  Possible state variables  are: Not streaming, Buffering, Autotuning, Learning, Learning Complete, Monitoring,  Streaming error,  Autotuning error, Autotuning retry</span></span>
+<span id="cb299-26"><a href="#cb299-26" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Required: true</span></span>
+<span id="cb299-27"><a href="#cb299-27" aria-hidden="true" tabindex="-1"></a>    State <span class="op">*</span><span class="dt">string</span> <span class="st">`json:&quot;state&quot;`</span></span>
+<span id="cb299-28"><a href="#cb299-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb299-29"><a href="#cb299-29" aria-hidden="true" tabindex="-1"></a>    <span class="co">// the current streaming window size that is being used</span></span>
+<span id="cb299-30"><a href="#cb299-30" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Required: true</span></span>
+<span id="cb299-31"><a href="#cb299-31" aria-hidden="true" tabindex="-1"></a>    StreamingWindowSize <span class="op">*</span><span class="dt">uint16</span> <span class="st">`json:&quot;streamingWindowSize&quot;`</span></span>
+<span id="cb299-32"><a href="#cb299-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb299-33"><a href="#cb299-33" aria-hidden="true" tabindex="-1"></a>    <span class="co">// inferences since the most recent restart</span></span>
+<span id="cb299-34"><a href="#cb299-34" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Required: true</span></span>
+<span id="cb299-35"><a href="#cb299-35" aria-hidden="true" tabindex="-1"></a>    TotalInferences <span class="op">*</span><span class="dt">uint64</span> <span class="st">`json:&quot;totalInferences&quot;`</span></span>
+<span id="cb299-36"><a href="#cb299-36" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="func-streamstatus-contextvalidate">func (*StreamStatus) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/stream_status.go#L159">ContextValidate</a></h3>
 <div class="sourceCode" id="cb300"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb300-1"><a href="#cb300-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> <span class="op">(</span>m <span class="op">*</span>StreamStatus<span class="op">)</span> ContextValidate<span class="op">(</span>ctx context<span class="op">.</span>Context<span class="op">,</span> formats strfmt<span class="op">.</span>Registry<span class="op">)</span> <span class="dt">error</span></span></code></pre></div>
 <p>ContextValidate validates this stream status based on context it is
 used</p>
-<h3 id="func-streamstatus-marshalbinary">func (*StreamStatus) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/stream_status.go#L158">MarshalBinary</a></h3>
+<h3 id="func-streamstatus-marshalbinary">func (*StreamStatus) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/stream_status.go#L164">MarshalBinary</a></h3>
 <div class="sourceCode" id="cb301"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb301-1"><a href="#cb301-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> <span class="op">(</span>m <span class="op">*</span>StreamStatus<span class="op">)</span> MarshalBinary<span class="op">()</span> <span class="op">([]</span><span class="dt">byte</span><span class="op">,</span> <span class="dt">error</span><span class="op">)</span></span></code></pre></div>
 <p>MarshalBinary interface implementation</p>
-<h3 id="func-streamstatus-unmarshalbinary">func (*StreamStatus) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/stream_status.go#L166">UnmarshalBinary</a></h3>
+<h3 id="func-streamstatus-unmarshalbinary">func (*StreamStatus) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/stream_status.go#L172">UnmarshalBinary</a></h3>
 <div class="sourceCode" id="cb302"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb302-1"><a href="#cb302-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> <span class="op">(</span>m <span class="op">*</span>StreamStatus<span class="op">)</span> UnmarshalBinary<span class="op">(</span>b <span class="op">[]</span><span class="dt">byte</span><span class="op">)</span> <span class="dt">error</span></span></code></pre></div>
 <p>UnmarshalBinary interface implementation</p>
-<h3 id="func-streamstatus-validate">func (*StreamStatus) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/stream_status.go#L52">Validate</a></h3>
+<h3 id="func-streamstatus-validate">func (*StreamStatus) <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/stream_status.go#L58">Validate</a></h3>
 <div class="sourceCode" id="cb303"><pre class="sourceCode go"><code class="sourceCode go"><span id="cb303-1"><a href="#cb303-1" aria-hidden="true" tabindex="-1"></a><span class="kw">func</span> <span class="op">(</span>m <span class="op">*</span>StreamStatus<span class="op">)</span> Validate<span class="op">(</span>formats strfmt<span class="op">.</span>Registry<span class="op">)</span> <span class="dt">error</span></span></code></pre></div>
 <p>Validate validates this stream status</p>
 <h2 id="type-streamingendpointusageinfo">type <a href="https://github.com/boonlogic/amber-go-sdk/blob/master/models/streaming_endpoint_usage_info.go#L20-L41">StreamingEndpointUsageInfo</a></h2>
