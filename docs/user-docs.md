@@ -29,9 +29,9 @@ import "github.com/boonlogic/amber-go-sdk"
   - [func (a *AmberClient) PretrainSensor(sensorId string, payload amberModels.PostPretrainRequest) (*amberModels.PostPretrainResponse, *amberModels.Error)](<#func-amberclient-pretrainsensor>)
   - [func (a *AmberClient) PretrainSensorXL(sensorId string, request amberModels.PostPretrainRequest) (*amberModels.PostPretrainResponse, *amberModels.Error)](<#func-amberclient-pretrainsensorxl>)
   - [func (a *AmberClient) SetCert(cert string) error](<#func-amberclient-setcert>)
-  - [func (a *AmberClient) SetNoVerify(verify bool) error](<#func-amberclient-setnoverify>)
   - [func (a *AmberClient) SetProxy(proxy string) error](<#func-amberclient-setproxy>)
   - [func (a *AmberClient) SetTimeout(timeout int) error](<#func-amberclient-settimeout>)
+  - [func (a *AmberClient) SetVerify(value bool) error](<#func-amberclient-setverify>)
   - [func (a *AmberClient) StreamFusion(sensorId string, payload amberModels.PutStreamRequest) (*amberModels.PutStreamResponse, *amberModels.Error)](<#func-amberclient-streamfusion>)
   - [func (a *AmberClient) StreamSensor(sensorId string, payload amberModels.PostStreamRequest) (*amberModels.PostStreamResponse, *amberModels.Error)](<#func-amberclient-streamsensor>)
   - [func (a *AmberClient) UpdateLabel(sensorId string, label string) (*amberModels.PutSensorResponse, *amberModels.Error)](<#func-amberclient-updatelabel>)
@@ -40,7 +40,7 @@ import "github.com/boonlogic/amber-go-sdk"
 - [type LicenseProfile](<#type-licenseprofile>)
 
 
-## func [LoadCsvRecords](<https://github.com/boonlogic/amber-go-sdk/blob/master/sdk.go#L921>)
+## func [LoadCsvRecords](<https://github.com/boonlogic/amber-go-sdk/blob/master/sdk.go#L925>)
 
 ```go
 func LoadCsvRecords(csvFile string) ([]string, error)
@@ -48,7 +48,7 @@ func LoadCsvRecords(csvFile string) ([]string, error)
 
 utility function to create csv payloads given a csv data file. output will be one continuous string of comma separated values
 
-## func [PackCsvAsByteSlice](<https://github.com/boonlogic/amber-go-sdk/blob/master/sdk.go#L968>)
+## func [PackCsvAsByteSlice](<https://github.com/boonlogic/amber-go-sdk/blob/master/sdk.go#L972>)
 
 ```go
 func PackCsvAsByteSlice(csv string) ([]byte, error)
@@ -174,12 +174,6 @@ func (a *AmberClient) PretrainSensorXL(sensorId string, request amberModels.Post
 func (a *AmberClient) SetCert(cert string) error
 ```
 
-### func \(\*AmberClient\) [SetNoVerify](<https://github.com/boonlogic/amber-go-sdk/blob/master/sdk.go#L150>)
-
-```go
-func (a *AmberClient) SetNoVerify(verify bool) error
-```
-
 ### func \(\*AmberClient\) [SetProxy](<https://github.com/boonlogic/amber-go-sdk/blob/master/sdk.go#L167>)
 
 ```go
@@ -190,6 +184,12 @@ func (a *AmberClient) SetProxy(proxy string) error
 
 ```go
 func (a *AmberClient) SetTimeout(timeout int) error
+```
+
+### func \(\*AmberClient\) [SetVerify](<https://github.com/boonlogic/amber-go-sdk/blob/master/sdk.go#L150>)
+
+```go
+func (a *AmberClient) SetVerify(value bool) error
 ```
 
 ### func \(\*AmberClient\) [StreamFusion](<https://github.com/boonlogic/amber-go-sdk/blob/master/sdk.go#L470>)
@@ -3009,7 +3009,7 @@ func (m *PostStreamRequest) Validate(formats strfmt.Registry) error
 
 Validate validates this post stream request
 
-## type [PostStreamResponse](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L20-L62>)
+## type [PostStreamResponse](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L20-L66>)
 
 ### PostStreamResponse post stream response
 
@@ -3051,6 +3051,10 @@ type PostStreamResponse struct {
     // Required: true
     NW  Float32Array `json:"NW"`
 
+    // o m
+    // Required: true
+    OM  Float32Array `json:"OM"`
+
     // r i
     // Required: true
     RI  Uint16Array `json:"RI"`
@@ -3061,7 +3065,7 @@ type PostStreamResponse struct {
 }
 ```
 
-### func \(\*PostStreamResponse\) [ContextValidate](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L417>)
+### func \(\*PostStreamResponse\) [ContextValidate](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L451>)
 
 ```go
 func (m *PostStreamResponse) ContextValidate(ctx context.Context, formats strfmt.Registry) error
@@ -3069,7 +3073,7 @@ func (m *PostStreamResponse) ContextValidate(ctx context.Context, formats strfmt
 
 ContextValidate validate this post stream response based on the context it is used
 
-### func \(\*PostStreamResponse\) [MarshalBinary](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L612>)
+### func \(\*PostStreamResponse\) [MarshalBinary](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L664>)
 
 ```go
 func (m *PostStreamResponse) MarshalBinary() ([]byte, error)
@@ -3077,7 +3081,7 @@ func (m *PostStreamResponse) MarshalBinary() ([]byte, error)
 
 MarshalBinary interface implementation
 
-### func \(PostStreamResponse\) [MarshalJSON](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L123>)
+### func \(PostStreamResponse\) [MarshalJSON](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L131>)
 
 ```go
 func (m PostStreamResponse) MarshalJSON() ([]byte, error)
@@ -3085,7 +3089,7 @@ func (m PostStreamResponse) MarshalJSON() ([]byte, error)
 
 MarshalJSON marshals this object to a JSON structure
 
-### func \(\*PostStreamResponse\) [UnmarshalBinary](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L620>)
+### func \(\*PostStreamResponse\) [UnmarshalBinary](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L672>)
 
 ```go
 func (m *PostStreamResponse) UnmarshalBinary(b []byte) error
@@ -3093,7 +3097,7 @@ func (m *PostStreamResponse) UnmarshalBinary(b []byte) error
 
 UnmarshalBinary interface implementation
 
-### func \(\*PostStreamResponse\) [UnmarshalJSON](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L65>)
+### func \(\*PostStreamResponse\) [UnmarshalJSON](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L69>)
 
 ```go
 func (m *PostStreamResponse) UnmarshalJSON(raw []byte) error
@@ -3101,7 +3105,7 @@ func (m *PostStreamResponse) UnmarshalJSON(raw []byte) error
 
 UnmarshalJSON unmarshals this object from a JSON structure
 
-### func \(\*PostStreamResponse\) [Validate](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L182>)
+### func \(\*PostStreamResponse\) [Validate](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/post_stream_response.go#L194>)
 
 ```go
 func (m *PostStreamResponse) Validate(formats strfmt.Registry) error
@@ -3598,7 +3602,7 @@ func (m *SensorUsageInfo) Validate(formats strfmt.Registry) error
 
 Validate validates this sensor usage info
 
-## type [StreamStatus](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/stream_status.go#L20-L49>)
+## type [StreamStatus](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/stream_status.go#L20-L55>)
 
 ### StreamStatus stream status
 
@@ -3610,6 +3614,12 @@ type StreamStatus struct {
     // current cluster count (applies to Learning and Monitoring states)
     // Required: true
     ClusterCount *uint32 `json:"clusterCount"`
+
+    // Unix time stamp of the last posted stream data
+    LastModified uint64 `json:"lastModified,omitempty"`
+
+    // number of seconds since the last posted stream data
+    LastModifiedDelta uint64 `json:"lastModifiedDelta,omitempty"`
 
     // message to accompany the current state
     // Required: true
@@ -3637,7 +3647,7 @@ type StreamStatus struct {
 }
 ```
 
-### func \(\*StreamStatus\) [ContextValidate](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/stream_status.go#L153>)
+### func \(\*StreamStatus\) [ContextValidate](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/stream_status.go#L159>)
 
 ```go
 func (m *StreamStatus) ContextValidate(ctx context.Context, formats strfmt.Registry) error
@@ -3645,7 +3655,7 @@ func (m *StreamStatus) ContextValidate(ctx context.Context, formats strfmt.Regis
 
 ContextValidate validates this stream status based on context it is used
 
-### func \(\*StreamStatus\) [MarshalBinary](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/stream_status.go#L158>)
+### func \(\*StreamStatus\) [MarshalBinary](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/stream_status.go#L164>)
 
 ```go
 func (m *StreamStatus) MarshalBinary() ([]byte, error)
@@ -3653,7 +3663,7 @@ func (m *StreamStatus) MarshalBinary() ([]byte, error)
 
 MarshalBinary interface implementation
 
-### func \(\*StreamStatus\) [UnmarshalBinary](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/stream_status.go#L166>)
+### func \(\*StreamStatus\) [UnmarshalBinary](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/stream_status.go#L172>)
 
 ```go
 func (m *StreamStatus) UnmarshalBinary(b []byte) error
@@ -3661,7 +3671,7 @@ func (m *StreamStatus) UnmarshalBinary(b []byte) error
 
 UnmarshalBinary interface implementation
 
-### func \(\*StreamStatus\) [Validate](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/stream_status.go#L52>)
+### func \(\*StreamStatus\) [Validate](<https://github.com/boonlogic/amber-go-sdk/blob/master/models/stream_status.go#L58>)
 
 ```go
 func (m *StreamStatus) Validate(formats strfmt.Registry) error
