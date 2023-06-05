@@ -856,6 +856,8 @@ func (crt CustomRoundTripper) RoundTrip(req *http.Request) (res *http.Response, 
 		req.ContentLength = int64(b.Len())
 	}
 
+	req.Header.Set("User-Agent", "Boon Logic / amber-go-sdk / http")
+
 	// Send the request, get the response
 	res, e = crt.Proxied.RoundTrip(req)
 	return res, e
