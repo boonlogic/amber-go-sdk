@@ -44,7 +44,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	amberClient "github.com/boonlogic/amber-go-sdk"
+	amberClient "github.com/boonlogic/amber-go-sdk/v1"
 	"syscall"
 )
 
@@ -92,8 +92,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	amberClient "github.com/boonlogic/amber-go-sdk"
-	amberModels "github.com/boonlogic/amber-go-sdk/models"
+	amberClient "github.com/boonlogic/amber-go-sdk/v1"
+	amberModels "github.com/boonlogic/amber-go-sdk/v1/models"
 	"syscall"
 )
 
