@@ -1,0 +1,25 @@
+{
+    "default": {
+        "license-key": "amber-dev-user",
+        "secret-key": "phi{Ch2obovoe",
+        "server": "http://dev-build-1:5888/v1",
+        "oauth-server": "https://amber-local.boonlogic.com/qa"
+    },
+    "missing-username": {
+        "secret-key": "filler-password",
+        "server": "https://amber-local.boonlogic.com/dev"
+    },
+    "missing-password": {
+        "license-key": "amber-test-user",
+        "server": "https://amber-local.boonlogic.com/dev"
+    },
+    "missing-server": {
+        "license-key": "amber-test-user",
+        "secret-key": "filler-password"
+    },
+    "garbage": {
+        "license-key": "garbage-username",
+        "secret-key": "garbage-password",
+        "server": "https://amber-local.boonlogic.com/dev"
+    }
+}

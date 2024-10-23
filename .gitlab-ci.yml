@@ -65,11 +65,12 @@ test-v1:
     BOON_AMBER_PORT: 5007
     BOON_MAX_INSTANCES: 1
     MONGO_URI: $V1_MONGO_URI
+    AMBER_TAG: $AMBER_TAG
   script:
     - ci-root/pipelines/expert-api/create-amberv1-test-config > ${CI_PROJECT_DIR}/ci-root/.Amber.license
     - export AMBER_TEST_LICENSE_FILE=${CI_PROJECT_DIR}/ci-root/.Amber.license
     - cd ${CI_PROJECT_DIR}/ci-root/packages/amber-go-sdk/amber-go-sdk
-    - make test-v1sdk
+    - make test-v1-v1sdk
   artifacts:
     paths:
     - ci-root/packages/amber-go-sdk/amber-go-sdk
@@ -81,17 +82,18 @@ test-v2:
   needs: [build]
   services:
     - name: 715859896688.dkr.ecr.us-east-1.amazonaws.com/expert-server:${AMBER_TAG}
-      alias: amber-test-fixture
+      alias: amber-test-fixture-v2
   variables:
     BOON_PRODUCT_ID: amber-cloud-v2
     BOON_AMBER_PORT: 5007
     BOON_MAX_INSTANCES: 1
     MONGO_URI: $V2_MONGO_URI
+    AMBER_TAG: $AMBER_TAG
   script:
     - ci-root/pipelines/expert-api/create-amberv2-test-config > ${CI_PROJECT_DIR}/ci-root/.Amber.license
     - export AMBER_TEST_LICENSE_FILE=${CI_PROJECT_DIR}/ci-root/.Amber.license
     - cd ${CI_PROJECT_DIR}/ci-root/packages/amber-go-sdk/amber-go-sdk
-    - echo "make test-v2sdk"
+    - make test-v2-v2sdk
   artifacts:
     paths:
     - ci-root/packages/amber-go-sdk/amber-go-sdk

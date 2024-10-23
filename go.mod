@@ -1,5 +1,4 @@
 module github.com/boonlogic/amber-go-sdk
-
 go 1.16
 
 require (
