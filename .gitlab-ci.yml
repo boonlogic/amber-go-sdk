@@ -18,6 +18,8 @@ variables:
   CLANG_FORMAT: clang-format
   REF_NAME: master
   SHELL: /bin/bash
+  CI_DEBUG_SERVICES: "false"
+  FF_NETWORK_PER_BUILD: "true"
 
 stages:
   - build
@@ -83,12 +85,14 @@ test-v2:
   services:
     - name: 715859896688.dkr.ecr.us-east-1.amazonaws.com/expert-server:${AMBER_TAG}
       alias: amber-test-fixture-v2
+    - name: mongo:8.0
   variables:
     BOON_PRODUCT_ID: amber-cloud-v2
     BOON_AMBER_PORT: 5007
     BOON_MAX_INSTANCES: 1
     MONGO_URI: $V2_MONGO_URI
     AMBER_TAG: $AMBER_TAG
+    AMBER_STORE_UPDATE_FIXTURE: true
   script:
     - ci-root/pipelines/expert-api/create-amberv2-test-config > ${CI_PROJECT_DIR}/ci-root/.Amber.license
     - export AMBER_TEST_LICENSE_FILE=${CI_PROJECT_DIR}/ci-root/.Amber.license
