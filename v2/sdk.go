@@ -487,6 +487,30 @@ func (a *AmberClient) GetModelStatus(modelId string) (*amberModels.GetStatusResp
 	return aok.Payload, nil
 }
 
+func (a *AmberClient) GetModelNanoStatus(modelId string) (*amberModels.GetNanoStatusResponse, *amberModels.Error) {
+	if result, aErr := a.authenticate(); !result {
+		return nil, aErr
+	}
+	params := &amberOps.GetModelNanoStatusParams{
+		ModelID: modelId,
+	}
+	params.WithTimeout(a.timeout)
+	aok, err := a.amberServer.Operations.GetModelNanoStatus(params, a.authWriter)
+	if err != nil {
+		switch errToken(err) {
+		case unauthorized:
+			return nil, err.(*amberOps.GetModelNanoStatusUnauthorized).Payload
+		case notFound:
+			return nil, err.(*amberOps.GetModelNanoStatusNotFound).Payload
+		case internalServerError:
+			return nil, err.(*amberOps.GetModelNanoStatusInternalServerError).Payload
+		default:
+			return nil, &amberModels.Error{Code: 500, Message: err.Error()}
+		}
+	}
+	return aok.Payload, nil
+}
+
 func (a *AmberClient) PretrainModel(modelId string, request amberModels.PostPretrainRequest) (*amberModels.PostPretrainResponse, *amberModels.Error) {
 
 	var err error
