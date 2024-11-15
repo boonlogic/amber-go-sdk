@@ -7,10 +7,12 @@ package models
 
 import (
 	"context"
+	"encoding/json"
 
 	"github.com/go-openapi/errors"
 	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
+	"github.com/go-openapi/validate"
 )
 
 // PostLearningRequest post learning request
@@ -18,13 +20,30 @@ import (
 // swagger:model postLearningRequest
 type PostLearningRequest struct {
 
+	// autotuning
+	Autotuning *AutotuneConfig `json:"autotuning,omitempty"`
+
+	// Desired learning state.
+	// Required: true
+	// Enum: [Buffering Learning]
+	State *string `json:"state"`
+
 	// training
-	Training *TrainingConfig `json:"training,omitempty"`
+	// Required: true
+	Training *TrainingConfig `json:"training"`
 }
 
 // Validate validates this post learning request
 func (m *PostLearningRequest) Validate(formats strfmt.Registry) error {
 	var res []error
+
+	if err := m.validateAutotuning(formats); err != nil {
+		res = append(res, err)
+	}
+
+	if err := m.validateState(formats); err != nil {
+		res = append(res, err)
+	}
 
 	if err := m.validateTraining(formats); err != nil {
 		res = append(res, err)
@@ -36,9 +55,72 @@ func (m *PostLearningRequest) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-func (m *PostLearningRequest) validateTraining(formats strfmt.Registry) error {
-	if swag.IsZero(m.Training) { // not required
+func (m *PostLearningRequest) validateAutotuning(formats strfmt.Registry) error {
+	if swag.IsZero(m.Autotuning) { // not required
 		return nil
+	}
+
+	if m.Autotuning != nil {
+		if err := m.Autotuning.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("autotuning")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("autotuning")
+			}
+			return err
+		}
+	}
+
+	return nil
+}
+
+var postLearningRequestTypeStatePropEnum []interface{}
+
+func init() {
+	var res []string
+	if err := json.Unmarshal([]byte(`["Buffering","Learning"]`), &res); err != nil {
+		panic(err)
+	}
+	for _, v := range res {
+		postLearningRequestTypeStatePropEnum = append(postLearningRequestTypeStatePropEnum, v)
+	}
+}
+
+const (
+
+	// PostLearningRequestStateBuffering captures enum value "Buffering"
+	PostLearningRequestStateBuffering string = "Buffering"
+
+	// PostLearningRequestStateLearning captures enum value "Learning"
+	PostLearningRequestStateLearning string = "Learning"
+)
+
+// prop value enum
+func (m *PostLearningRequest) validateStateEnum(path, location string, value string) error {
+	if err := validate.EnumCase(path, location, value, postLearningRequestTypeStatePropEnum, true); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (m *PostLearningRequest) validateState(formats strfmt.Registry) error {
+
+	if err := validate.Required("state", "body", m.State); err != nil {
+		return err
+	}
+
+	// value enum
+	if err := m.validateStateEnum("state", "body", *m.State); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *PostLearningRequest) validateTraining(formats strfmt.Registry) error {
+
+	if err := validate.Required("training", "body", m.Training); err != nil {
+		return err
 	}
 
 	if m.Training != nil {
@@ -59,6 +141,10 @@ func (m *PostLearningRequest) validateTraining(formats strfmt.Registry) error {
 func (m *PostLearningRequest) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	var res []error
 
+	if err := m.contextValidateAutotuning(ctx, formats); err != nil {
+		res = append(res, err)
+	}
+
 	if err := m.contextValidateTraining(ctx, formats); err != nil {
 		res = append(res, err)
 	}
@@ -66,6 +152,22 @@ func (m *PostLearningRequest) ContextValidate(ctx context.Context, formats strfm
 	if len(res) > 0 {
 		return errors.CompositeValidationError(res...)
 	}
+	return nil
+}
+
+func (m *PostLearningRequest) contextValidateAutotuning(ctx context.Context, formats strfmt.Registry) error {
+
+	if m.Autotuning != nil {
+		if err := m.Autotuning.ContextValidate(ctx, formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve.ValidateName("autotuning")
+			} else if ce, ok := err.(*errors.CompositeError); ok {
+				return ce.ValidateName("autotuning")
+			}
+			return err
+		}
+	}
+
 	return nil
 }
 
