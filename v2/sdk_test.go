@@ -575,13 +575,16 @@ func TestEnableLearning(t *testing.T) {
 	learningsamples := uint64(1000)
 	denominator := uint64(10000)
 	numerator := uint64(1)
+	training := &am.TrainingConfig{
+		LearningMaxClusters:     &maxclusters,
+		LearningMaxSamples:      &learningsamples,
+		LearningRateDenominator: &denominator,
+		LearningRateNumerator:   &numerator,
+	}
+	state := "Learning"
 	putConfigRequest := am.PostLearningRequest{
-		Training: &am.TrainingConfig{
-			LearningMaxClusters:     &maxclusters,
-			LearningMaxSamples:      &learningsamples,
-			LearningRateDenominator: &denominator,
-			LearningRateNumerator:   &numerator,
-		},
+		Training: training,
+		State:    &state,
 	}
 
 	response, aErr := testClient.PostModelLearning(testModelID, putConfigRequest)
